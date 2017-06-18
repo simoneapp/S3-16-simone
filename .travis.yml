@@ -31,3 +31,6 @@ android:
 
 script:
 - chmod +x ./gradlew
+
+notifications:
+    slack: simone-app:ZuDGmNIMJSK28PW3c8Elca5G

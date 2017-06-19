@@ -1,14 +1,15 @@
 package Model
 
-import akka.actor.AbstractActor
-import akka.actor.UntypedAbstractActor
+import akka.actor.UntypedActor
+import android.util.Log
+
 
 /**
  * Created by gzano on 18/06/2017.
  */
-class PlayerActor : UntypedAbstractActor() {
+class PlayerActor : UntypedActor() {
     override fun onReceive(p0: Any?) {
-        println(p0.toString())
+        Log.d("MESSAGGIO RICEVUTO", p0.toString())
     }
 
 

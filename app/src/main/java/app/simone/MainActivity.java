@@ -12,9 +12,13 @@ import android.widget.Button;
 
 import Model.GameMessage;
 import Model.PlayerActor;
+import actors.Player;
+import actors.PlayerActorJava;
+import actors.ViewActor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import messages.StartGameVsCPUMsg;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -107,8 +111,9 @@ public class MainActivity extends AppCompatActivity {
         this.init();
 
         ActorSystem system = ActorSystem.create("system");
-        ActorRef actor = system.actorOf(Props.create(PlayerActor.class), "actor");
-        actor.tell( new GameMessage("ciao sapi!"), ActorRef.noSender());
+        ActorRef actor = system.actorOf(Props.create(PlayerActorJava.class), "actor");
+        ActorRef view_actor = system.actorOf(Props.create(ViewActor.class), "view-actor");
+        actor.tell( new StartGameVsCPUMsg(4), ActorRef.noSender());
 
         // Set up the user interaction to manually show or hide the system UI.
         /*mContentView.setOnClickListener(new View.OnClickListener() {

@@ -10,6 +10,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import Model.GameMessage;
+import Model.PlayerActor;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -99,6 +105,10 @@ public class MainActivity extends AppCompatActivity {
         mVisible = true;
 
         this.init();
+
+        ActorSystem system = ActorSystem.create("system");
+        ActorRef actor = system.actorOf(Props.create(PlayerActor.class), "actor");
+        actor.tell( new GameMessage("ciao sapi!"), ActorRef.noSender());
 
         // Set up the user interaction to manually show or hide the system UI.
         /*mContentView.setOnClickListener(new View.OnClickListener() {

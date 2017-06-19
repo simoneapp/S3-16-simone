@@ -1,20 +1,20 @@
 package app.simone;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 
 import Model.GameMessage;
 import Model.PlayerActor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import app.simone.users.FacebookLoginActivity;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         if (mVisible) {
             hide();
         } else {
-           // show();
+            // show();
         }
     }
 
@@ -168,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }*/
+
+    public void openMultiplayer(View view) {
+        Intent intent = new Intent(this, FacebookLoginActivity.class);
+        startActivity(intent);
+    }
 
     /**
      * Schedules a call to hide() in [delay] milliseconds, canceling any

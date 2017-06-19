@@ -23,15 +23,17 @@
                 android:textColor="#fff"
                 android:layout_weight="1"
                 android:text="Player vs CPU"
-                android:id="@+id/button1"/>
+                android:id="@+id/btn_player2cpu"/>
+
             <Button
+                android:id="@+id/btn_player2player"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#FF4500"
-                android:textColor="#fff"
                 android:layout_weight="1"
+                android:background="#FF4500"
+                android:onClick="openMultiplayer"
                 android:text="Player vs Player"
-                android:id="@+id/button2"/>
+                android:textColor="#fff" />
         </LinearLayout>
 
 
@@ -49,7 +51,7 @@
                 android:textColor="#fff"
                 android:layout_weight="1"
                 android:text="Highscore"
-                android:id="@+id/button3"/>
+                android:id="@+id/btn_highscore"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -58,7 +60,7 @@
                 android:textColor="#fff"
                 android:layout_weight="1"
                 android:text="Settings"
-                android:id="@+id/button4"/>
+                android:id="@+id/btn_settings"/>
         </LinearLayout>
     </LinearLayout>
 

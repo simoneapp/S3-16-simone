@@ -1,8 +1,9 @@
 package actors;
 
 import android.util.Log;
-
 import akka.actor.UntypedActor;
+import messages.IMessage;
+import messages.StartGameVsCPUMsg;
 
 /**
  * Created by sapi9 on 19/06/2017.
@@ -10,7 +11,11 @@ import akka.actor.UntypedActor;
 
 public class ViewActor extends UntypedActor{
     @Override
-    public void onReceive(Object o) throws Exception {
-        Log.i("DAI", "DAI");
+    public void onReceive(Object message) throws Exception {
+        switch (((IMessage) message).getType()) {
+            case STARTGAMEVSCPU:
+                Log.d("VIEWACTOR",""+((StartGameVsCPUMsg)message).getnColors());
+                break;
+        }
     }
 }

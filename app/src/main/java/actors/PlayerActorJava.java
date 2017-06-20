@@ -12,8 +12,10 @@ import akka.actor.UntypedActor;
 import akka.pattern.AskableActorSelection;
 import akka.util.Timeout;
 import messages.IMessage;
+import messages.StartGameVsCPUMsg;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
+import utils.Utilities;
 
 /**
  * Created by sapi9 on 19/06/2017.
@@ -26,14 +28,8 @@ public class PlayerActorJava extends UntypedActor {
     public void onReceive(Object message) throws Exception {
         switch (((IMessage) message).getType()) {
             case STARTGAMEVSCPU:
-                ActorSelection sel = context().actorSelection("/user/view-actor");
-
-                Timeout t = new Timeout(3, TimeUnit.SECONDS);
-                AskableActorSelection asker = new AskableActorSelection(sel);
-                Future<Object> fut = asker.ask(new Identify(1), t);
-                ActorIdentity ident = (ActorIdentity) Await.result(fut, t.duration());
-                ActorRef ref = ident.getRef();
-                ref.tell(new GameMessage("lol"),getSelf());
+                ActorRef view = Utilities.getActorByName("/user/view-actor", context());
+                view.tell(new StartGameVsCPUMsg(((StartGameVsCPUMsg)message).getnColors()),getSelf());
                 break;
         }
     }

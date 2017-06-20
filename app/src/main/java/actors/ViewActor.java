@@ -1,6 +1,8 @@
 package actors;
 
 import android.util.Log;
+
+import Model.interfaces.IActivity;
 import akka.actor.UntypedActor;
 import messages.IMessage;
 import messages.StartGameVsCPUMsg;
@@ -10,6 +12,14 @@ import messages.StartGameVsCPUMsg;
  */
 
 public class ViewActor extends UntypedActor{
+    private IActivity main;
+
+    @Override
+    public void preStart() throws Exception {
+        super.preStart();
+        //this.main =
+    }
+
     @Override
     public void onReceive(Object message) throws Exception {
         switch (((IMessage) message).getType()) {
@@ -18,4 +28,6 @@ public class ViewActor extends UntypedActor{
                 break;
         }
     }
+
+
 }

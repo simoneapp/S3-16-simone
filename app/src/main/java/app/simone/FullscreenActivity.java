@@ -1,6 +1,7 @@
 package app.simone;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -157,6 +158,11 @@ public abstract class FullscreenActivity extends AppCompatActivity implements IA
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+    }
+
+    public void openActivity(Class activity) {
+        Intent intent = new Intent(this, activity);
+        startActivity(intent);
     }
 
 }

@@ -18,8 +18,8 @@ import scala.concurrent.Future;
  */
 
 public class Utilities {
-    public static ActorRef getActorByName(String name, ActorContext context){
-        ActorSelection sel = context.actorSelection("/user/view-actor");
+    public static ActorRef getActorByName(String name, ActorSystem system){
+        ActorSelection sel = system.actorSelection("/user/view-actor");
 
         Timeout t = new Timeout(3, TimeUnit.SECONDS);
         AskableActorSelection asker = new AskableActorSelection(sel);

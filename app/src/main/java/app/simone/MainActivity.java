@@ -31,8 +31,6 @@ public class MainActivity extends FullscreenActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
 
 
@@ -41,7 +39,7 @@ public class MainActivity extends FullscreenActivity {
 
             @Override
             public void onClick(View view) {
-                openVSCpuActivity();
+                openActivity(VSCpuActivity.class);
             }
         });
 
@@ -49,13 +47,6 @@ public class MainActivity extends FullscreenActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-
-
-
-        ActorSystem system = ActorSystem.create("system");
-        ActorRef actor = system.actorOf(Props.create(PlayerActorJava.class), "actor");
-        ActorRef view_actor = system.actorOf(Props.create(ViewActor.class), "view-actor");
-        actor.tell( new StartGameVsCPUMsg(4), ActorRef.noSender());
     }
 
     @Override
@@ -66,11 +57,5 @@ public class MainActivity extends FullscreenActivity {
     }
 
 
-    /*
-    VS CPU Activity
-     */
-    public void openVSCpuActivity() {
-        Intent intent = new Intent(this, VSCpuActivity.class);
-        startActivity(intent);
-    }
+
 }

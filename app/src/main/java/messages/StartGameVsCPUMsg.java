@@ -4,19 +4,20 @@ package messages;
  * Start Game Message.
  */
 public class StartGameVsCPUMsg implements IMessage {
-	private int nColors = 4;
+	private int mode = 0;
 
-	public StartGameVsCPUMsg(int nColors){
-		this.nColors = nColors;
+	public StartGameVsCPUMsg(int mode){
+		this.mode = mode;
 	}
 
 	@Override
 	public MessageType getType() {
-		return MessageType.STARTGAMEVSCPU;
+		return MessageType.START_GAME_VS_CPU;
 	}
 
+
 	public int getnColors(){
-		return this.nColors;
+		return mode == 0? 4 : 6;
 	}
 
 }

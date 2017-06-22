@@ -1,16 +1,21 @@
 package messages;
 
-import Model.interfaces.IActivity;
+import app.simone.IGameActivity;
 
 /**
  * Created by sapi9 on 21/06/2017.
  */
 
 public class AttachViewMsg implements IMessage {
-    private IActivity activity;
+    private IGameActivity activity;
+    private int radiobtnIndex = 0;
 
-    public AttachViewMsg(IActivity activity){
+    public AttachViewMsg(IGameActivity activity){
         this.activity = activity;
+    }
+    public AttachViewMsg(IGameActivity activity, int radiobtnIndex){
+        this.activity = activity;
+        this.radiobtnIndex = radiobtnIndex;
     }
 
     @Override
@@ -18,8 +23,11 @@ public class AttachViewMsg implements IMessage {
         return MessageType.ATTACH_VIEW_MSG;
     }
 
-    public IActivity getIActivity(){
+    public IGameActivity getIActivity(){
         return this.activity;
+    }
 
+    public int getRadiobtnIndex(){
+        return this.radiobtnIndex;
     }
 }

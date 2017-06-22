@@ -1,27 +1,11 @@
 package app.simone;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
-import actors.PlayerActorJava;
-import actors.ViewActor;
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Props;
-import messages.StartGameVsCPUMsg;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * @author Michele Sapignoli
  */
 public class MainActivity extends FullscreenActivity {
 
@@ -34,7 +18,7 @@ public class MainActivity extends FullscreenActivity {
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
 
 
-        //Listener on vs CPU button
+        //Listener on vs CPUActor button
         VSCpuButton.setOnClickListener(new View.OnClickListener(){
 
             @Override

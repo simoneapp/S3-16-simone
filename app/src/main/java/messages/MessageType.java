@@ -8,5 +8,6 @@ package messages;
 public enum MessageType {
     START_GAME_VS_CPU,
     BLINK_MSG,
-    ATTACH_VIEW_MSG
+    ATTACH_VIEW_MSG,
+    YOUR_TURN_MSG
 }

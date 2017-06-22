@@ -8,13 +8,12 @@ import android.widget.RadioGroup;
 
 import akka.actor.ActorRef;
 import messages.StartGameVsCPUMsg;
-import scala.collection.immutable.Stream;
 import utils.Constants;
 import utils.Utilities;
 import application.mApplication;
 
 /**
- * Created by sapi9 on 20/06/2017.
+ * @author Michele Sapignoli
  */
 
 public class VSCpuActivity extends FullscreenActivity {
@@ -29,9 +28,7 @@ public class VSCpuActivity extends FullscreenActivity {
                 View radioButton = radioButtonGroup.findViewById(radioButtonID);
                 int idx = radioButtonGroup.indexOfChild(radioButton);
 
-                ActorRef CPUActor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem());
-                CPUActor.tell(new StartGameVsCPUMsg(idx), ActorRef.noSender());
-                openActivity(GameActivity.class);
+                openActivity(GameActivity.class, Constants.RADIOBTN_INDEX_KEY, idx);
             }
         });
     }

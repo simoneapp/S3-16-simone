@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import akka.actor.UntypedActor;
@@ -14,7 +15,7 @@ import utils.Constants;
 import utils.Utilities;
 
 /**
- * Created by sapi9 on 21/06/2017.
+ * @author Michele Sapignoli
  */
 
 public class CPUActor extends UntypedActor {
@@ -31,22 +32,20 @@ public class CPUActor extends UntypedActor {
     public void onReceive(Object message) throws Exception {
         switch (((IMessage) message).getType()) {
             case START_GAME_VS_CPU:
-                this.nColors = ((StartGameVsCPUMsg)message).getnColors();
-                Log.d("CPU ACTOR", "Received StartGameVsCpuMSG, " + this.nColors +" colors.");
-                this.generateColor();
                 /*
-                Sending BlinkMsg to ViewActor
+                Received StartGameVsCPUMsg from GameViewActor Actor BlinkMsg to GameViewActor
                  */
-                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.VIEW_ACTOR_NAME, context().system())
-                        .tell(new BlinkMsg(this.currentSequence),getSelf());
-
+                this.nColors = ((StartGameVsCPUMsg)message).getnColors();
+                Log.d("##CPU ACTOR", "Received StartGameVsCpuMSG, " + this.nColors +" colors.");
+                this.generateColor();
+                getSender().tell(new BlinkMsg(this.currentSequence),getSelf());
                 break;
         }
     }
 
     private void generateColor(){
-        this.currentSequence.add(ThreadLocalRandom.current().nextInt(0, nColors));
-        Log.d("CPU ACTOR", "Generated new color in sequence, now sequence is" + this.currentSequence.toString());
+        this.currentSequence.add(new Random().nextInt(nColors));
+        Log.d("##CPU ACTOR", "Generated new color in sequence, now sequence is" + this.currentSequence.toString());
     }
 
 }

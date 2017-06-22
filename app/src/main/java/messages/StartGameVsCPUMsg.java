@@ -1,13 +1,15 @@
 package messages;
 
+import utils.Constants;
+
 /**
  * Start Game Message.
  */
 public class StartGameVsCPUMsg implements IMessage {
-	private int mode = 0;
+	private int radiobtnIndex = 0;
 
-	public StartGameVsCPUMsg(int mode){
-		this.mode = mode;
+	public StartGameVsCPUMsg(int radiobtnIndex){
+		this.radiobtnIndex = radiobtnIndex;
 	}
 
 	@Override
@@ -17,7 +19,7 @@ public class StartGameVsCPUMsg implements IMessage {
 
 
 	public int getnColors(){
-		return mode == 0? 4 : 6;
+		return radiobtnIndex == 0? Constants.CLASSIC_MODE : Constants.HARDER_MODE;
 	}
 
 }

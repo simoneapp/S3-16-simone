@@ -3,14 +3,14 @@ package application;
 import android.app.Application;
 
 import actors.CPUActor;
-import actors.PlayerActorJava;
-import actors.ViewActor;
+import actors.PlayerActor;
+import actors.GameViewActor;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import utils.Constants;
 
 /**
- * Created by sapi9 on 21/06/2017.
+ * @author Michele Sapignoli
  */
 
 public class mApplication extends Application {
@@ -20,9 +20,9 @@ public class mApplication extends Application {
         super.onCreate();
 
         system = ActorSystem.create("system");
-        system.actorOf(Props.create(PlayerActorJava.class), Constants.PLAYER_ACTOR_NAME);
+        system.actorOf(Props.create(PlayerActor.class), Constants.PLAYER_ACTOR_NAME);
         system.actorOf(Props.create(CPUActor.class), Constants.CPU_ACTOR_NAME);
-        system.actorOf(Props.create(ViewActor.class), Constants.VIEW_ACTOR_NAME);
+        system.actorOf(Props.create(GameViewActor.class), Constants.GAMEVIEW_ACTOR_NAME);
     }
 
     public static ActorSystem getActorSystem(){

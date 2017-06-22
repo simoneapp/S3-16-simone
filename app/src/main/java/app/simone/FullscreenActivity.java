@@ -10,13 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 
-import Model.interfaces.IActivity;
-
 /**
- * Created by sapi9 on 20/06/2017.
+ * @author Michele Sapignoli
  */
 
-public abstract class FullscreenActivity extends AppCompatActivity implements IActivity {
+public abstract class FullscreenActivity extends AppCompatActivity {
     protected int UI_ANIMATION_DELAY = 300;
     protected int initialDelay = 100;
     protected boolean mVisible;
@@ -162,6 +160,12 @@ public abstract class FullscreenActivity extends AppCompatActivity implements IA
 
     public void openActivity(Class activity) {
         Intent intent = new Intent(this, activity);
+        startActivity(intent);
+    }
+
+    public void openActivity(Class activity, String extraName, int extra) {
+        Intent intent = new Intent(this, activity);
+        intent.putExtra(extraName, extra);
         startActivity(intent);
     }
 

@@ -4,6 +4,9 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.matcher.ViewMatchers
+import android.support.test.espresso.web.sugar.Web.onWebView
+import android.support.test.espresso.web.webdriver.DriverAtoms.*
+import android.support.test.espresso.web.webdriver.Locator
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import org.junit.Assert.assertEquals
@@ -43,10 +46,14 @@ class ExampleInstrumentedTest {
     }
 
     @Test
-    fun changeText_sameActivity() {
+    fun testFacebookLogin() {
 
         Espresso.onView(ViewMatchers.withId(R.id.btn_player2player)).perform(click())
         Espresso.onView(ViewMatchers.withId(R.id.login_button)).perform(click())
+        onWebView().withElement(findElement(Locator.NAME, "email")).perform(webKeys("simonedice123"))
+        onWebView().withElement(findElement(Locator.NAME, "pass")).perform(webKeys("simonsays123"))
+        onWebView().withElement(findElement(Locator.NAME, "login")).perform(webClick())
+
         //Espresso.onView(ViewMatchers.)
     }
 

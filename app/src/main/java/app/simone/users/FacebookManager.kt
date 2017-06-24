@@ -3,12 +3,15 @@ package app.simone.users
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import app.simone.R
 import app.simone.users.model.FacebookFriend
 import com.facebook.*
 import com.facebook.AccessToken
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
+import com.facebook.share.model.GameRequestContent
+import com.facebook.share.widget.GameRequestDialog
 
 /**
  * Created by nicola on 21/06/2017.
@@ -26,6 +29,7 @@ class FacebookManager() {
 
     var callbackManager : CallbackManager? = null
     var loginButton : LoginButton? = null
+    var requestDialog : GameRequestDialog? = null
 
     fun registerFacebookButton(context : Activity, update: (success: Boolean, data: List<FacebookFriend>?, error: String?) -> Unit) {
 
@@ -46,6 +50,23 @@ class FacebookManager() {
             override fun onError(exception: FacebookException) {
                 update(false, null, FB_LOGIN_ERROR_MSG + exception.localizedMessage)
             }
+        })
+
+        requestDialog = GameRequestDialog(context)
+
+        requestDialog?.registerCallback(callbackManager, object: FacebookCallback<GameRequestDialog.Result> {
+            override fun onSuccess(result: GameRequestDialog.Result?) {
+                Log.v("FB Request", result?.toString())
+            }
+
+            override fun onCancel() {
+                Log.v("FB Request", "Cancel")
+            }
+
+            override fun onError(error: FacebookException?) {
+                Log.v("FB Request", error?.localizedMessage.toString())
+            }
+
         })
     }
 
@@ -69,6 +90,14 @@ class FacebookManager() {
                     }
                 }
         ).executeAsync()
+    }
+
+    fun sendGameRequest() {
+        val content = GameRequestContent.Builder()
+                .setMessage("If you move like Simone, you can't go wrong! Come and give a try to Simone for Android!")
+                .build()
+
+        requestDialog?.show(content)
     }
 
     fun isLoggedIn(): Boolean {

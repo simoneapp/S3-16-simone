@@ -23,7 +23,7 @@ class FacebookLoginActivity : IFacebookActivity, AppCompatActivity() {
         setContentView(R.layout.activity_facebook_login)
         manager.registerFacebookButton(this, { success, data, error -> updateList(success, data, error) })
 
-        adapter = FacebookFriendsAdapter(this, friends)
+        adapter = FacebookFriendsAdapter(this, friends, manager)
 
         listView = this.findViewById(R.id.list_friends) as ListView
         listView?.adapter = adapter
@@ -36,7 +36,7 @@ class FacebookLoginActivity : IFacebookActivity, AppCompatActivity() {
     val updateList = { success: Boolean, data: List<FacebookFriend>?, error: String? ->
 
         adapter?.clear()
-        
+
         if(success) {
             adapter?.addAll(data)
         } else {

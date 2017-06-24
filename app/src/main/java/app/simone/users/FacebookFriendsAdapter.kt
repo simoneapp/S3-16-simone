@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import app.simone.R
@@ -21,7 +22,10 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 
 class FacebookFriendsAdapter : ArrayAdapter<FacebookFriend> {
 
-    constructor(context: Context, data: List<FacebookFriend>) : super(context, R.layout.cell_friends) {
+    var manager : FacebookManager? = null
+
+    constructor(context: Context, data: List<FacebookFriend>, manager : FacebookManager) : super(context, R.layout.cell_friends) {
+        this.manager = manager
         val config = ImageLoaderConfiguration.createDefault(getContext())
         ImageLoader.getInstance().init(config)
     }
@@ -38,6 +42,7 @@ class FacebookFriendsAdapter : ArrayAdapter<FacebookFriend> {
 
         setName(convertView, friend.name)
         setImage(convertView, friend.picture)
+        handleInviteButton(convertView, friend)
 
         return convertView
     }
@@ -61,6 +66,12 @@ class FacebookFriendsAdapter : ArrayAdapter<FacebookFriend> {
             })
         }
 
+    }
+
+    fun handleInviteButton(convertView: View?, friend: FacebookFriend) {
+        val btnInvite = convertView?.findViewById(R.id.btn_invite) as Button
+        if(btnInvite.hasOnClickListeners()) { return }
+        btnInvite.setOnClickListener{ manager?.sendGameRequest() }
     }
 
 }

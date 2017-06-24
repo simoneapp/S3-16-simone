@@ -10,12 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import app.simone.R
 import app.simone.users.model.FacebookFriend
+import app.simone.users.model.FacebookPicture
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
-
-
-
 
 /**
  * Created by nicola on 23/06/2017.
@@ -28,7 +26,7 @@ class FacebookFriendsAdapter : ArrayAdapter<FacebookFriend> {
         ImageLoader.getInstance().init(config)
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
 
         var convertView = convertView
 
@@ -38,22 +36,31 @@ class FacebookFriendsAdapter : ArrayAdapter<FacebookFriend> {
 
         val friend = getItem(position).let { it } ?: return convertView!!
 
+        setName(convertView, friend.name)
+        setImage(convertView, friend.picture)
+
+        return convertView
+    }
+
+    fun setName(convertView: View?, name: String?) {
         val txvName = convertView?.findViewById(R.id.text_name) as TextView
-        txvName.text = friend.name
+        txvName.text = name
+    }
 
-        val imgProfile = convertView?.findViewById(R.id.img_profile) as ImageView
+    fun setImage(convertView: View?, picture: FacebookPicture?){
 
-        if(friend?.picture != null) {
-            val url = friend!!.picture!!.url
+        val imgProfile = convertView!!.findViewById(R.id.img_profile) as ImageView
 
-            ImageLoader.getInstance().loadImage(url, object : SimpleImageLoadingListener() {
+        if(picture != null) {
+            imgProfile.setImageDrawable(null)
+            ImageLoader.getInstance().cancelDisplayTask(imgProfile)
+            ImageLoader.getInstance().loadImage(picture.url, object : SimpleImageLoadingListener() {
                 override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
                     imgProfile.setImageBitmap(loadedImage)
                 }
             })
         }
 
-        return convertView!!
     }
 
 }

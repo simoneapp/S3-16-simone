@@ -5,4 +5,5 @@ package app.simone.users;
  */
 
 public interface IFacebookActivity {
+
 }

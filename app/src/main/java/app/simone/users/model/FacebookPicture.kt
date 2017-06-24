@@ -6,7 +6,7 @@ import org.json.JSONObject
  * Created by nicola on 23/06/2017.
  */
 
-class FacebookPicture(val json : JSONObject) {
+class FacebookPicture(json : JSONObject) {
 
     var url : String? = null
     var isSilhouette : Boolean? = null

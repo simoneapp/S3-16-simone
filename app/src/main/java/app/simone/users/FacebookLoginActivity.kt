@@ -4,11 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ListView
+import android.widget.Toast
 import app.simone.R
 import app.simone.users.model.FacebookFriend
 
 
-class FacebookLoginActivity : AppCompatActivity() {
+class FacebookLoginActivity : IFacebookActivity, AppCompatActivity() {
 
     var manager = FacebookManager()
     var listView : ListView? = null
@@ -20,7 +21,7 @@ class FacebookLoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_facebook_login)
-        manager.registerFacebookButton(this)
+        manager.registerFacebookButton(this, { success, data, error -> updateList(success, data, error) })
 
         adapter = FacebookFriendsAdapter(this, friends)
 
@@ -28,17 +29,19 @@ class FacebookLoginActivity : AppCompatActivity() {
         listView?.adapter = adapter
 
         if(manager.isLoggedIn()) {
-            manager.getFacebookFriends { success, data, error ->
-                if(success) {
-                    adapter?.clear()
-                    adapter?.addAll(data)
-                }
-            }
+            manager.getFacebookFriends { success, data, error -> updateList(success, data, error) }
         }
     }
 
-    fun updateFriendsList() {
+    val updateList = { success: Boolean, data: List<FacebookFriend>?, error: String? ->
 
+        adapter?.clear()
+        
+        if(success) {
+            adapter?.addAll(data)
+        } else {
+            Toast.makeText(this, error, Toast.LENGTH_SHORT)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

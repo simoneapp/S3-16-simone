@@ -13,14 +13,17 @@ import com.facebook.login.widget.LoginButton
 import com.facebook.share.model.GameRequestContent
 import com.facebook.share.widget.GameRequestDialog
 
+
+
 /**
  * Created by nicola on 21/06/2017.
  */
 
-class FacebookManager() {
+class FacebookManager() : IFacebookManager {
 
-    val GRAPH_PATH = "/me/taggable_friends"
-    val FRIENDS_LIMIT = "5000"
+    val FRIENDS_PATH = "/me/friends"
+    val SCORE_PATH = "/109981342949411/scores"
+    val FRIENDS_LIMIT = 5000
     val FIELDS = "name,picture,id"
 
     val FB_LOGIN_CANCELLED_MSG = "Facebook Login action cancelled from the user!"
@@ -73,12 +76,12 @@ class FacebookManager() {
     fun getFacebookFriends(completion: (success: Boolean, data: List<FacebookFriend>?, error: String?) -> Unit) {
 
         val parameters = Bundle()
-        parameters.putString("limit",FRIENDS_LIMIT)
+        parameters.putInt("limit",FRIENDS_LIMIT)
         parameters.putString("fields", FIELDS)
 
         GraphRequest(
                 AccessToken.getCurrentAccessToken(),
-                GRAPH_PATH,
+                FRIENDS_PATH,
                 parameters,
                 HttpMethod.GET,
                 GraphRequest.Callback { response ->
@@ -87,6 +90,43 @@ class FacebookManager() {
                         completion(true, FacebookFriend.listFromJson(jsonFriends), null)
                     } else {
                         completion(false, null, response.error.errorUserMessage)
+                    }
+                }
+        ).executeAsync()
+    }
+
+    override fun updateScore(score: Int, completion: (success: Boolean, error: String?) -> Unit) {
+
+        val parameters = Bundle()
+        parameters.putInt("score",score)
+
+        GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                SCORE_PATH,
+                parameters,
+                HttpMethod.POST,
+                GraphRequest.Callback { response ->
+                    if(response.error == null) {
+                        completion(true, null)
+                    } else {
+                        completion(false, response.error.errorUserMessage)
+                    }
+                }
+        ).executeAsync()
+    }
+
+    override fun getScore(completion: (success: Boolean, score: Int, error: String?) -> Unit) {
+
+        GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                SCORE_PATH,
+                null,
+                HttpMethod.GET,
+                GraphRequest.Callback { response ->
+                    if(response.error == null) {
+                        completion(true, 0, null)
+                    } else {
+                        completion(false, 0, response.error.errorUserMessage)
                     }
                 }
         ).executeAsync()

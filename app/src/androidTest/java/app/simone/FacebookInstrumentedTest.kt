@@ -9,11 +9,12 @@ import android.support.test.espresso.web.webdriver.DriverAtoms.*
 import android.support.test.espresso.web.webdriver.Locator
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import app.simone.users.FacebookManager
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
+import java.util.concurrent.CountDownLatch
 
 
 /**
@@ -26,15 +27,12 @@ import org.junit.runner.RunWith
  * @see [Testing documentation](http://d.android.com/tools/testing)
  */
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
-
-    /*@Rule
-    public var mActivityRule = ActivityTestRule(
-            MainActivity::class.java)
-*/
+class FacebookInstrumentedTest {
 
     @Rule @JvmField
     val mActivityRule = ActivityTestRule(MainActivity::class.java)
+
+    private val lock = CountDownLatch(1)
 
     @Test
     @Throws(Exception::class)
@@ -49,12 +47,25 @@ class ExampleInstrumentedTest {
     fun testFacebookLogin() {
 
         Espresso.onView(ViewMatchers.withId(R.id.btn_player2player)).perform(click())
-        Espresso.onView(ViewMatchers.withId(R.id.login_button)).perform(click())
-        onWebView().withElement(findElement(Locator.NAME, "email")).perform(webKeys("simonedice123"))
-        onWebView().withElement(findElement(Locator.NAME, "pass")).perform(webKeys("simonsays123"))
-        onWebView().withElement(findElement(Locator.NAME, "login")).perform(webClick())
 
-        //Espresso.onView(ViewMatchers.)
+        val btnLogin = Espresso.onView(ViewMatchers.withId(R.id.login_button))
+        val manager = FacebookManager()
+
+        if(!manager.isLoggedIn()) {
+            btnLogin.perform(click())
+            onWebView().withElement(findElement(Locator.NAME, "email")).perform(webKeys("simonedice123"))
+            onWebView().withElement(findElement(Locator.NAME, "pass")).perform(webKeys("simonsays123"))
+            onWebView().withElement(findElement(Locator.NAME, "login")).perform(webClick())
+        }
+
+        val newScore = 50
+
+        manager.updateScore(newScore) { success, error ->
+            manager.getScore { success, score, error ->
+                assert(score == newScore)
+            }
+        }
+
     }
 
 }

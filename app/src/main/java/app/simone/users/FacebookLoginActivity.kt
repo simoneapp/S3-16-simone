@@ -3,13 +3,14 @@ package app.simone.users
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Button
 import android.widget.ListView
 import android.widget.Toast
 import app.simone.R
 import app.simone.users.model.FacebookFriend
 
 
-class FacebookLoginActivity : IFacebookActivity, AppCompatActivity() {
+class FacebookLoginActivity : AppCompatActivity() {
 
     var manager = FacebookManager()
     var listView : ListView? = null
@@ -31,6 +32,11 @@ class FacebookLoginActivity : IFacebookActivity, AppCompatActivity() {
         if(manager.isLoggedIn()) {
             manager.getFacebookFriends { success, data, error -> updateList(success, data, error) }
         }
+
+        val btnInvites = this.findViewById(R.id.btn_invite) as Button
+        btnInvites.setOnClickListener({
+            manager?.sendGameRequest()
+        })
     }
 
     val updateList = { success: Boolean, data: List<FacebookFriend>?, error: String? ->

@@ -42,7 +42,6 @@ class FacebookFriendsAdapter : ArrayAdapter<FacebookFriend> {
 
         setName(convertView, friend.name)
         setImage(convertView, friend.picture)
-        handleInviteButton(convertView, friend)
 
         return convertView
     }
@@ -65,13 +64,5 @@ class FacebookFriendsAdapter : ArrayAdapter<FacebookFriend> {
                 }
             })
         }
-
     }
-
-    fun handleInviteButton(convertView: View?, friend: FacebookFriend) {
-        val btnInvite = convertView?.findViewById(R.id.btn_invite) as Button
-        if(btnInvite.hasOnClickListeners()) { return }
-        btnInvite.setOnClickListener{ manager?.sendGameRequest() }
-    }
-
 }

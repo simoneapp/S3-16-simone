@@ -8,6 +8,6 @@ import android.os.Handler;
 
 public interface IGameActivity {
 
-    public Handler getViewHandler();
-    public void enableButtons(boolean isEnabled);
+    public Handler getActorHandler();
+    public void setPlayerTurn(boolean isPlayerTurn);
 }

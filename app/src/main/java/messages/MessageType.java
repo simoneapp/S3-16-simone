@@ -9,5 +9,8 @@ public enum MessageType {
     START_GAME_VS_CPU,
     BLINK_MSG,
     ATTACH_VIEW_MSG,
-    YOUR_TURN_MSG
+    YOUR_TURN_MSG,
+    NEXT_COLOR_MSG,
+    GUESS_COLOR_MSG,
+    PLAYER_TURN_MSG
 }

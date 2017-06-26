@@ -40,6 +40,10 @@ public class CPUActor extends UntypedActor {
                 this.generateColor();
                 getSender().tell(new BlinkMsg(this.currentSequence),getSelf());
                 break;
+            case NEXT_COLOR_MSG:
+                this.generateColor();
+                getSender().tell(new BlinkMsg(this.currentSequence),getSelf());
+                break;
         }
     }
 

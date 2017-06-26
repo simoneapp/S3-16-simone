@@ -18,7 +18,7 @@ public class BlinkMsg implements IMessage {
         return MessageType.BLINK_MSG;
     }
 
-    public List getSequence(){
+    public List<Integer> getSequence(){
         return this.sequence;
     }
 }

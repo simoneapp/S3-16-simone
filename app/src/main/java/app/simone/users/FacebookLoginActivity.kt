@@ -3,7 +3,6 @@ package app.simone.users
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ListView
@@ -42,18 +41,17 @@ class FacebookLoginActivity : AppCompatActivity() {
 
         listView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
 
-            manager.getScore { success, score, error ->
+            val friend = adapter?.getItem(i)
+
+            manager.getFriendScore(friend) {
+                success, score, error ->
 
                 if(success) {
-                    Log.v("SCORE", score.toString())
-
-                    manager?.updateScore(score + 10) { success, error ->
-                        Log.v("FB Publish", "Success: " + success + ", Error: " + error.toString())
-                    }
+                    Toast.makeText(this, "Score: " + score, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Error: cannot fetch user's score.", Toast.LENGTH_SHORT).show()
                 }
-
             }
-
         }
     }
 

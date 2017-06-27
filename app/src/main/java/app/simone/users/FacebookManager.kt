@@ -23,7 +23,7 @@ import org.json.JSONObject
 class FacebookManager() : IFacebookManager {
 
     val FRIENDS_PATH = "/me/friends"
-    val SCORE_PATH = "/me/scores"
+    val SCORE_PATH = "/scores"
     val FRIENDS_LIMIT = 5000
     val FIELDS = "name,picture,id"
 
@@ -128,11 +128,19 @@ class FacebookManager() : IFacebookManager {
         }
     }
 
-    override fun getScore(completion: (success: Boolean, score: Int, error: String?) -> Unit) {
+    override fun getMyScore(completion: (success: Boolean, score: Int, error: String?) -> Unit) {
+        getUserScore("me", completion)
+    }
+
+    override fun getFriendScore(user: FacebookFriend?, completion: (success: Boolean, score: Int, error: String?) -> Unit) {
+        getUserScore(user!!.friendId!!, completion)
+    }
+
+    private fun getUserScore(id: String,  completion: (success: Boolean, score: Int, error: String?) -> Unit) {
 
         GraphRequest(
                 AccessToken.getCurrentAccessToken(),
-                SCORE_PATH,
+                "/" + id + SCORE_PATH,
                 null,
                 HttpMethod.GET,
                 GraphRequest.Callback { response ->

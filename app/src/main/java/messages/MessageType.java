@@ -7,11 +7,11 @@ package messages;
  */
 public enum MessageType {
     START_GAME_VS_CPU,
-    BLINK_MSG,
+    TIME_TO_BLINK_MSG,
     ATTACH_VIEW_MSG,
     YOUR_TURN_MSG,
     NEXT_COLOR_MSG,
     GUESS_COLOR_MSG,
     PLAYER_TURN_MSG,
-    REF_MSG
+    GIMME_NEW_COLOR_MSG
 }

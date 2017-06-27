@@ -35,7 +35,6 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-
                     greenButton.setAlpha(0.4f);
                     actorHandler.sendEmptyMessageDelayed(4, 500);
                     break;
@@ -71,25 +70,25 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             switch (msg.what) {
                 case 0:
                     greenButton.setAlpha(0.4f);
-                    playerHandler.sendEmptyMessageDelayed(4, 500);
+                    playerHandler.sendEmptyMessageDelayed(4, 200);
                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
                             .tell(new GuessColorMsg(0), ActorRef.noSender());
                     break;
                 case 1:
                     redButton.setAlpha(0.4f);
-                    playerHandler.sendEmptyMessageDelayed(4, 500);
+                    playerHandler.sendEmptyMessageDelayed(4, 200);
                     Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
                             .tell(new GuessColorMsg(1), ActorRef.noSender());
                     break;
                 case 2:
                     blueButton.setAlpha(0.4f);
-                    playerHandler.sendEmptyMessageDelayed(4, 500);
+                    playerHandler.sendEmptyMessageDelayed(4, 200);
                     Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
                             .tell(new GuessColorMsg(2), ActorRef.noSender());
                     break;
                 case 3:
                     yellowButton.setAlpha(0.4f);
-                    playerHandler.sendEmptyMessageDelayed(4, 500);
+                    playerHandler.sendEmptyMessageDelayed(4, 200);
                     Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
                             .tell(new GuessColorMsg(3), ActorRef.noSender());
                     break;

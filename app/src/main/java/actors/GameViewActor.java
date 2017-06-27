@@ -10,7 +10,8 @@ import app.simone.IGameActivity;
 import akka.actor.UntypedActor;
 import application.mApplication;
 import messages.AttachViewMsg;
-import messages.BlinkMsg;
+import messages.TimeToBlinkMsg;
+import messages.GimmeNewColorMsg;
 import messages.GuessColorMsg;
 import messages.IMessage;
 import messages.NextColorMsg;
@@ -41,18 +42,14 @@ public class GameViewActor extends UntypedActor{
             case ATTACH_VIEW_MSG:
                 this.gameActivity = ((AttachViewMsg)message).getIActivity();
 
-                /*
-                StartGameVsCPUMsg to CPU Actor
-                 */
                 Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
                         .tell(new StartGameVsCPUMsg(((AttachViewMsg)message).getRadiobtnIndex()), getSelf());
                 Log.d("##VIEW ACTOR", "Current GameActivity registered + StartGameVSCPUMsg sent to CPUActor ACTOR");
                 break;
-            case BLINK_MSG:
+            case TIME_TO_BLINK_MSG:
                 this.cpuColorIndex = 0;
-                List<Integer> sequence = ((BlinkMsg)message).getSequence();
-                Log.d("##VIEW ACTOR", "CPU Turn, colors to blink:" + sequence.toString());
-                cpuSequence = ((BlinkMsg)message).getSequence();
+                cpuSequence = ((TimeToBlinkMsg)message).getSequence();
+                Log.d("##VIEW ACTOR", "CPU Turn, colors to blink:" + cpuSequence.toString());
                 getSelf().tell(new NextColorMsg(), getSelf());
                 break;
             case NEXT_COLOR_MSG:
@@ -73,11 +70,11 @@ public class GameViewActor extends UntypedActor{
                 Log.d("##VIEW ACTOR", "Player inserted :" +color);
                 playerSequence.add(color);
                 //TODO correct check
-                if(playerSequence.get(playerColorIndex) == cpuSequence.get(playerColorIndex)){
+                if(playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))){
                     if(playerSequence.size() == cpuSequence.size()){
                         gameActivity.setPlayerTurn(false);
                         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
-                                .tell(new NextColorMsg(), getSelf());
+                                .tell(new GimmeNewColorMsg(), getSelf());
                         this.playerSequence.clear();
                     }
 

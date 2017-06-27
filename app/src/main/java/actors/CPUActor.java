@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import akka.actor.UntypedActor;
-import messages.BlinkMsg;
+import messages.TimeToBlinkMsg;
 import messages.IMessage;
 import messages.StartGameVsCPUMsg;
 
@@ -30,23 +30,22 @@ public class CPUActor extends UntypedActor {
         switch (((IMessage) message).getType()) {
             case START_GAME_VS_CPU:
                 /*
-                Received StartGameVsCPUMsg from GameViewActor Actor BlinkMsg to GameViewActor
+                Received StartGameVsCPUMsg from GameViewActor Actor TimeToBlinkMsg to GameViewActor
                  */
                 this.nColors = ((StartGameVsCPUMsg)message).getnColors();
                 Log.d("##CPU ACTOR", "Received StartGameVsCpuMSG, " + this.nColors +" colors.");
-                this.generateColor();
-                getSender().tell(new BlinkMsg(this.currentSequence),getSelf());
+                this.generateAndSendColor();
                 break;
-            case NEXT_COLOR_MSG:
-                this.generateColor();
-                getSender().tell(new BlinkMsg(this.currentSequence),getSelf());
+            case GIMME_NEW_COLOR_MSG:
+                this.generateAndSendColor();
                 break;
         }
     }
 
-    private void generateColor(){
+    private void generateAndSendColor(){
         this.currentSequence.add(new Random().nextInt(nColors));
         Log.d("##CPU ACTOR", "Generated new color in sequence, now sequence is" + this.currentSequence.toString());
+        getSender().tell(new TimeToBlinkMsg(this.currentSequence),getSelf());
     }
 
 }

@@ -3,14 +3,16 @@ package messages;
 import java.util.ArrayList;
 import java.util.List;
 
+import colors.Colors;
+
 /**
  * Created by sapi9 on 21/06/2017.
  */
 
 public class TimeToBlinkMsg implements IMessage {
-    private List<Integer> sequence;
+    private List<Colors> sequence;
 
-    public TimeToBlinkMsg(List<Integer> sequence){
+    public TimeToBlinkMsg(List<Colors> sequence){
         this.sequence = sequence;
     }
 
@@ -19,7 +21,7 @@ public class TimeToBlinkMsg implements IMessage {
         return MessageType.TIME_TO_BLINK_MSG;
     }
 
-    public List<Integer> getSequence(){
+    public List<Colors> getSequence(){
         return this.sequence;
     }
 }

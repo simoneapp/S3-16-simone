@@ -20,9 +20,8 @@ public class mApplication extends Application {
     public void onCreate() {
         super.onCreate();
         system = ActorSystem.create("system");
-
-        ActorRef cpu = mApplication.getActorSystem().actorOf(Props.create(CPUActor.class), Constants.CPU_ACTOR_NAME);
-        ActorRef view = mApplication.getActorSystem().actorOf(Props.create(GameViewActor.class), Constants.GAMEVIEW_ACTOR_NAME);
+        mApplication.getActorSystem().actorOf(Props.create(CPUActor.class), Constants.CPU_ACTOR_NAME);
+        mApplication.getActorSystem().actorOf(Props.create(GameViewActor.class), Constants.GAMEVIEW_ACTOR_NAME);
     }
 
     public static ActorSystem getActorSystem(){

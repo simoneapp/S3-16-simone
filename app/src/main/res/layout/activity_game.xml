@@ -26,14 +26,14 @@
                 android:background="@color/myGreen"
                 android:textColor="@color/myMainTextColor"
                 android:layout_weight="1"
-                android:id="@+id/game_button1"/>
+                android:id="@+id/GREEN"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/myRed"
                 android:textColor="@color/myMainTextColor"
                 android:layout_weight="1"
-                android:id="@+id/game_button2"/>
+                android:id="@+id/RED"/>
         </LinearLayout>
 
 
@@ -47,18 +47,18 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/myBlue"
+                android:background="@color/myYellow"
                 android:textColor="@color/myMainTextColor"
                 android:layout_weight="1"
-                android:id="@+id/game_button3"/>
+                android:id="@+id/YELLOW"/>
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/myYellow"
+                android:background="@color/myBlue"
                 android:textColor="@color/myMainTextColor"
                 android:layout_weight="1"
-                android:id="@+id/game_button4"/>
+                android:id="@+id/BLUE"/>
         </LinearLayout>
     </LinearLayout>
 

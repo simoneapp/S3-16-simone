@@ -9,6 +9,7 @@ import java.util.List;
 import app.simone.IGameActivity;
 import akka.actor.UntypedActor;
 import application.mApplication;
+import colors.Colors;
 import messages.AttachViewMsg;
 import messages.TimeToBlinkMsg;
 import messages.GimmeNewColorMsg;
@@ -26,8 +27,8 @@ import utils.Utilities;
 
 public class GameViewActor extends UntypedActor{
     private IGameActivity gameActivity;
-    private List<Integer> cpuSequence;
-    private List<Integer> playerSequence;
+    private List<Colors> cpuSequence;
+    private List<Colors> playerSequence;
     private int cpuColorIndex;
     private int playerColorIndex;
     @Override
@@ -66,7 +67,7 @@ public class GameViewActor extends UntypedActor{
                 this.gameActivity.setPlayerTurn(true);
                 break;
             case GUESS_COLOR_MSG:
-                int color = ((GuessColorMsg)message).getGuessColor();
+                Colors color = ((GuessColorMsg)message).getGuessColor();
                 Log.d("##VIEW ACTOR", "Player inserted :" +color);
                 playerSequence.add(color);
                 //TODO correct check
@@ -85,10 +86,11 @@ public class GameViewActor extends UntypedActor{
         }
     }
 
-    private void blink(int color){
+    private void blink(Colors color){
         Message m = new Message();
-        m.what = color;
-        this.gameActivity.getActorHandler().sendMessageDelayed(m, 500);
+        m.what =  color.getValue();
+        m.arg1 = Constants.CPU_TURN;
+        this.gameActivity.getOuterHandler().sendMessageDelayed(m, 500);
     }
 
     private boolean isPlayerTurn(){

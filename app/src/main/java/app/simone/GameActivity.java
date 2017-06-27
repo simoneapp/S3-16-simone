@@ -7,12 +7,9 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
-import actors.CPUActor;
-import actors.GameViewActor;
 import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Props;
 import application.mApplication;
+import colors.Colors;
 import messages.AttachViewMsg;
 import messages.GuessColorMsg;
 import messages.NextColorMsg;
@@ -30,76 +27,35 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     private Button yellowButton;
     private boolean playerTurn;
 
-    private Handler actorHandler = new Handler() {
+
+    private Handler outerHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    greenButton.setAlpha(0.4f);
-                    actorHandler.sendEmptyMessageDelayed(4, 500);
-                    break;
-                case 1:
-                    redButton.setAlpha(0.4f);
-                    actorHandler.sendEmptyMessageDelayed(4, 500);
-                    break;
-                case 2:
-                    blueButton.setAlpha(0.4f);
-                    actorHandler.sendEmptyMessageDelayed(4, 500);
-                    break;
-                case 3:
-                    yellowButton.setAlpha(0.4f);
-                    actorHandler.sendEmptyMessageDelayed(4, 500);
-                    break;
-                case 4:
-                    redButton.setAlpha(1);
-                    blueButton.setAlpha(1);
-                    yellowButton.setAlpha(1);
-                    greenButton.setAlpha(1);
-                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
-                            .tell(new NextColorMsg(), ActorRef.noSender());
-                    break;
-
-            }
-
+            Button b = (Button) findViewById(msg.what);
+            b.setAlpha(0.4f);
+            Message m = new Message();
+            m.what = msg.what;
+            m.arg1 = msg.arg1;
+            viewHandler.sendMessageDelayed(m, 300);
         }
     };
 
-    private Handler playerHandler = new Handler() {
+    private Handler viewHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    greenButton.setAlpha(0.4f);
-                    playerHandler.sendEmptyMessageDelayed(4, 200);
-                   Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
-                            .tell(new GuessColorMsg(0), ActorRef.noSender());
-                    break;
-                case 1:
-                    redButton.setAlpha(0.4f);
-                    playerHandler.sendEmptyMessageDelayed(4, 200);
-                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
-                            .tell(new GuessColorMsg(1), ActorRef.noSender());
-                    break;
-                case 2:
-                    blueButton.setAlpha(0.4f);
-                    playerHandler.sendEmptyMessageDelayed(4, 200);
-                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
-                            .tell(new GuessColorMsg(2), ActorRef.noSender());
-                    break;
-                case 3:
-                    yellowButton.setAlpha(0.4f);
-                    playerHandler.sendEmptyMessageDelayed(4, 200);
-                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
-                            .tell(new GuessColorMsg(3), ActorRef.noSender());
-                    break;
-                case 4 : redButton.setAlpha(1);
-                    blueButton.setAlpha(1);
-                    yellowButton.setAlpha(1);
-                    greenButton.setAlpha(1);
-                    break;
+            Button b = (Button) findViewById(msg.what);
+            b.setAlpha(1);
 
+            switch (msg.arg1) {
+                case Constants.CPU_TURN:
+                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
+                            .tell(new NextColorMsg(), ActorRef.noSender());
+                    break;
+                case Constants.PLAYER_TURN:
+                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
+                            .tell(new GuessColorMsg(Colors.fromInt(msg.what)), ActorRef.noSender());
+                    break;
             }
-
         }
     };
 
@@ -109,44 +65,55 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
         int radiobtnIndex = 0;
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             radiobtnIndex = savedInstanceState.getInt(Constants.RADIOBTN_INDEX_KEY);
         }
 
-        greenButton = (Button) findViewById(R.id.game_button1);
+        greenButton = (Button) findViewById(R.id.GREEN);
         greenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(playerTurn){
-
-                    playerHandler.sendEmptyMessage(0);
+                if (playerTurn) {
+                    Message m = new Message();
+                    m.what = Colors.GREEN.getValue();
+                    m.arg1 = Constants.PLAYER_TURN;
+                    outerHandler.sendMessage(m);
                 }
             }
         });
-        redButton = (Button) findViewById(R.id.game_button2);
+        redButton = (Button) findViewById(R.id.RED);
         redButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(playerTurn){
-                    playerHandler.sendEmptyMessage(1);
+                if (playerTurn) {
+                    Message m = new Message();
+                    m.what = Colors.RED.getValue();
+                    m.arg1 = Constants.PLAYER_TURN;
+                    outerHandler.sendMessage(m);
                 }
             }
         });
-        blueButton = (Button) findViewById(R.id.game_button3);
+        blueButton = (Button) findViewById(R.id.BLUE);
         blueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(playerTurn){
-                    playerHandler.sendEmptyMessage(2);
+                if (playerTurn) {
+                    Message m = new Message();
+                    m.what = Colors.BLUE.getValue();
+                    m.arg1 = Constants.PLAYER_TURN;
+                    outerHandler.sendMessage(m);
                 }
             }
         });
-        yellowButton = (Button) findViewById(R.id.game_button4);
+        yellowButton = (Button) findViewById(R.id.YELLOW);
         yellowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(playerTurn){
-                    playerHandler.sendEmptyMessage(3);
+                if (playerTurn) {
+                    Message m = new Message();
+                    m.what = Colors.YELLOW.getValue();
+                    m.arg1 = Constants.PLAYER_TURN;
+                    outerHandler.sendMessage(m);
                 }
             }
         });
@@ -156,8 +123,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
          */
 
 
-
-       Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
                 .tell(new AttachViewMsg(this, radiobtnIndex), ActorRef.noSender());
     }
 
@@ -167,11 +133,11 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         mContentView = findViewById(R.id.game_fullscreen_content);
     }
 
-    public Handler getActorHandler(){
-        return this.actorHandler;
+    public Handler getOuterHandler() {
+        return this.outerHandler;
     }
 
-    public void setPlayerTurn(boolean isPlayerTurn){
+    public void setPlayerTurn(boolean isPlayerTurn) {
         this.playerTurn = isPlayerTurn;
     }
 

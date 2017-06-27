@@ -7,10 +7,15 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
+import actors.CPUActor;
+import actors.GameViewActor;
 import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
 import application.mApplication;
 import messages.AttachViewMsg;
 import messages.GuessColorMsg;
+import messages.NextColorMsg;
 import utils.Constants;
 import utils.Utilities;
 
@@ -51,6 +56,8 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                     blueButton.setAlpha(1);
                     yellowButton.setAlpha(1);
                     greenButton.setAlpha(1);
+                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
+                            .tell(new NextColorMsg(), ActorRef.noSender());
                     break;
 
             }
@@ -65,7 +72,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                 case 0:
                     greenButton.setAlpha(0.4f);
                     playerHandler.sendEmptyMessageDelayed(4, 500);
-                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
+                   Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
                             .tell(new GuessColorMsg(0), ActorRef.noSender());
                     break;
                 case 1:
@@ -100,7 +107,9 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         int radiobtnIndex = 0;
+
         if(savedInstanceState != null){
             radiobtnIndex = savedInstanceState.getInt(Constants.RADIOBTN_INDEX_KEY);
         }
@@ -146,7 +155,10 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         /*
         Pass the instance of the GameActivity to GameViewActor
          */
-        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
+
+
+
+       Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
                 .tell(new AttachViewMsg(this, radiobtnIndex), ActorRef.noSender());
     }
 
@@ -163,5 +175,6 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     public void setPlayerTurn(boolean isPlayerTurn){
         this.playerTurn = isPlayerTurn;
     }
+
 
 }

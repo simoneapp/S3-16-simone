@@ -12,5 +12,6 @@ public enum MessageType {
     YOUR_TURN_MSG,
     NEXT_COLOR_MSG,
     GUESS_COLOR_MSG,
-    PLAYER_TURN_MSG
+    PLAYER_TURN_MSG,
+    REF_MSG
 }

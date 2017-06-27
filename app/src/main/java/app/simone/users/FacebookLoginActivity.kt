@@ -3,6 +3,8 @@ package app.simone.users
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ListView
 import android.widget.Toast
@@ -37,6 +39,22 @@ class FacebookLoginActivity : AppCompatActivity() {
         btnInvites.setOnClickListener({
             manager?.sendGameRequest()
         })
+
+        listView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
+
+            manager.getScore { success, score, error ->
+
+                if(success) {
+                    Log.v("SCORE", score.toString())
+
+                    manager?.updateScore(score + 10) { success, error ->
+                        Log.v("FB Publish", "Success: " + success + ", Error: " + error.toString())
+                    }
+                }
+
+            }
+
+        }
     }
 
     val updateList = { success: Boolean, data: List<FacebookFriend>?, error: String? ->

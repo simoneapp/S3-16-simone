@@ -8,11 +8,12 @@ import app.simone.R
 import app.simone.users.model.FacebookFriend
 import com.facebook.*
 import com.facebook.AccessToken
+import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.facebook.share.model.GameRequestContent
 import com.facebook.share.widget.GameRequestDialog
-
+import org.json.JSONObject
 
 
 /**
@@ -22,24 +23,29 @@ import com.facebook.share.widget.GameRequestDialog
 class FacebookManager() : IFacebookManager {
 
     val FRIENDS_PATH = "/me/friends"
-    val SCORE_PATH = "/109981342949411/scores"
+    val SCORE_PATH = "/me/scores"
     val FRIENDS_LIMIT = 5000
     val FIELDS = "name,picture,id"
 
     val FB_LOGIN_CANCELLED_MSG = "Facebook Login action cancelled from the user!"
     val FB_LOGIN_ERROR_MSG = "Facebook Login Error: "
-    val FB_PERMISSIONS = arrayOf("email", "user_friends", "read_custom_friendlists").toMutableList()
+    val FB_READ_PERMISSIONS = arrayOf("email", "user_friends", "read_custom_friendlists").toMutableList()
+    val FB_WRITE_PERMISSIONS = arrayOf("publish_actions").toMutableList()
 
     var callbackManager : CallbackManager? = null
     var loginButton : LoginButton? = null
     var requestDialog : GameRequestDialog? = null
+    var context : Activity? = null
 
     fun registerFacebookButton(context : Activity, update: (success: Boolean, data: List<FacebookFriend>?, error: String?) -> Unit) {
+
+        this.context = context
 
         callbackManager = CallbackManager.Factory.create()
 
         loginButton = context.findViewById(R.id.login_button) as LoginButton
-        loginButton?.setReadPermissions(FB_PERMISSIONS)
+
+        loginButton?.setReadPermissions(FB_READ_PERMISSIONS)
 
         loginButton?.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
@@ -98,21 +104,28 @@ class FacebookManager() : IFacebookManager {
     override fun updateScore(score: Int, completion: (success: Boolean, error: String?) -> Unit) {
 
         val parameters = Bundle()
-        parameters.putInt("score",score)
+        parameters.putString("score",score.toString())
 
-        GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                SCORE_PATH,
-                parameters,
-                HttpMethod.POST,
-                GraphRequest.Callback { response ->
-                    if(response.error == null) {
-                        completion(true, null)
-                    } else {
-                        completion(false, response.error.errorUserMessage)
+        if(AccessToken.getCurrentAccessToken().permissions.containsAll(FB_WRITE_PERMISSIONS)) {
+
+            GraphRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    SCORE_PATH,
+                    parameters,
+                    HttpMethod.POST,
+                    GraphRequest.Callback { response ->
+                        if(response.error == null) {
+                            completion(true, null)
+                        } else {
+                            completion(false, response.error.errorUserMessage)
+                        }
                     }
-                }
-        ).executeAsync()
+            ).executeAsync()
+
+        } else {
+            LoginManager.getInstance().logInWithPublishPermissions(context, FB_WRITE_PERMISSIONS)
+            completion(false, "You need to accept Facebook publish permissions")
+        }
     }
 
     override fun getScore(completion: (success: Boolean, score: Int, error: String?) -> Unit) {
@@ -124,9 +137,16 @@ class FacebookManager() : IFacebookManager {
                 HttpMethod.GET,
                 GraphRequest.Callback { response ->
                     if(response.error == null) {
-                        completion(true, 0, null)
+                        val scores = response.jsonObject.getJSONArray("data")
+
+                        if(scores.length() > 0) {
+                            val score = (scores.get(0) as JSONObject).getInt("score")
+                            completion(true, score, null)
+                        } else {
+                            completion(false, -1, "Score not available")
+                        }
                     } else {
-                        completion(false, 0, response.error.errorUserMessage)
+                        completion(false, -1, response.error.errorUserMessage)
                     }
                 }
         ).executeAsync()

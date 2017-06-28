@@ -17,13 +17,13 @@
             android:weightSum="2" >
 
             <Button
+                android:id="@+id/button1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#1ab855"
-                android:textColor="#fff"
                 android:layout_weight="1"
+                android:background="#1ab855"
                 android:text="Player vs CPU"
-                android:id="@+id/button1"/>
+                android:textColor="#fff" />
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -43,13 +43,14 @@
             android:weightSum="2" >
 
             <Button
+                android:id="@+id/button3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#75d4f0"
-                android:textColor="#fff"
                 android:layout_weight="1"
+                android:background="#75d4f0"
+                android:onClick="playVsCpu"
                 android:text="Highscore"
-                android:id="@+id/button3"/>
+                android:textColor="#fff" />
 
             <Button
                 android:layout_width="match_parent"

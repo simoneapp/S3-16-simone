@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+apply plugin: 'realm-android'
 android {
     compileSdkVersion 23
     buildToolsVersion '25.0.0'
@@ -30,14 +30,22 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile group: 'com.typesafe.akka', name: 'akka-actor_2.10', version: '2.3.16'
+    compile group: 'org.scala-lang', name: 'scala-library', version: '2.10.4'
+    // Because RxAndroid releases are few and far between, it is recommended you also
+// explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:23.4.0'
-    compile group: 'com.typesafe.akka', name: 'akka-actor_2.10', version: '2.3.16'
-    compile group: 'org.scala-lang', name: 'scala-library', version: '2.10.4'
     compile 'org.scala-lang:scala-library:2.10.4'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.0'
+
     testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
+
 }
 repositories {
     mavenCentral()

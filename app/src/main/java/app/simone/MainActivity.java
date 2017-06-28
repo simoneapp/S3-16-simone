@@ -1,20 +1,18 @@
 package app.simone;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 
-import Model.GameMessage;
-import Model.PlayerActor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
+import io.realm.Realm;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -57,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);*/
         }
     };
+
     private View mControlsView;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void init(){
+    private void init() {
 
 
     }
@@ -99,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Realm.init(this);
 
         setContentView(R.layout.activity_main);
 
@@ -106,9 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
         this.init();
 
-        ActorSystem system = ActorSystem.create("system");
-        ActorRef actor = system.actorOf(Props.create(PlayerActor.class), "actor");
-        actor.tell( new GameMessage("ciao sapi!"), ActorRef.noSender());
 
         // Set up the user interaction to manually show or hide the system UI.
         /*mContentView.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +122,14 @@ public class MainActivity extends AppCompatActivity {
         //this.setButtonsColor();
     }
 
+    public void playVsCpu(View view) {
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+
+    }
+
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -139,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         if (mVisible) {
             hide();
         } else {
-           // show();
+            // show();
         }
     }
 

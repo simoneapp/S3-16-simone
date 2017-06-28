@@ -80,7 +80,7 @@ public class GameViewActor extends UntypedActor{
                     }
 
                 } else {
-                    Log.d("##VIEW ACTOR", "Hai perso coglione");
+                    Log.d("##VIEW ACTOR", "Hai perso per dindirindina");
                 }
                 break;
         }

@@ -25,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        Realm.init(this)
         val config = RealmConfiguration.Builder().name("players.realm").deleteRealmIfMigrationNeeded().schemaVersion(3).build()
         Realm.setDefaultConfiguration(config)
         realm = Realm.getDefaultInstance()

@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import akka.actor.ActorRef;
 import application.mApplication;
-import colors.Colors;
+import colors.Color;
 import messages.AttachViewMsg;
 import messages.GuessColorMsg;
 import messages.NextColorMsg;
@@ -21,10 +21,6 @@ import utils.Utilities;
  */
 
 public class GameActivity extends FullscreenActivity implements IGameActivity {
-    private Button greenButton;
-    private Button redButton;
-    private Button blueButton;
-    private Button yellowButton;
     private boolean playerTurn;
 
 
@@ -53,7 +49,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                     break;
                 case Constants.PLAYER_TURN:
                     Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
-                            .tell(new GuessColorMsg(Colors.fromInt(msg.what)), ActorRef.noSender());
+                            .tell(new GuessColorMsg(Color.fromInt(msg.what)), ActorRef.noSender());
                     break;
             }
         }
@@ -69,59 +65,14 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             radiobtnIndex = savedInstanceState.getInt(Constants.RADIOBTN_INDEX_KEY);
         }
 
-        greenButton = (Button) findViewById(R.id.GREEN);
-        greenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (playerTurn) {
-                    Message m = new Message();
-                    m.what = Colors.GREEN.getValue();
-                    m.arg1 = Constants.PLAYER_TURN;
-                    outerHandler.sendMessage(m);
-                }
-            }
-        });
-        redButton = (Button) findViewById(R.id.RED);
-        redButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (playerTurn) {
-                    Message m = new Message();
-                    m.what = Colors.RED.getValue();
-                    m.arg1 = Constants.PLAYER_TURN;
-                    outerHandler.sendMessage(m);
-                }
-            }
-        });
-        blueButton = (Button) findViewById(R.id.BLUE);
-        blueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (playerTurn) {
-                    Message m = new Message();
-                    m.what = Colors.BLUE.getValue();
-                    m.arg1 = Constants.PLAYER_TURN;
-                    outerHandler.sendMessage(m);
-                }
-            }
-        });
-        yellowButton = (Button) findViewById(R.id.YELLOW);
-        yellowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (playerTurn) {
-                    Message m = new Message();
-                    m.what = Colors.YELLOW.getValue();
-                    m.arg1 = Constants.PLAYER_TURN;
-                    outerHandler.sendMessage(m);
-                }
-            }
-        });
+        initButton(Color.GREEN);
+        initButton(Color.RED);
+        initButton(Color.YELLOW);
+        initButton(Color.BLUE);
 
         /*
         Pass the instance of the GameActivity to GameViewActor
          */
-
 
         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
                 .tell(new AttachViewMsg(this, radiobtnIndex), ActorRef.noSender());
@@ -131,6 +82,22 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     protected void setSubclassContentView() {
         setContentView(R.layout.activity_game);
         mContentView = findViewById(R.id.game_fullscreen_content);
+    }
+
+    private boolean initButton(final Color color){
+        Button button = (Button) findViewById(color.getValue());
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (playerTurn) {
+                    Message m = new Message();
+                    m.what = color.getValue();
+                    m.arg1 = Constants.PLAYER_TURN;
+                    outerHandler.sendMessage(m);
+                }
+            }
+        });
+        return true;
     }
 
     public Handler getOuterHandler() {

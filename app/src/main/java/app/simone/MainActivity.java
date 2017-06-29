@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import app.simone.users.FacebookLoginActivity;
+
 /**
  * @author Michele Sapignoli
  */
@@ -35,6 +37,15 @@ public class MainActivity extends FullscreenActivity {
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        // Trigger the initial hide() shortly after the activity has been
+        // created, to briefly hint to the user that UI controls
+        // are available.
+        //delayedHide(100);
+    }
+
     protected void setSubclassContentView() {
         setContentView(R.layout.activity_main);
         mContentView = findViewById(R.id.main_fullscreen_content);
@@ -45,6 +56,9 @@ public class MainActivity extends FullscreenActivity {
         startActivity(intent);
     }
 
-
+    public void openMultiplayer(View view) {
+        Intent intent = new Intent(this, FacebookLoginActivity.class);
+        startActivity(intent);
+    }
 
 }

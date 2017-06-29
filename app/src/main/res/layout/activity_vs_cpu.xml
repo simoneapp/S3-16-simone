@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="app.simone.VSCpuActivity">
+
+    <FrameLayout
+        android:id="@+id/vs_cpu_fullscreen_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="5">
+
+            <LinearLayout
+                android:id="@+id/vs_cpu_top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/myGreen"
+                android:layout_weight="2"
+                >
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vs_cpu"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/myMainTextColor"
+                    android:textSize="60sp"
+                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:background="@drawable/layout_shadow" >
+            </View>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="3"
+                android:gravity="center_horizontal|center_vertical"
+                >
+                <RadioGroup
+                    android:id="@+id/vs_cpu_radiogroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <RadioButton
+                        android:id="@+id/simpleRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="32sp"
+                        android:layout_margin="5sp"
+                        android:textColor="@color/myDarkGreen"
+                        android:backgroundTint="@color/myGreen"
+                        android:checked="true"
+                        android:text="Classic"/>
+                    <RadioButton
+                        android:id="@+id/simpleRadioButton1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5sp"
+                        android:textColor="@color/myDarkGreen"
+                        android:textSize="32sp"
+                        android:text="Harder"/>
+                </RadioGroup>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/vs_cpu_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/vs_cpu_top_layout"
+        app:layout_anchorGravity="bottom|right|end"
+        app:backgroundTint="@color/myDarkGreen"
+        android:layout_marginEnd="20dp"
+        app:srcCompat="@android:drawable/ic_media_play" />
+
+</android.support.design.widget.CoordinatorLayout>

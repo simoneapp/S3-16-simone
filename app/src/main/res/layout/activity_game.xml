@@ -1,45 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:launchMode= "singleTask"
+    tools:context="app.simone.GameActivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:launchMode="singleTask"
-    tools:context="app.simone.MainActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/main_fullscreen_content"
+        android:id="@+id/game_fullscreen_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="2">
+        android:weightSum="2" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2" >
 
             <Button
-                android:id="@+id/button_vs_cpu"
                 android:layout_width="match_parent"
-
-
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-
                 android:background="@color/myGreen"
-                android:text="Player vs CPU"/>
-
+                android:textColor="@color/myMainTextColor"
+                android:layout_weight="1"
+                android:id="@+id/GREEN"/>
             <Button
-                android:id="@+id/btn_player2player"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="@color/myRed"
-                android:onClick="openMultiplayer"
-                android:text="Player vs Player"
-                android:textColor="@color/myMainTextColor" />
+                android:textColor="@color/myMainTextColor"
+                android:layout_weight="1"
+                android:id="@+id/RED"/>
         </LinearLayout>
 
 
@@ -48,28 +42,23 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="2" >
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
-                android:layout_weight="1"
-                android:background="@color/myBlue"
-
-                android:textColor="@color/myMainTextColor"
-                android:onClick="playVsCpu"
-                android:text="Highscore"
-                android:id="@+id/btn_highscore"/>
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:background="@color/myYellow"
                 android:textColor="@color/myMainTextColor"
-                android:text="Settings"
-                android:id="@+id/btn_settings"/>
+                android:layout_weight="1"
+                android:id="@+id/YELLOW"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/myBlue"
+                android:textColor="@color/myMainTextColor"
+                android:layout_weight="1"
+                android:id="@+id/BLUE"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -77,6 +66,6 @@
         android:layout_width="100dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
-        android:src="@drawable/central_button" />
+        android:src="@drawable/central_button"/>
 
 </FrameLayout>

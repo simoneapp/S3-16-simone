@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+apply plugin: 'realm-android'
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.0'
@@ -23,6 +23,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
 }
 
 dependencies {
@@ -44,7 +47,15 @@ dependencies {
     compile 'org.scala-lang:scala-library:2.10.4'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    // Because RxAndroid releases are few and far between, it is recommended you also
+// explicitly depend on RxJava's latest version for bug fixes and new features.
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
+
 }
 
 repositories {

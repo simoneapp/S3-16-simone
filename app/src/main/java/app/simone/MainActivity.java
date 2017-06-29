@@ -11,12 +11,14 @@ import android.widget.Button;
 public class MainActivity extends FullscreenActivity {
 
     private Button VSCpuButton;
+    private Button connectionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
+        connectionButton = (Button)findViewById(R.id.button4);
 
 
         //Listener on vs CPUActor button
@@ -25,6 +27,14 @@ public class MainActivity extends FullscreenActivity {
             @Override
             public void onClick(View view) {
                 openActivity(VSCpuActivity.class);
+            }
+        });
+
+        connectionButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                openActivity(PubnubActivity.class);
             }
         });
 

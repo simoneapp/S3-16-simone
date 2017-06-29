@@ -1,71 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:launchMode= "singleTask"
-    tools:context="app.simone.GameActivity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:launchMode="singleTask"
+    tools:context="app.simone.GameActivity">
 
-    <LinearLayout
-        android:id="@+id/game_fullscreen_content"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="2" >
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/game_fullscreen_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:weightSum="2" >
+            android:orientation="vertical"
+            android:weightSum="2">
 
-            <Button
+            <LinearLayout
+                android:id="@+id/game_top_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/myGreen"
-                android:textColor="@color/myMainTextColor"
                 android:layout_weight="1"
-                android:id="@+id/GREEN"/>
-            <Button
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/GREEN"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/myGreen"
+                    android:textColor="@color/myMainTextColor" />
+
+                <Button
+                    android:id="@+id/RED"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/myRed"
+                    android:textColor="@color/myMainTextColor" />
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/myRed"
-                android:textColor="@color/myMainTextColor"
                 android:layout_weight="1"
-                android:id="@+id/RED"/>
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/YELLOW"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/myYellow"
+                    android:textColor="@color/myMainTextColor" />
+
+                <Button
+                    android:id="@+id/BLUE"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/myBlue"
+                    android:textColor="@color/myMainTextColor" />
+            </LinearLayout>
         </LinearLayout>
 
+    </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:weightSum="2" >
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/myYellow"
-                android:textColor="@color/myMainTextColor"
-                android:layout_weight="1"
-                android:id="@+id/YELLOW"/>
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/myBlue"
-                android:textColor="@color/myMainTextColor"
-                android:layout_weight="1"
-                android:id="@+id/BLUE"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:src="@drawable/central_button"/>
-
-</FrameLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/game_fab"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginEnd="20dp"
+        app:backgroundTint="@color/myLightGray"
+        app:layout_anchor="@id/game_top_layout"
+        app:layout_anchorGravity="bottom|center"/>
+    <app.simone.styleable.SimoneTextView
+        android:layout_height="wrap_content"
+        android:id="@+id/game_simone_textview"
+        android:layout_width="wrap_content"
+        android:text="@string/tap_to_begin"
+        android:textAlignment="center"
+        android:elevation="6dp"
+        android:textSize="64sp"
+        android:textColor="@color/myDarkGray"
+        app:layout_anchor="@id/game_top_layout"
+        app:layout_anchorGravity="bottom|center"/>
+</android.support.design.widget.CoordinatorLayout>

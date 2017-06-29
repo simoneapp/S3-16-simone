@@ -1,4 +1,14 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'realm-android'
 android {
@@ -49,8 +59,17 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
     testCompile 'junit:junit:4.12'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
+    compile "com.hanks:htextview-base:+"    // base library
+    compile "com.hanks:htextview-scale:+"       // optional
+
+
+
 
 }
 repositories {
     mavenCentral()
+    maven { url 'https://maven.fabric.io/public' }
 }

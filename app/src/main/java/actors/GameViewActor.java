@@ -42,9 +42,6 @@ public class GameViewActor extends UntypedActor{
         switch (((IMessage) message).getType()) {
             case ATTACH_VIEW_MSG:
                 this.gameActivity = ((AttachViewMsg)message).getIActivity();
-
-                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
-                        .tell(new StartGameVsCPUMsg(((AttachViewMsg)message).getRadiobtnIndex()), getSelf());
                 Log.d("##VIEW ACTOR", "Current GameActivity registered + StartGameVSCPUMsg sent to CPUActor ACTOR");
                 break;
             case TIME_TO_BLINK_MSG:
@@ -70,7 +67,7 @@ public class GameViewActor extends UntypedActor{
                 Color color = ((GuessColorMsg)message).getGuessColor();
                 Log.d("##VIEW ACTOR", "Player inserted :" +color);
                 playerSequence.add(color);
-                //TODO correct check
+
                 if(playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))){
                     if(playerSequence.size() == cpuSequence.size()){
                         gameActivity.setPlayerTurn(false);

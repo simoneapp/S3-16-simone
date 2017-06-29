@@ -37,6 +37,10 @@
             android:name=".GameActivity"
             android:label="Game"
             android:theme="@style/AppTheme.NoActionBar" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="578b2c1882d727176d06b548a797e4c9373b27ca" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

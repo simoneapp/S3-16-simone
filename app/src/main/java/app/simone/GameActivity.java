@@ -4,15 +4,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import akka.actor.ActorRef;
+import app.simone.styleable.SimoneTextView;
 import application.mApplication;
 import colors.Color;
 import messages.AttachViewMsg;
 import messages.GuessColorMsg;
 import messages.NextColorMsg;
+import messages.StartGameVsCPUMsg;
 import utils.Constants;
 import utils.Utilities;
 
@@ -22,17 +26,27 @@ import utils.Utilities;
 
 public class GameActivity extends FullscreenActivity implements IGameActivity {
     private boolean playerTurn;
-
+    private boolean tapToBegin = true;
+    private SimoneTextView simoneTextView;
 
     private Handler outerHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            Button b = (Button) findViewById(msg.what);
-            b.setAlpha(0.4f);
-            Message m = new Message();
-            m.what = msg.what;
-            m.arg1 = msg.arg1;
-            viewHandler.sendMessageDelayed(m, 300);
+            switch (msg.arg1) {
+                case Constants.SET_TURN_MSG:
+                    viewHandler.sendEmptyMessage(msg.what == Constants.CPU_TURN? Constants.CPU_TURN : Constants.PLAYER_TURN);
+                    break;
+                default:
+                    Button b = (Button) findViewById(msg.what);
+                    b.setAlpha(0.4f);
+                    Message m = new Message();
+                    m.what = msg.what;
+                    m.arg1 = msg.arg1;
+                    viewHandler.sendMessageDelayed(m, 300);
+                    break;
+
+            }
+
         }
     };
 
@@ -65,10 +79,25 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             radiobtnIndex = savedInstanceState.getInt(Constants.RADIOBTN_INDEX_KEY);
         }
 
-        initButton(Color.GREEN);
-        initButton(Color.RED);
-        initButton(Color.YELLOW);
-        initButton(Color.BLUE);
+        initColorButton(Color.GREEN);
+        initColorButton(Color.RED);
+        initColorButton(Color.YELLOW);
+        initColorButton(Color.BLUE);
+
+        FloatingActionButton gameFab = (FloatingActionButton) findViewById(R.id.game_fab);
+        simoneTextView = (SimoneTextView) findViewById(R.id.game_simone_textview);
+        gameFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tapToBegin) {
+                    tapToBegin = false;
+                    simoneTextView.setText(Constants.STRING_EMPTY);
+                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
+                            .tell(new StartGameVsCPUMsg(), ActorRef.noSender());
+                }
+            }
+        });
+
 
         /*
         Pass the instance of the GameActivity to GameViewActor
@@ -84,7 +113,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         mContentView = findViewById(R.id.game_fullscreen_content);
     }
 
-    private boolean initButton(final Color color){
+    private boolean initColorButton(final Color color) {
         Button button = (Button) findViewById(color.getValue());
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +136,5 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     public void setPlayerTurn(boolean isPlayerTurn) {
         this.playerTurn = isPlayerTurn;
     }
-
 
 }

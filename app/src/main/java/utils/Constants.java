@@ -14,5 +14,8 @@ public class Constants {
     public static final int HARDER_MODE = 6;
     public static final int PLAYER_TURN = 0;
     public static final int CPU_TURN = 1;
+    public static final String STRING_EMPTY ="";
+    public static final String TURN_PLAYER = "Your turn";
+    public static final int SET_TURN_MSG = 20;
 
 }

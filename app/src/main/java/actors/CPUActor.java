@@ -9,7 +9,7 @@ import java.util.Random;
 import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
 import application.mApplication;
-import colors.Color;
+import colors.SColor;
 import messages.TimeToBlinkMsg;
 import messages.IMessage;
 import messages.StartGameVsCPUMsg;
@@ -22,7 +22,7 @@ import utils.Utilities;
 
 public class CPUActor extends UntypedActor {
     private int nColors = 0;
-    private List<Color> currentSequence;
+    private List<SColor> currentSequence;
 
     @Override
     public void preStart() throws Exception {
@@ -48,7 +48,7 @@ public class CPUActor extends UntypedActor {
     }
 
     private void generateAndSendColor(ActorRef viewActor){
-        this.currentSequence.add(Color.values()[new Random().nextInt(nColors)]);
+        this.currentSequence.add(SColor.values()[new Random().nextInt(nColors)]);
         Log.d("##CPU ACTOR", "Generated new color in sequence, now sequence is" + this.currentSequence.toString());
         viewActor.tell(new TimeToBlinkMsg(this.currentSequence),getSelf());
     }

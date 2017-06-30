@@ -6,11 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
-import colors.Color;
+import application.mApplication;
+import colors.SColor;
 import messages.TimeToBlinkMsg;
 import messages.IMessage;
 import messages.StartGameVsCPUMsg;
+import utils.Constants;
+import utils.Utilities;
 
 /**
  * @author Michele Sapignoli
@@ -18,7 +22,7 @@ import messages.StartGameVsCPUMsg;
 
 public class CPUActor extends UntypedActor {
     private int nColors = 0;
-    private List<Color> currentSequence;
+    private List<SColor> currentSequence;
 
     @Override
     public void preStart() throws Exception {
@@ -35,18 +39,18 @@ public class CPUActor extends UntypedActor {
                  */
                 this.nColors = ((StartGameVsCPUMsg)message).getnColors();
                 Log.d("##CPU ACTOR", "Received StartGameVsCpuMSG, " + this.nColors +" colors.");
-                this.generateAndSendColor();
+                this.generateAndSendColor(Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem()));
                 break;
             case GIMME_NEW_COLOR_MSG:
-                this.generateAndSendColor();
+                this.generateAndSendColor(getSender());
                 break;
         }
     }
 
-    private void generateAndSendColor(){
-        this.currentSequence.add(Color.values()[new Random().nextInt(nColors)]);
+    private void generateAndSendColor(ActorRef viewActor){
+        this.currentSequence.add(SColor.values()[new Random().nextInt(nColors)]);
         Log.d("##CPU ACTOR", "Generated new color in sequence, now sequence is" + this.currentSequence.toString());
-        getSender().tell(new TimeToBlinkMsg(this.currentSequence),getSelf());
+        viewActor.tell(new TimeToBlinkMsg(this.currentSequence),getSelf());
     }
 
 }

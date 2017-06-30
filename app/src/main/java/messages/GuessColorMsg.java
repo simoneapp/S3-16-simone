@@ -1,15 +1,15 @@
 package messages;
 
-import colors.Color;
+import colors.SColor;
 
 /**
  * Created by sapi9 on 23/06/2017.
  */
 
 public class GuessColorMsg implements IMessage {
-    private Color guessColor;
+    private SColor guessColor;
 
-    public GuessColorMsg(Color color){
+    public GuessColorMsg(SColor color){
         this.guessColor = color;
     }
 
@@ -18,7 +18,7 @@ public class GuessColorMsg implements IMessage {
         return MessageType.GUESS_COLOR_MSG;
     }
 
-    public Color getGuessColor(){
+    public SColor getGuessColor(){
         return this.guessColor;
     }
 }

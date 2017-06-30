@@ -8,6 +8,8 @@ import utils.Constants;
 public class StartGameVsCPUMsg implements IMessage {
 	private int radiobtnIndex = 0;
 
+	public StartGameVsCPUMsg(){}
+
 	public StartGameVsCPUMsg(int radiobtnIndex){
 		this.radiobtnIndex = radiobtnIndex;
 	}

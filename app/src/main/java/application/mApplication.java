@@ -4,7 +4,6 @@ import android.app.Application;
 
 import actors.CPUActor;
 import actors.GameViewActor;
-import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import utils.Constants;

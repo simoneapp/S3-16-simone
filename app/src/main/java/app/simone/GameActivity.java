@@ -34,12 +34,12 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     private Handler outerHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.arg1 == Constants.GAME_OVER) {
-                UserMatchController controller=new UserMatchControllerImpl(realm);
-                controller.insertMatch("Michele Sapignoli",msg.what);
-                Log.d("REALM","score received: "+new UserDataAccessControllerImpl(realm).getMatches("Michele Sapignoli").first().toString());
-
-            }
+//            if (msg.arg1 == Constants.GAME_OVER) {
+//                UserMatchController controller=new UserMatchControllerImpl(realm);
+//                controller.insertMatch("Michele Sapignoli",msg.what);
+//                Log.d("REALM","score received: "+new UserDataAccessControllerImpl(realm).getMatches("Michele Sapignoli").first().toString());
+//
+//            }
             Button b = (Button) findViewById(msg.what);
             b.setAlpha(0.4f);
             Message m = new Message();

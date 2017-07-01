@@ -20,7 +20,7 @@ import org.json.JSONObject
  * Created by nicola on 21/06/2017.
  */
 
-class FacebookManager() : IFacebookManager {
+class FacebookManager : IFacebookManager {
 
     val FRIENDS_PATH = "/me/friends"
     val SCORE_PATH = "/scores"

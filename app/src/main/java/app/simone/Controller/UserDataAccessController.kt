@@ -11,15 +11,17 @@ import java.util.*
  */
 interface UserDataAccessController {
     val FIELD_SCORE: String
-    fun getMatches(playerName:String): RealmList<Match>
+    fun getMatches(playerName: String): RealmList<Match>
 
     fun getMatchesSortedByScore(playerName: String): RealmResults<Match>? {
-        return getMatches(playerName).sort(FIELD_SCORE,Sort.DESCENDING)
+        return getMatches(playerName).sort(FIELD_SCORE, Sort.DESCENDING)
     }
-    fun getDate(matchList:RealmList<Match>,match: Match): Date
-    fun deleteMatches(playerName: String)
-    fun deleteMatch(playerName: String,match: Match){
-        getMatches(playerName).deleteAllFromRealm()
+
+    fun getDate(match: Match): Date{
+        return match.gameDate
     }
+
+
+
 
 }

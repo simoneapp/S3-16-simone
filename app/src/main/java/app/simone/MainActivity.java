@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import app.simone.DataModel.Player;
 import app.simone.users.FacebookLoginActivity;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 /**
  * @author Michele Sapignoli
@@ -13,16 +17,17 @@ import app.simone.users.FacebookLoginActivity;
 public class MainActivity extends FullscreenActivity {
 
     private Button VSCpuButton;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
+        VSCpuButton = (Button) findViewById(R.id.button_vs_cpu);
 
 
         //Listener on vs CPUActor button
-        VSCpuButton.setOnClickListener(new View.OnClickListener(){
+        VSCpuButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -51,14 +56,36 @@ public class MainActivity extends FullscreenActivity {
         mContentView = findViewById(R.id.main_fullscreen_content);
         mVisible = true;
     }
-    public void playVsCpu(View view){
-        Intent intent=new Intent(this,LoginActivity.class);
+
+    public void playVsCpu(View view) {
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().name("DBPlayers.realm").deleteRealmIfMigrationNeeded().schemaVersion(5).build();
+        Realm.setDefaultConfiguration(config);
+        realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+
+            @Override
+            public void execute(Realm realm) {
+             RealmResults<Player> res= realm.where(Player.class).equalTo("name","Michele Sapignoli").findAll();
+                if(!res.isEmpty()){
+                   res.deleteAllFromRealm();
+                }
+                Player player = realm.createObject(Player.class,"Michele Sapignoli");
+            }
+        });
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
     public void openMultiplayer(View view) {
         Intent intent = new Intent(this, FacebookLoginActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
 }

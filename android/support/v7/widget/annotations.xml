@@ -1,0 +1,6 @@
+<root>
+    <item
+        name='android.support.v7.widget.RecyclerView android.support.v7.widget.RecyclerView.LayoutManager getLayoutManager()'>
+        <annotation name='android.support.annotation.NonNull' />
+    </item>
+</root>

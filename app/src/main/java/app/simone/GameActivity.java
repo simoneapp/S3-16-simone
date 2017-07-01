@@ -4,12 +4,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import akka.actor.ActorRef;
+import app.simone.Controller.ControllerImplementations.UserDataAccessControllerImpl;
+import app.simone.Controller.ControllerImplementations.UserMatchControllerImpl;
+import app.simone.Controller.UserMatchController;
 import application.mApplication;
 import colors.Color;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import messages.AttachViewMsg;
 import messages.GuessColorMsg;
 import messages.NextColorMsg;
@@ -22,11 +28,18 @@ import utils.Utilities;
 
 public class GameActivity extends FullscreenActivity implements IGameActivity {
     private boolean playerTurn;
+    private Realm realm;
 
 
     private Handler outerHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            if (msg.arg1 == Constants.GAME_OVER) {
+                UserMatchController controller=new UserMatchControllerImpl(realm);
+                controller.insertMatch("Michele Sapignoli",msg.what);
+                Log.d("REALM","score received: "+new UserDataAccessControllerImpl(realm).getMatches("Michele Sapignoli").first().toString());
+
+            }
             Button b = (Button) findViewById(msg.what);
             b.setAlpha(0.4f);
             Message m = new Message();
@@ -35,6 +48,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             viewHandler.sendMessageDelayed(m, 300);
         }
     };
+
 
     private Handler viewHandler = new Handler() {
         @Override
@@ -58,7 +72,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        initRealm();
         int radiobtnIndex = 0;
 
         if (savedInstanceState != null) {
@@ -79,12 +93,18 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
+    @Override
     protected void setSubclassContentView() {
         setContentView(R.layout.activity_game);
         mContentView = findViewById(R.id.game_fullscreen_content);
     }
 
-    private boolean initButton(final Color color){
+    private boolean initButton(final Color color) {
         Button button = (Button) findViewById(color.getValue());
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +118,13 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             }
         });
         return true;
+    }
+
+    private void initRealm() {
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().name("DBPlayers.realm").deleteRealmIfMigrationNeeded().schemaVersion(5).build();
+        Realm.setDefaultConfiguration(config);
+        realm=Realm.getDefaultInstance();
     }
 
     public Handler getOuterHandler() {

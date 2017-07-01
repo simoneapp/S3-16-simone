@@ -8,5 +8,5 @@ import app.simone.users.model.FacebookFriend
 interface IFacebookManager {
     fun updateScore(score: Int, completion: (success: Boolean, error: String?) -> Unit)
     fun getMyScore(completion: (success: Boolean, score: Int, error: String?) -> Unit)
-    fun getFriendScore(user: FacebookFriend?, completion: (success: Boolean, score: Int, error: String?) -> Unit)
+    fun getFriendScore(user: FacebookFriend?, completion: (success: Boolean, score: Int, error: String?) -> Unit) //get freind score
 }

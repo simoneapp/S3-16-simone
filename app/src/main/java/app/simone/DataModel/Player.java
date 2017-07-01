@@ -14,7 +14,7 @@ public  class Player extends RealmObject {
 
     @PrimaryKey
     private String name = "";
-    private RealmList<Match> matches = null;
+    private RealmList<Match> matches = new RealmList<>();
 
     public RealmList<Match> getMatches() {
         return matches;

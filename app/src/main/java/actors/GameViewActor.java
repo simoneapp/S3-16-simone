@@ -10,6 +10,7 @@ import app.simone.IGameActivity;
 import akka.actor.UntypedActor;
 import application.mApplication;
 import colors.Color;
+import io.realm.Realm;
 import messages.AttachViewMsg;
 import messages.TimeToBlinkMsg;
 import messages.GimmeNewColorMsg;
@@ -25,12 +26,14 @@ import utils.Utilities;
  * @author Michele Sapignoli
  */
 
-public class GameViewActor extends UntypedActor{
+public class GameViewActor extends UntypedActor {
     private IGameActivity gameActivity;
     private List<Color> cpuSequence;
     private List<Color> playerSequence;
     private int cpuColorIndex;
     private int playerColorIndex;
+    private int currentScore = 0;
+
     @Override
     public void preStart() throws Exception {
         super.preStart();
@@ -41,20 +44,20 @@ public class GameViewActor extends UntypedActor{
     public void onReceive(Object message) throws Exception {
         switch (((IMessage) message).getType()) {
             case ATTACH_VIEW_MSG:
-                this.gameActivity = ((AttachViewMsg)message).getIActivity();
+                this.gameActivity = ((AttachViewMsg) message).getIActivity();
 
                 Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
-                        .tell(new StartGameVsCPUMsg(((AttachViewMsg)message).getRadiobtnIndex()), getSelf());
+                        .tell(new StartGameVsCPUMsg(((AttachViewMsg) message).getRadiobtnIndex()), getSelf());
                 Log.d("##VIEW ACTOR", "Current GameActivity registered + StartGameVSCPUMsg sent to CPUActor ACTOR");
                 break;
             case TIME_TO_BLINK_MSG:
                 this.cpuColorIndex = 0;
-                cpuSequence = ((TimeToBlinkMsg)message).getSequence();
+                cpuSequence = ((TimeToBlinkMsg) message).getSequence();
                 Log.d("##VIEW ACTOR", "CPU Turn, colors to blink:" + cpuSequence.toString());
                 getSelf().tell(new NextColorMsg(), getSelf());
                 break;
             case NEXT_COLOR_MSG:
-                if(this.isPlayerTurn()){
+                if (this.isPlayerTurn()) {
                     getSelf().tell(new PlayerTurnMsg(), getSelf());
                 } else {
                     this.blink(cpuSequence.get(cpuColorIndex));
@@ -67,34 +70,44 @@ public class GameViewActor extends UntypedActor{
                 this.gameActivity.setPlayerTurn(true);
                 break;
             case GUESS_COLOR_MSG:
-                Color color = ((GuessColorMsg)message).getGuessColor();
-                Log.d("##VIEW ACTOR", "Player inserted :" +color);
+                Color color = ((GuessColorMsg) message).getGuessColor();
+                Log.d("##VIEW ACTOR", "Player inserted :" + color);
                 playerSequence.add(color);
                 //TODO correct check
-                if(playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))){
-                    if(playerSequence.size() == cpuSequence.size()){
+                if (playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))) {
+                    if (playerSequence.size() == cpuSequence.size()) {
                         gameActivity.setPlayerTurn(false);
                         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
                                 .tell(new GimmeNewColorMsg(), getSelf());
                         this.playerSequence.clear();
+                        currentScore++;
+
                     }
 
                 } else {
                     Log.d("##VIEW ACTOR", "Hai perso per dindirindina");
+                    gameOver(currentScore);
                 }
                 break;
         }
     }
 
-    private void blink(Color color){
+    private void blink(Color color) {
         Message m = new Message();
-        m.what =  color.getValue();
+        m.what = color.getValue();
         m.arg1 = Constants.CPU_TURN;
         this.gameActivity.getOuterHandler().sendMessageDelayed(m, 500);
     }
 
-    private boolean isPlayerTurn(){
+    private boolean isPlayerTurn() {
         return cpuColorIndex == cpuSequence.size();
+    }
+
+    private void gameOver(int currentScore) {
+        Message m = new Message();
+        m.what = currentScore;
+        m.arg1 = Constants.GAME_OVER;
+        this.gameActivity.getOuterHandler().sendMessage(m);
     }
 
 }

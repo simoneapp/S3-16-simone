@@ -51,6 +51,7 @@
         <activity
             android:name=".GameActivity"
             android:label="Game"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <meta-data
             android:name="io.fabric.ApiKey"

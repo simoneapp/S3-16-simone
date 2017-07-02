@@ -13,5 +13,6 @@ public enum MessageType {
     NEXT_COLOR_MSG,
     GUESS_COLOR_MSG,
     PLAYER_TURN_MSG,
-    GIMME_NEW_COLOR_MSG
+    GIMME_NEW_COLOR_MSG,
+    PAUSE_MSG
 }

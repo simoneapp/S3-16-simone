@@ -66,6 +66,7 @@ public class MainActivity extends FullscreenActivity {
     public void playVsCpu(View view){
         Intent intent=new Intent(this,LoginActivity.class);
         startActivity(intent);
+
     }
 
     public void openMultiplayer(View view) {

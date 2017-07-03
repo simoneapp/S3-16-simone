@@ -11,7 +11,11 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 
+import org.json.JSONObject;
+
 import java.util.Arrays;
+
+import scala.util.parsing.combinator.testing.Str;
 
 /**
  * Created by Giacomo on 29/06/2017.
@@ -58,7 +62,7 @@ public class PubnubController {
         * */
 
         pubnub.publish()
-                .message(Arrays.asList(msg))
+                .message(msg)
                 .channel(this.channel)
                 .shouldStore(true)
                 .usePOST(true)
@@ -83,5 +87,8 @@ public class PubnubController {
 
     public PubNub getPubnub(){return this.pubnub;}
 
+    public void setListener(){
+
+    }
 
 }

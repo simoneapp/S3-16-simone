@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.pubnub.api.PubNub;
@@ -15,23 +16,28 @@ import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 
 import PubNub.PubnubController;
 
-public class PubnubActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     private Button subscribeButton;
     private Button publishButton;
     private Button unscribeButton;
+    private Button saveButton;
     private TextView msgView;
     private PubnubController myPub;
+    private EditText editText;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pubnub);
+        setContentView(R.layout.activity_settings);
 
         subscribeButton = (Button)findViewById(R.id.sButton);
         publishButton = (Button)findViewById(R.id.pButton);
         unscribeButton = (Button)findViewById(R.id.unButton);
         msgView = (TextView) findViewById(R.id.label);
+        editText = (EditText)findViewById(R.id.username);
+        saveButton = (Button) findViewById(R.id.saveButton);
 
         myPub = new PubnubController("myChannel");
 
@@ -78,7 +84,7 @@ public class PubnubActivity extends AppCompatActivity {
             public void onClick(View view) {
                 System.out.println("publish");
                 Toast.makeText(getApplicationContext(), "Msg 'ciao' published on channel", Toast.LENGTH_SHORT).show();
-                myPub.publishToChannel("ciao Sapi");
+                //myPub.publishToChannel("ciao Sapi");
             }
         });
 
@@ -88,6 +94,15 @@ public class PubnubActivity extends AppCompatActivity {
             public void onClick(View view) {
                 System.out.println("unscribed from channel");
                 myPub.unscribe();
+            }
+        });
+
+        saveButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                System.out.println("editText saved");
+                username=String.valueOf(editText.getText());
             }
         });
     }

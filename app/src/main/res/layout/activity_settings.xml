@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="app.simone.PubnubActivity">
+    tools:context="app.simone.SettingsActivity">
 
     <LinearLayout
-        android:layout_width="368dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="8dp"
@@ -39,6 +39,27 @@
             android:text="Unscribe"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="296dp" />
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Insert your @string/mr_user_route_category_name"
+            android:inputType="textPersonName"
+            android:text="myusername"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="327dp" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Save"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="260dp" />
 
         <TextView
             android:id="@+id/label"

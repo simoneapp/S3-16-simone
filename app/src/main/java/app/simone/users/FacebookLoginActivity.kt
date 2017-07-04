@@ -16,7 +16,6 @@ import com.pubnub.api.models.consumer.PNStatus
 import PubNub.OnlinePlayer
 import android.preference.PreferenceManager
 import PubNub.CustomAdapter
-import android.util.Log
 import android.widget.*
 import com.google.gson.JsonObject
 
@@ -35,7 +34,6 @@ class FacebookLoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Pubnub handler
         pubnubController.subscribeToChannel()
         this.addPubnubListener(pubnubController.pubnub)
 
@@ -66,10 +64,6 @@ class FacebookLoginActivity : AppCompatActivity() {
                 success, score, error ->
 
                 if(success) {
-                   // Toast.makeText(this, "Score: " + score, Toast.LENGTH_SHORT).show()
-
-                    //pubnubController.publishToChannel("");
-                    //Toast.makeText(this,"Ricevuta richiesta da Ciccio", Toast.LENGTH_SHORT).show()
                     enablePlayButton(friend!!)
                 } else {
                     Toast.makeText(this, "Error: cannot fetch user's score.", Toast.LENGTH_SHORT).show()
@@ -98,14 +92,12 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     fun setMyUsername(){
         player = OnlinePlayer(Profile.getCurrentProfile().id.toString(),Profile.getCurrentProfile().firstName.toString(),Profile.getCurrentProfile().lastName.toString())
-        println("MY ID is: "+ Profile.getCurrentProfile().id.toString())
     }
 
     fun enablePlayButton(friend: FacebookFriend){
         val btnPlay = this.findViewById(R.id.playButton) as Button
         btnPlay.isEnabled = true
         btnPlay.setOnClickListener({
-            println("starting game..")
             val activityIntent = Intent(baseContext, GameActivity::class.java)
             activityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             println("ME: "+Profile.getCurrentProfile().firstName.toString()+" "+Profile.getCurrentProfile().lastName.toString())
@@ -124,21 +116,14 @@ class FacebookLoginActivity : AppCompatActivity() {
 
         obj.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, status: PNStatus) {
-
             }
 
             override fun message(pubnub: PubNub, message: PNMessageResult) {
                 if (message.channel != null) {
                     val msg = message.message
-                    //var firstname: String by msg.byString("firstname")
-                    //var firstname: String = "${msg.get("firstname")}"
-                    Log.d("GIAK", "MESSAGGIO RICEVUTO")
-
                     runOnUiThread {
-                        //msgView.setText(msg)
                         if(msg.asJsonObject.get("from").asString !=Profile.getCurrentProfile().id.toString() )
                         //saveRequestId(msg.asJsonObject)
-                        //Toast.makeText(applicationContext, "RICHIESTA RICEVUTA DA: "+msg.asJsonObject.get("to").asString, Toast.LENGTH_SHORT).show()
                         updateListViewRequests(msg.asJsonObject)
 
                     }
@@ -171,26 +156,18 @@ class FacebookLoginActivity : AppCompatActivity() {
     }
 
     fun updateListViewRequests(obj: JsonObject){
-
         //if(getPendingRequests()!="") {
 
             var myTextView = this.findViewById(R.id.textView3) as TextView
             myTextView.text = "Richieste in sospeso:"
-
             listViewRequests = this.findViewById(R.id.listView_requests) as ListView
-
             var dataModels = java.util.ArrayList<OnlinePlayer>()
 
-           /* dataModels.add(OnlinePlayer("1", "Ciccio", "1"))
-            dataModels.add(OnlinePlayer("2", "Ciccio", "2"))
-            dataModels.add(OnlinePlayer("3", "Ciccio", "3")) */
+           /* dataModels.add(OnlinePlayer("1", "Ciccio", "1"))*/
 
             dataModels.add(OnlinePlayer("ID: "+obj.get("to").asString,obj.get("toName").asString,""))
-
             val adapter = CustomAdapter(dataModels, applicationContext)
-
             listViewRequests?.adapter = adapter
-
             listView?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
                 val dataModel = dataModels[position]
                 println("cliccato posizione " + dataModel.toString())

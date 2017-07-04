@@ -2,24 +2,14 @@ package PubNub;
 
 
 import android.util.Log;
-
 import com.google.gson.JsonObject;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
-import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.enums.PNStatusCategory;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Arrays;
-
-import scala.util.parsing.combinator.testing.Str;
 
 import static com.github.salomonbrys.kotson.ElementKt.toMap;
 
@@ -55,9 +45,6 @@ public class PubnubController {
         pubnub.subscribe()
                 .channels(Arrays.asList(this.channel)) // subscribe to channels
                 .execute();
-
-        Log.d("GIAK","ISCRITTO AL CANALE");
-
     }
 
 
@@ -91,31 +78,11 @@ public class PubnubController {
                         // status.isError to see if error happened
                         if(!status.isError()) {
                             System.out.println("pub timetoken: " + result.getTimetoken());
-                            Log.d("GIAK","MESSAGGIO PUBBLICATO");
                         }
                         System.out.println("pub status code: " + status.getStatusCode());
-                        Log.d("GIAK","ERRORE!");
                     }
                 });
-
-/*        pubnub.publish()
-                .message(request)
-                .channel(this.channel)
-                .shouldStore(true)
-                .usePOST(true)
-                .async(new PNCallback<PNPublishResult>() {
-                    @Override
-                    public void onResponse(PNPublishResult result, PNStatus status) {
-                        if (status.isError()) {
-                            // something bad happened.
-                            System.out.println("error happened while publishing: " + status.toString());
-                        } else {
-                            System.out.println("publish worked! timetoken: " + result.getTimetoken());
-                        }
-                    }
-                });*/
     }
-
 
 
     public void unscribe(){
@@ -125,9 +92,5 @@ public class PubnubController {
     }
 
     public PubNub getPubnub(){return this.pubnub;}
-
-    public void setListener(){
-
-    }
 
 }

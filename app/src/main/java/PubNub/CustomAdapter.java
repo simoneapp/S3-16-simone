@@ -2,7 +2,6 @@ package PubNub;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import java.util.ArrayList;
-
 import app.simone.GameActivity;
-import app.simone.LoginActivity;
 import app.simone.R;
-import app.simone.VSCpuActivity;
 import com.facebook.Profile;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;

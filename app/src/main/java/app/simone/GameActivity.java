@@ -8,30 +8,21 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import PubNub.OnlinePlayer;
 import PubNub.Request;
-import java.util.Map;
 import java.util.Random;
-
 import PubNub.PubnubController;
 import akka.actor.ActorRef;
 import app.simone.styleable.SimoneTextView;
@@ -149,28 +140,14 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             pnController = new PubnubController("multiplayer");
             pnController.subscribeToChannel();
 
-
-
-            //JSONObject data = new JSONObject();
-
-/*            try {
-                data.put("id", getIntent().getExtras().getString("id"));
-                data.put("firstname", getIntent().getExtras().getString("firstname"));
-                data.put("surname", getIntent().getExtras().getString("surname"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
-
             OnlinePlayer player = (OnlinePlayer) getIntent().getExtras().getSerializable("player");
             OnlinePlayer toPlayer = (OnlinePlayer) getIntent().getExtras().getSerializable("toPlayer");
             Request req = new Request(player,toPlayer);
-
-            //pnController.publishToChannel(data);
             try {
                 pnController.publishToChannel(req);
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.d("GIAK","Erroe nel pubblicare");
+                Log.d("GameActivity","Error while publishing the message on the channel");
             }
         }
 

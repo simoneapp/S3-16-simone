@@ -1,10 +1,12 @@
 package PubNub;
 
+import java.io.Serializable;
+
 /**
  * Created by Giacomo on 01/07/2017.
  */
 
-public class OnlinePlayer {
+public class OnlinePlayer implements Serializable {
 
     private String id;
     private String name;
@@ -26,5 +28,17 @@ public class OnlinePlayer {
 
     public String getSurname() {
         return surname;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 }

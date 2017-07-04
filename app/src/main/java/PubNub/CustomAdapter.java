@@ -1,25 +1,23 @@
 package PubNub;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 
+import app.simone.GameActivity;
+import app.simone.LoginActivity;
 import app.simone.R;
+import app.simone.VSCpuActivity;
+import com.facebook.Profile;
 
-import static android.R.attr.resource;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by Giacomo on 03/07/2017.
@@ -40,7 +38,6 @@ public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.On
     private static class ViewHolder {
         TextView txtName;
         TextView txtType;
-        TextView txtVersion;
         Button info;
     }
 
@@ -56,8 +53,13 @@ public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.On
 
             case R.id.item_info:
 
-                Snackbar.make(v, "Release date " +dataModel.getId(), Snackbar.LENGTH_LONG)
-                        .setAction("No action", null).show();
+                Intent intent = new Intent(mContext,GameActivity.class);
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("id",Profile.getCurrentProfile().getId().toString());
+                intent.putExtra("firstname",Profile.getCurrentProfile().getFirstName().toString());
+                intent.putExtra("surname",Profile.getCurrentProfile().getLastName().toString());
+
+                mContext.startActivity(intent);
                 break;
         }
     }

@@ -16,7 +16,9 @@ import com.pubnub.api.models.consumer.PNStatus
 import PubNub.OnlinePlayer
 import android.preference.PreferenceManager
 import PubNub.CustomAdapter
+import android.util.Log
 import android.widget.*
+import com.google.gson.JsonObject
 
 
 class FacebookLoginActivity : AppCompatActivity() {
@@ -28,7 +30,7 @@ class FacebookLoginActivity : AppCompatActivity() {
     var friends = ArrayList<FacebookFriend>()
     var adapter : FacebookFriendsAdapter? = null
     var pubnubController = PubnubController("multiplayer")
-    var myId : String = ""
+    var player: OnlinePlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +70,7 @@ class FacebookLoginActivity : AppCompatActivity() {
 
                     //pubnubController.publishToChannel("");
                     //Toast.makeText(this,"Ricevuta richiesta da Ciccio", Toast.LENGTH_SHORT).show()
-                    enablePlayButton()
+                    enablePlayButton(friend!!)
                 } else {
                     Toast.makeText(this, "Error: cannot fetch user's score.", Toast.LENGTH_SHORT).show()
                 }
@@ -95,11 +97,11 @@ class FacebookLoginActivity : AppCompatActivity() {
     }
 
     fun setMyUsername(){
-        myId=Profile.getCurrentProfile().id.toString()
-        println("MY ID is: "+myId)
+        player = OnlinePlayer(Profile.getCurrentProfile().id.toString(),Profile.getCurrentProfile().firstName.toString(),Profile.getCurrentProfile().lastName.toString())
+        println("MY ID is: "+ Profile.getCurrentProfile().id.toString())
     }
 
-    fun enablePlayButton(){
+    fun enablePlayButton(friend: FacebookFriend){
         val btnPlay = this.findViewById(R.id.playButton) as Button
         btnPlay.isEnabled = true
         btnPlay.setOnClickListener({
@@ -107,12 +109,15 @@ class FacebookLoginActivity : AppCompatActivity() {
             val activityIntent = Intent(baseContext, GameActivity::class.java)
             activityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             println("ME: "+Profile.getCurrentProfile().firstName.toString()+" "+Profile.getCurrentProfile().lastName.toString())
-            activityIntent.putExtra("id",myId)
-            activityIntent.putExtra("firstname",Profile.getCurrentProfile().firstName.toString())
-            activityIntent.putExtra("surname",Profile.getCurrentProfile().lastName.toString())
+            activityIntent.putExtra("player", player)
+            activityIntent.putExtra("toPlayer", fromFriendToPlayer(friend))
             baseContext.startActivity(activityIntent)
 
         })
+    }
+
+    fun fromFriendToPlayer(friend: FacebookFriend):OnlinePlayer{
+        return OnlinePlayer(friend.friendId,friend.name,"")
     }
 
     fun addPubnubListener(obj: PubNub){
@@ -127,14 +132,14 @@ class FacebookLoginActivity : AppCompatActivity() {
                     val msg = message.message
                     //var firstname: String by msg.byString("firstname")
                     //var firstname: String = "${msg.get("firstname")}"
+                    Log.d("GIAK", "MESSAGGIO RICEVUTO")
 
-                    System.out.println(msg)
                     runOnUiThread {
                         //msgView.setText(msg)
-                        if(msg.asString !=Profile.getCurrentProfile().id.toString() )
-                        saveRequestId(msg.asString)
-                        //Toast.makeText(applicationContext, "RICHIESTA RICEVUTA DA: "+msg.asString, Toast.LENGTH_SHORT).show()
-                        updateListViewRequests()
+                        if(msg.asJsonObject.get("from").asString !=Profile.getCurrentProfile().id.toString() )
+                        //saveRequestId(msg.asJsonObject)
+                        //Toast.makeText(applicationContext, "RICHIESTA RICEVUTA DA: "+msg.asJsonObject.get("to").asString, Toast.LENGTH_SHORT).show()
+                        updateListViewRequests(msg.asJsonObject)
 
                     }
                 }
@@ -147,10 +152,10 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     }
 
-    fun saveRequestId(id: String){
+    fun saveRequestId(obj: JsonObject){
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = preferences.edit()
-        editor.putString("id", id)
+        editor.putString("id", "")
         editor.apply()
     }
 
@@ -165,9 +170,9 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     }
 
-    fun updateListViewRequests(){
+    fun updateListViewRequests(obj: JsonObject){
 
-        if(getPendingRequests()!="") {
+        //if(getPendingRequests()!="") {
 
             var myTextView = this.findViewById(R.id.textView3) as TextView
             myTextView.text = "Richieste in sospeso:"
@@ -180,7 +185,7 @@ class FacebookLoginActivity : AppCompatActivity() {
             dataModels.add(OnlinePlayer("2", "Ciccio", "2"))
             dataModels.add(OnlinePlayer("3", "Ciccio", "3")) */
 
-            dataModels.add(OnlinePlayer("ID: "+getPendingRequests(),"Ciccio","1"))
+            dataModels.add(OnlinePlayer("ID: "+obj.get("to").asString,obj.get("toName").asString,""))
 
             val adapter = CustomAdapter(dataModels, applicationContext)
 
@@ -190,7 +195,7 @@ class FacebookLoginActivity : AppCompatActivity() {
                 val dataModel = dataModels[position]
                 println("cliccato posizione " + dataModel.toString())
             }
-        }
+        //}
 
     }
 

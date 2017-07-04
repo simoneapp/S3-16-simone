@@ -1,5 +1,6 @@
 package app.simone;
 
+import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,20 +8,27 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.pubnub.api.PubNub;
+import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import PubNub.OnlinePlayer;
-
+import PubNub.Request;
 import java.util.Map;
 import java.util.Random;
 
@@ -80,7 +88,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                     gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#990000")));
                     simoneTextView.startAnimation(animation);
                     if(isMultiplayerMode){
-
+                        addScoreListener();
                         String score = Integer.toString(getScore(INIT_SEED));
 
                         //JSONObject data = new JSONObject();
@@ -91,7 +99,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                             e.printStackTrace();
                         }
                         pnController.publishToChannel(data);*/
-                      pnController.publishToChannel(score);
+                      //pnController.publishToChannel(score);
                     }
                     break;
             }
@@ -136,10 +144,11 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getIntent().getExtras().getString("id")!=null){
+        if(getIntent().getExtras().get("player")!=null){
             isMultiplayerMode=true;
             pnController = new PubnubController("multiplayer");
             pnController.subscribeToChannel();
+
 
 
             //JSONObject data = new JSONObject();
@@ -152,10 +161,17 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                 e.printStackTrace();
             }*/
 
-            String id = getIntent().getExtras().getString("id");
+            OnlinePlayer player = (OnlinePlayer) getIntent().getExtras().getSerializable("player");
+            OnlinePlayer toPlayer = (OnlinePlayer) getIntent().getExtras().getSerializable("toPlayer");
+            Request req = new Request(player,toPlayer);
 
             //pnController.publishToChannel(data);
-            pnController.publishToChannel(id);
+            try {
+                pnController.publishToChannel(req);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d("GIAK","Erroe nel pubblicare");
+            }
         }
 
         int radiobtnIndex = 0;
@@ -229,6 +245,45 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
     public void setPlayerTurn(boolean isPlayerTurn) {
         this.playerTurn = isPlayerTurn;
+    }
+
+    private void addScoreListener(){
+        pnController.getPubnub().addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+                if (message.getMessage() != null) {
+                    final PNMessageResult msg = message;
+                    System.out.println(message.getMessage().toString());
+
+                    printScore(GameActivity.this,message);
+
+
+                }
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+
+            }
+        });
+    }
+
+    private void printScore(final Activity parent, PNMessageResult message){
+        if (message.getMessage() != null) {
+            final PNMessageResult msg = message;
+            System.out.println(message.getMessage().toString());
+
+            parent.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(parent.getBaseContext(), "Your score is: "+msg.getMessage().toString(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
 }

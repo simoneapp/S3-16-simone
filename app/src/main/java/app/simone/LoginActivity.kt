@@ -7,11 +7,9 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 
-import app.simone.Controller.UserMatchController
-import app.simone.Controller.ControllerImplementations.UserMatchControllerImpl
 import app.simone.Controller.ControllerImplementations.ResultNotFoundException
-import app.simone.Controller.ControllerImplementations.UserDataAccessControllerImpl
-import app.simone.Controller.UserDataAccessController
+import app.simone.Controller.ControllerImplementations.UserDataControllerImpl
+import app.simone.Controller.UserDataController
 import app.simone.DataModel.Player
 
 import io.realm.Realm
@@ -20,7 +18,7 @@ import io.realm.RealmConfiguration
 
 class LoginActivity : AppCompatActivity() {
     private var realm: Realm? = null
-    private var controller: UserMatchController? = null
+    private var controller: UserDataController? = null
     private var editText: EditText? = null
     private var playerName: String? = null
     val PLAYER_NAME = "player_name"
@@ -32,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
         val config = RealmConfiguration.Builder().name("DBPlayers.realm").deleteRealmIfMigrationNeeded().schemaVersion(5).build()
         Realm.setDefaultConfiguration(config)
         realm = Realm.getDefaultInstance()
-        controller = UserMatchControllerImpl(realm!!)
+        controller = UserDataControllerImpl(realm!!)
         editText = findViewById(R.id.editText) as EditText
 
     }
@@ -48,10 +46,10 @@ class LoginActivity : AppCompatActivity() {
             }
 
         }
-        controller !!. insertMatch (playerName!!,10) //di prova!!
+        controller !!. insertMatch (10) //di prova!!
         val textView = findViewById(R.id.loginTextView) as TextView
-        val size=UserDataAccessControllerImpl(realm!!).getMatches(playerName!!).size.toString()
-        val score=UserDataAccessControllerImpl(realm!!).getMatches(playerName!!).first().score.toString()
+        val size= UserDataControllerImpl(realm!!).getMatches().size.toString()
+        val score= UserDataControllerImpl(realm!!).getMatches().first().score.toString()
         textView.text = "$playerName , $size with score: $score"
 
     }

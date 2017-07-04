@@ -10,7 +10,6 @@ import akka.actor.ActorRef;
 
 public interface IGameActivity {
 
-    Handler getOuterHandler();
-
+    Handler getHandler();
     void setPlayerTurn(boolean isPlayerTurn);
 }

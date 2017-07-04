@@ -2,14 +2,25 @@ package app.simone;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.SyncStateContract;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
+
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 
 import app.simone.DataModel.Player;
 import app.simone.users.FacebookLoginActivity;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import utils.Constants;
 
 /**
  * @author Michele Sapignoli
@@ -18,16 +29,18 @@ public class MainActivity extends FullscreenActivity {
 
     private Button VSCpuButton;
     private Realm realm;
+    final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
 
-        VSCpuButton = (Button) findViewById(R.id.button_vs_cpu);
+        VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
 
 
         //Listener on vs CPUActor button
-        VSCpuButton.setOnClickListener(new View.OnClickListener() {
+        VSCpuButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
@@ -35,10 +48,11 @@ public class MainActivity extends FullscreenActivity {
             }
         });
 
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        FloatingActionButton mainFab = (FloatingActionButton) findViewById(R.id.main_fab);
+        TextView simoneTextView = (TextView) findViewById(R.id.main_simone_textview);
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.pulse);
+        mainFab.startAnimation(animation);
+        simoneTextView.startAnimation(animation);
     }
 
     @Override
@@ -57,23 +71,9 @@ public class MainActivity extends FullscreenActivity {
         mVisible = true;
     }
 
-    public void playVsCpu(View view) {
-        Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder().name("DBPlayers.realm").deleteRealmIfMigrationNeeded().schemaVersion(5).build();
-        Realm.setDefaultConfiguration(config);
-        realm = Realm.getDefaultInstance();
-        realm.executeTransaction(new Realm.Transaction() {
+    public void highScoreShow(View view) {
 
-            @Override
-            public void execute(Realm realm) {
-             RealmResults<Player> res= realm.where(Player.class).equalTo("name","Michele Sapignoli").findAll();
-                if(!res.isEmpty()){
-                   res.deleteAllFromRealm();
-                }
-                Player player = realm.createObject(Player.class,"Michele Sapignoli");
-            }
-        });
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, DBShowcaseActivity.class);
         startActivity(intent);
     }
 

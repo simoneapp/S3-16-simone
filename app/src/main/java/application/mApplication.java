@@ -4,7 +4,6 @@ import android.app.Application;
 
 import actors.CPUActor;
 import actors.GameViewActor;
-import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import utils.Constants;
@@ -22,6 +21,7 @@ public class mApplication extends Application {
         system = ActorSystem.create("system");
         mApplication.getActorSystem().actorOf(Props.create(CPUActor.class), Constants.CPU_ACTOR_NAME);
         mApplication.getActorSystem().actorOf(Props.create(GameViewActor.class), Constants.GAMEVIEW_ACTOR_NAME);
+
 
     }
 

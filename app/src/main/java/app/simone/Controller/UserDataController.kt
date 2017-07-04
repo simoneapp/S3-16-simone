@@ -9,17 +9,18 @@ import java.util.*
 /**
  * Created by gzano on 26/06/2017.
  */
-interface UserDataAccessController {
+interface UserDataController {
     val FIELD_SCORE: String
-    fun getMatches(playerName: String): RealmList<Match>
+    fun getMatches(): RealmList<Match>
 
-    fun getMatchesSortedByScore(playerName: String): RealmResults<Match>? {
-        return getMatches(playerName).sort(FIELD_SCORE, Sort.DESCENDING)
+    fun getMatchesSortedByScore(): RealmResults<Match>? {
+        return getMatches().sort(FIELD_SCORE, Sort.DESCENDING)
     }
 
     fun getDate(match: Match): Date{
         return match.gameDate
     }
+    fun insertMatch(score:Int)
 
 
 

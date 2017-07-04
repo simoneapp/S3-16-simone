@@ -60,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/myBlue"
+                    android:background="@color/myYellow"
                     android:onClick="playVsCpu"
                     android:textColor="@color/myMainTextColor" />
 
@@ -69,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/myYellow"
+                    android:background="@color/myBlue"
                     android:textColor="@color/myMainTextColor" />
             </LinearLayout>
         </LinearLayout>

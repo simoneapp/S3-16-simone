@@ -23,10 +23,7 @@ public class VSCpuActivity extends FullscreenActivity {
         FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.vs_cpu_fab);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                RadioGroup radioButtonGroup = (RadioGroup) findViewById(R.id.vs_cpu_radiogroup);
-                int radioButtonID = radioButtonGroup.getCheckedRadioButtonId();
-                View radioButton = radioButtonGroup.findViewById(radioButtonID);
-                int idx = radioButtonGroup.indexOfChild(radioButton);
+                int idx = 0;
 
                 openActivity(GameActivity.class, Constants.RADIOBTN_INDEX_KEY, idx);
             }
@@ -37,6 +34,16 @@ public class VSCpuActivity extends FullscreenActivity {
     protected void setSubclassContentView() {
         setContentView(R.layout.activity_vs_cpu);
         mContentView = findViewById(R.id.vs_cpu_fullscreen_content);
+    }
+
+    @Override
+    protected void backTransition() {
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
+    protected void forwardTransition() {
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
 }

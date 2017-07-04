@@ -89,6 +89,16 @@ public class MainActivity extends FullscreenActivity implements GoogleApiClient.
         //delayedHide(100);
     }
 
+    @Override
+    protected void backTransition() {
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    @Override
+    protected void forwardTransition() {
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
     protected void setSubclassContentView() {
         setContentView(R.layout.activity_main);
         mContentView = findViewById(R.id.main_fullscreen_content);

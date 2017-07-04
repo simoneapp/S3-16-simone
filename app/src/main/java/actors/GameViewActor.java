@@ -52,6 +52,7 @@ public class GameViewActor extends UntypedActor {
                 break;
             case TIME_TO_BLINK_MSG:
                 this.cpuColorIndex = 0;
+                paused = false;
                 playerTurn = false;
                 cpuSequence = ((TimeToBlinkMsg) message).getSequence();
                 Log.d("##VIEW ACTOR", "CPU Turn, colors to blink:" + cpuSequence.toString());

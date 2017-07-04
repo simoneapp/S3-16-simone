@@ -167,13 +167,16 @@ public abstract class FullscreenActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        backTransition();
     }
 
     public void openActivity(Class activity, String extraName, int extra) {
         Intent intent = new Intent(this, activity);
         intent.putExtra(extraName, extra);
         startActivity(intent);
+        forwardTransition();
     }
 
+    protected abstract void backTransition();
+    protected abstract void forwardTransition();
 }

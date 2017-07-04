@@ -14,43 +14,34 @@
 
 
         <LinearLayout
+            android:id="@+id/vscpu_game_toplayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:weightSum="5">
+            android:weightSum="2">
 
             <LinearLayout
                 android:id="@+id/vs_cpu_top_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/myGreen"
-                android:layout_weight="2"
+                android:layout_weight="1"
+                android:orientation="vertical"
                 >
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/vs_cpu"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textColor="@color/myMainTextColor"
-                    android:textSize="60sp"
-                    />
 
             </LinearLayout>
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dip"
-                android:background="@drawable/layout_shadow" >
-            </View>
 
             <LinearLayout
+                android:id="@+id/vscpu_bottomlayout"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="3"
+                android:layout_weight="1"
                 android:gravity="center_horizontal|center_vertical"
+                android:background="@color/myYellow"
+                android:orientation="vertical"
                 >
+                <!--
                 <RadioGroup
                     android:id="@+id/vs_cpu_radiogroup"
                     android:layout_width="wrap_content"
@@ -73,19 +64,57 @@
                         android:textColor="@color/myDarkGreen"
                         android:textSize="32sp"
                         android:text="Harder"/>
-                </RadioGroup>
+                </RadioGroup>-->
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/vs_cpu_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         app:layout_anchor="@id/vs_cpu_top_layout"
-        app:layout_anchorGravity="bottom|right|end"
-        app:backgroundTint="@color/myDarkGreen"
+        app:layout_anchorGravity="bottom|center"
+        app:backgroundTint="@color/myLightGray"
         android:layout_marginEnd="20dp"
-        app:srcCompat="@android:drawable/ic_media_play" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <app.simone.styleable.MainTextView
+
+        android:layout_height="wrap_content"
+        android:id="@+id/game_textview_vscpu"
+        android:layout_width="wrap_content"
+        android:textSize="64sp"
+        android:text="@string/vs_cpu"
+        android:layout_marginStart="20sp"
+        android:layout_marginTop="30sp"
+        android:textColor="#FFF"
+        android:alpha="0.6"
+        app:layout_anchor="@id/vscpu_game_toplayout"
+        app:layout_anchorGravity="left"
+        />
+    <app.simone.styleable.MainTextView
+
+        android:layout_height="wrap_content"
+        android:id="@+id/game_textview_explain"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:text="Follow\nsimone's sequence"
+        android:layout_marginStart="20sp"
+        android:layout_marginTop="30sp"
+        android:textColor="#FFF"
+        android:alpha="0.8"
+        app:layout_anchor="@id/vscpu_bottomlayout"
+        app:layout_anchorGravity="start|center_vertical"
+        />
+    <app.simone.styleable.SimoneTextView
+        android:layout_height="wrap_content"
+        android:id="@+id/vscpu_simone_textview"
+        android:layout_width="wrap_content"
+        android:text="play"
+        android:elevation="6dp"
+        android:textSize="32sp"
+        android:textColor="@color/myDarkGray"
+        app:layout_anchor="@id/vs_cpu_top_layout"
+        app:layout_anchorGravity="bottom|center"/>
 
 </android.support.design.widget.CoordinatorLayout>

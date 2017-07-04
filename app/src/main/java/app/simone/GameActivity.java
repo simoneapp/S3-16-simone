@@ -235,4 +235,20 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                     .tell(new PauseMsg(false), ActorRef.noSender());
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
+    @Override
+    protected void backTransition() {
+        overridePendingTransition(R.anim.left_in, R.anim.right_out);
+    }
+
+    @Override
+    protected void forwardTransition() {
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
 }

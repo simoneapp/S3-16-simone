@@ -59,8 +59,8 @@ public class GameViewActor extends UntypedActor {
                 getSelf().tell(new NextColorMsg(), getSelf());
                 break;
             case NEXT_COLOR_MSG:
-                Log.d("##VIEW ACTOR",""+paused);
-                if(!paused){
+                Log.d("##VIEW ACTOR", "" + paused);
+                if (!paused) {
                     if (this.isPlayerTurn()) {
                         playerTurn = true;
                         getSelf().tell(new PlayerTurnMsg(), getSelf());
@@ -86,7 +86,12 @@ public class GameViewActor extends UntypedActor {
 
                     int sizeDifference = playerSequence.size() - cpuSequence.size();
                     Log.d("##VIEW ACTOR", "sizedifference :" + sizeDifference);
-                    if (playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))) {
+                    //Avoid super fast tap
+                    if (sizeDifference > 0) {
+                        playerSequence = playerSequence.subList(0, cpuSequence.size());
+                    }
+
+                    if (playerSequence.size() > 0 && playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))) {
                         if (sizeDifference == 0) {
                             gameActivity.getHandler().sendEmptyMessage(Constants.CPU_TURN);
                             Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
@@ -109,9 +114,9 @@ public class GameViewActor extends UntypedActor {
 
                 break;
             case PAUSE_MSG:
-                Log.d("##VIEW ACTOR","PAUSE");
-                this.paused = ((PauseMsg)message).isPausing();
-                if(!this.paused){
+                Log.d("##VIEW ACTOR", "PAUSE");
+                this.paused = ((PauseMsg) message).isPausing();
+                if (!this.paused) {
                     getSelf().tell(new NextColorMsg(), getSelf());
                 }
                 break;

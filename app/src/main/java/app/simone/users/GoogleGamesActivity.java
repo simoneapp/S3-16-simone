@@ -86,7 +86,6 @@ public class GoogleGamesActivity extends AppCompatActivity implements GoogleApiC
 
             TurnBasedMatchConfig tbmc = TurnBasedMatchConfig.builder()
                     .addInvitedPlayers(invitees)
-                    .setAutoMatchCriteria(autoMatchCriteria)
                     .build();
 
             // Create and start the match.

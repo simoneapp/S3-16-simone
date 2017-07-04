@@ -2,6 +2,8 @@ package application;
 
 import android.app.Application;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import actors.CPUActor;
 import actors.GameViewActor;
 import akka.actor.ActorSystem;

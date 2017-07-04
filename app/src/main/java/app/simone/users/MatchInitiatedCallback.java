@@ -1,9 +1,11 @@
 package app.simone.users;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.games.Games;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer;
 
@@ -27,18 +29,20 @@ public class MatchInitiatedCallback implements
 
         // If this player is not the first player in this match, continue.
         if (match.getData() != null) {
-            Log.d("##MACHINITIATEDCALLBACK","showTurnUI");
-            //showTurnUI(match);
+            Log.d("##MACHINITIATEDCALLBACK","WAITING FOR MY TURN");
             return;
         }
 
         // Otherwise, this is the first player. Initialize the game state.
-        Log.d("##MACHINITIATEDCALLBACK","initGame");
+        Log.d("##MACHINITIATEDCALLBACK","GAME STARTED");
         //initGame(match);
+
+
 
         // Let the player take the first turn
         Log.d("##MACHINITIATEDCALLBACK","showTurnUi");
         //showTurnUI(match);
+
     }
 
 

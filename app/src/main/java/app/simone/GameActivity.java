@@ -1,6 +1,5 @@
 package app.simone;
 
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,7 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import akka.actor.ActorRef;
-import app.simone.Controller.ControllerImplementations.UserDataControllerImpl;
+import app.simone.Controller.ControllerImplementations.LocalDataControllerImpl;
 import app.simone.Controller.UserDataController;
 import app.simone.styleable.SimoneTextView;
 import application.mApplication;
@@ -26,11 +25,8 @@ import messages.AttachViewMsg;
 import messages.GuessColorMsg;
 import messages.NextColorMsg;
 import messages.StartGameVsCPUMsg;
-import scala.collection.immutable.Stream;
 import utils.Constants;
 import utils.Utilities;
-
-import static utils.Constants.PLAYER_NAME;
 
 
 /**
@@ -53,7 +49,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
             switch (msg.what) {
                 case Constants.CPU_TURN:
-                    if(playerTurn){
+                    if (playerTurn) {
                         simoneTextView.setText(Constants.STRING_EMPTY);
                         simoneTextView.startAnimation(animation);
                     }
@@ -61,7 +57,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
                     break;
                 case Constants.PLAYER_TURN:
-                    if(!playerTurn){
+                    if (!playerTurn) {
                         simoneTextView.setText(Constants.TURN_PLAYER);
                         simoneTextView.startAnimation(animation);
                     }
@@ -75,11 +71,11 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                     gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#990000")));
                     simoneTextView.startAnimation(animation);
                     userDataController.insertMatch(msg.arg2);
-                    Log.d("REALM TEST",Integer.toString(userDataController.getMatches().size()));
+                    Log.d("REALM TEST", Integer.toString(userDataController.getMatches().size()));
                     break;
             }
 
-            if(msg.arg1 != 0 && msg.arg2==0){
+            if (msg.arg1 != 0 && msg.arg2 == 0) {
                 // Message from ViewActor or this activity itself, handling the blinking
                 Button b = (Button) findViewById(msg.arg1);
                 b.setAlpha(0.4f);
@@ -88,9 +84,6 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                 m.arg1 = msg.arg1;
                 vHandler.sendMessageDelayed(m, 300);
             }
-
-
-
 
 
         }
@@ -119,7 +112,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initRealm();
-        userDataController=new UserDataControllerImpl(realm);
+        userDataController = new LocalDataControllerImpl(realm);
         int radiobtnIndex = 0;
 
         if (savedInstanceState != null) {
@@ -189,10 +182,14 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
     private void initRealm() {
         Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder().name("DBPlayers.realm").deleteRealmIfMigrationNeeded().schemaVersion(5).build();
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .schemaVersion(3)
+                .build();
         Realm.setDefaultConfiguration(config);
-        realm=Realm.getDefaultInstance();
+        realm = Realm.getDefaultInstance();
     }
+
 
     public Handler getHandler() {
         return this.handler;

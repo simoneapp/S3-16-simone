@@ -13,13 +13,17 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
+import app.simone.DataModel.Match;
 import io.fabric.sdk.android.Fabric;
 
 import app.simone.DataModel.Player;
 import app.simone.users.FacebookLoginActivity;
+import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
 import io.realm.RealmResults;
+import io.realm.RealmSchema;
 import utils.Constants;
 
 /**
@@ -35,12 +39,13 @@ public class MainActivity extends FullscreenActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+        insertDefaultPlayer();
 
-        VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
+        VSCpuButton = (Button) findViewById(R.id.button_vs_cpu);
 
 
         //Listener on vs CPUActor button
-        VSCpuButton.setOnClickListener(new View.OnClickListener(){
+        VSCpuButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -73,6 +78,7 @@ public class MainActivity extends FullscreenActivity {
 
     public void highScoreShow(View view) {
 
+
         Intent intent = new Intent(this, DBShowcaseActivity.class);
         startActivity(intent);
     }
@@ -86,6 +92,30 @@ public class MainActivity extends FullscreenActivity {
     public void onDestroy() {
         super.onDestroy();
         realm.close();
+
+    }
+
+    private void insertDefaultPlayer() {
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .schemaVersion(3)
+                .build();
+        Realm.setDefaultConfiguration(config);
+        realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+
+            @Override
+            public void execute(Realm realm) {
+                if (realm.where(Player.class).findAll().isEmpty()) {
+                    realm.createObject(Player.class, Constants.DEFAULT_PLAYER);
+                }
+
+            }
+
+        });
     }
 
 }
+
+

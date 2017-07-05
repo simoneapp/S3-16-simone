@@ -16,10 +16,13 @@ interface UserDataController {
     fun getMatchesSortedByScore(): RealmResults<Match>? {
         return getMatches().sort(FIELD_SCORE, Sort.DESCENDING)
     }
-
-    fun getDate(match: Match): Date{
-        return match.gameDate
+    fun getBestGame():Match{
+        return getMatchesSortedByScore()!!.first()
     }
+    fun getLastGame():Match{
+        return getMatches().last()
+    }
+
     fun insertMatch(score:Int)
 
 

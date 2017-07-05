@@ -21,6 +21,6 @@ public class Constants {
     public static final String  PLAY_AGAIN = "Play\nagain";
     public static final String PLAYER_NAME="name";
     public static final String DEFAULT_PLAYER="MICHELE SAPIGNOLI";
-    public static final String PLAYER_NAME_DBFIELD="name";
+//    public static final String PLAYER_NAME_DBFIELD="name";
 
 }

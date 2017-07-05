@@ -34,7 +34,6 @@ public class GameViewActor extends UntypedActor {
     private int cpuColorIndex;
     private int playerColorIndex;
     private int currentScore = 0;
-
     @Override
     public void preStart() throws Exception {
         super.preStart();
@@ -116,6 +115,8 @@ public class GameViewActor extends UntypedActor {
         m.what = Constants.WHATTASHAMEYOULOST_MSG;
         m.arg2 = currentScore;
         this.gameActivity.getHandler().sendMessage(m);
+        this.currentScore=0;
+
     }
 
 }

@@ -3,22 +3,32 @@ package app.simone.DataModel;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by gzano on 22/06/2017.
  */
 
 public class Match extends RealmObject {
-    private Date gameDate;
+    private String gameDate;
     private int score;
+    @PrimaryKey
+    private int matchID;
 
+    public int getMatchID() {
+        return matchID;
+    }
 
+    public void setMatchID(int matchID) {
+        this.matchID = matchID;
+    }
 
-    public Date getGameDate() {
+    public String getGameDate() {
         return gameDate;
     }
 
-    public void setGameDate(Date gameDate) {
+    public void setGameDate(String gameDate) {
         this.gameDate = gameDate;
     }
 

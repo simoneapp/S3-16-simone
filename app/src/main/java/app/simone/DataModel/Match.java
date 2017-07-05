@@ -13,15 +13,14 @@ import io.realm.annotations.PrimaryKey;
 public class Match extends RealmObject {
     private String gameDate;
     private int score;
-    @PrimaryKey
-    private int matchID;
+    private int gameType;
 
-    public int getMatchID() {
-        return matchID;
+    public int getGameType() {
+        return gameType;
     }
 
-    public void setMatchID(int matchID) {
-        this.matchID = matchID;
+    public void setGameType(int gameType) {
+        this.gameType = gameType;
     }
 
     public String getGameDate() {

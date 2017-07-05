@@ -74,10 +74,11 @@ public class GameViewActor extends UntypedActor {
                 playerSequence.add(color);
 
                 if (playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))) {
-                    currentScore++;
-                    Log.d("CURRENT SCORE", Integer.toString(currentScore));
+
 
                     if (playerSequence.size() == cpuSequence.size()) {
+                        currentScore++;
+                        Log.d("CURRENT SCORE", Integer.toString(currentScore));
                         gameActivity.getHandler().sendEmptyMessage(Constants.CPU_TURN);
                         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
                                 .tell(new GimmeNewColorMsg(), getSelf());
@@ -91,7 +92,6 @@ public class GameViewActor extends UntypedActor {
                     playerSequence.clear();
                     cpuColorIndex = 0;
                     cpuSequence.clear();
-//                    gameActivity.getHandler().sendEmptyMessage(Constants.WHATTASHAMEYOULOST_MSG);
                     gameOver(currentScore);
                 }
                 break;

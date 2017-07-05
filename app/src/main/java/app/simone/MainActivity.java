@@ -24,6 +24,7 @@ import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmResults;
 import io.realm.RealmSchema;
+import scala.collection.immutable.Stream;
 import utils.Constants;
 
 /**
@@ -107,9 +108,11 @@ public class MainActivity extends FullscreenActivity {
 
             @Override
             public void execute(Realm realm) {
-                if (realm.where(Player.class).findAll().isEmpty()) {
-                    realm.createObject(Player.class, Constants.DEFAULT_PLAYER);
-                }
+          //      if (realm.where(Player.class).findAll().isEmpty()) {
+                Player player=new Player();
+                player.setName(Constants.DEFAULT_PLAYER);
+                    realm.copyToRealmOrUpdate(player);
+           //     }
 
             }
 

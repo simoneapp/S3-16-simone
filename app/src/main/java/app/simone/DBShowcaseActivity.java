@@ -27,17 +27,22 @@ public class DBShowcaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dbshowcase);
         initRealm();
         userDataController = new LocalDataControllerImpl(realm);
+        TextView bestScoreTextView = (TextView) findViewById(R.id.textView33);
+
         realmResults = userDataController.getMatchesSortedByScore();
-        ArrayAdapter<String> ad = new ArrayAdapter<>(this, R.layout.listview, render(realmResults));
-        ListView listView=(ListView)findViewById(R.id.listViewDB);
-        listView.setAdapter(ad);
+        if (realmResults.isEmpty()) {
+            bestScoreTextView.setText("NO GAME YET!!");
+        } else {
+            ArrayAdapter<String> ad = new ArrayAdapter<>(this, R.layout.listview, render(realmResults));
+            ListView listView = (ListView) findViewById(R.id.listViewDB);
+            listView.setAdapter(ad);
+            Log.d("BESTSCORETEST ", Integer.toString(userDataController.getBestGame().getScore()));
+            String bestScore = Integer.toString(userDataController.getBestGame().getScore());
+            String score = Integer.toString(userDataController.getLastGame().getScore());
 
-        Log.d("BESTSCORETEST ",Integer.toString(userDataController.getBestGame().getScore()));
-        String bestScore=Integer.toString(userDataController.getBestGame().getScore());
-        TextView bestScoreTextView=(TextView)findViewById(R.id.textView33);
+            bestScoreTextView.setText(bestScore + " last game score: " + score);
+        }
 
-
-       bestScoreTextView.setText(bestScore);
     }
 
     @Override
@@ -62,26 +67,26 @@ public class DBShowcaseActivity extends AppCompatActivity {
         String[] renderedResults = new String[realmResults.size()];
         if (!realmResults.isEmpty()) {
             for (Match m : realmResults) {
-                renderedResults[i] = "score: "+Integer.toString(m.getScore())+" date: "+m.getGameDate();
+                renderedResults[i] = "score: " + Integer.toString(m.getScore()) + " date: " + m.getGameDate();
                 i++;
             }
         }
 
         return renderedResults;
     }
-    private String[] render(RealmList<Match> realmList){
+
+    private String[] render(RealmList<Match> realmList) {
         int i = 0;
         String[] renderedResults = new String[realmResults.size()];
         if (!realmResults.isEmpty()) {
             for (Match m : realmList) {
-                renderedResults[i] = "score: "+Integer.toString(m.getScore())+" date: "+m.getGameDate();
+                renderedResults[i] = "score: " + Integer.toString(m.getScore()) + " date: " + m.getGameDate();
                 i++;
             }
         }
 
         return renderedResults;
     }
-
 
 
 }

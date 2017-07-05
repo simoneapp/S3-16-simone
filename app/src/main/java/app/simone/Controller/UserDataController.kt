@@ -22,8 +22,7 @@ interface UserDataController {
     fun getLastGame():Match{
         return getMatches().last()
     }
-
-    fun insertMatch(score:Int)
+    fun insertMatch(score:Int,gameType:Int)
 
 
 

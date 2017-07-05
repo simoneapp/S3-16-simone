@@ -20,51 +20,27 @@ class LocalDataControllerImpl(val realm: Realm) : UserDataController {
     override val FIELD_SCORE: String
         get() = "score"
     val PLAYER_NAME_DBFIELD = "name"
-    val MATCH_ID_DBFIELD="matchID"
 
     override fun getMatches(): RealmList<Match> {
 
         return realm.where(Player::class.java).equalTo(PLAYER_NAME_DBFIELD, Constants.DEFAULT_PLAYER).findFirst().matches
     }
 
-    override fun insertMatch( score: Int) {
+    override fun insertMatch(score: Int, gameType: Int) {
         realm.executeTransaction { realm ->
-            val player = realm.where(Player::class.java).equalTo(PLAYER_NAME_DBFIELD , Constants.DEFAULT_PLAYER).findFirst()
-            val currentId=realm.where(Match::class.java).max("matchID")
-            var nextID=1
-            val match=Match()
-            if(currentId==null){
-                match.matchID=nextID
-                match.score=score
-                match.gameDate= simpleDateFormat.format(Date())
-                realm.copyToRealm(match)
-
-            }
-            else{
-                nextID=currentId.toInt()+1
-                match.matchID=nextID
-                match.score=score
-                match.gameDate= simpleDateFormat.format(Date())
-                realm.copyToRealm(match)
-
-            }
+            val player = realm.where(Player::class.java).equalTo(PLAYER_NAME_DBFIELD, Constants.DEFAULT_PLAYER).findFirst()
+            val match = realm.createObject(Match::class.java)
+            match.score = score
+            match.gameDate = simpleDateFormat.format(Date())
+            match.gameType=gameType
             player.matches.add(match)
-            Log.d("DATE TEST ",player.matches.size.toString()+match.gameDate.toString())
+            Log.d("DATE TEST ", player.matches.size.toString() + match.gameDate.toString())
 
         }
 
     }
-    fun updateMatch(matchID:Int,score: Int){
-        val match=Match()
-        match.matchID=matchID
-        match.score=score
-        realm.executeTransactionAsync { realm->
-            realm.copyToRealm(match)
-        }
-
-
-    }
-
 
 
 }
+
+

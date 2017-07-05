@@ -70,7 +70,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                     simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
                     gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#990000")));
                     simoneTextView.startAnimation(animation);
-                    userDataController.insertMatch(msg.arg2);
+                    userDataController.insertMatch(msg.arg2,Constants.CLASSIC_MODE);
                     Log.d("REALM TEST", Integer.toString(userDataController.getMatches().size()));
                     break;
             }

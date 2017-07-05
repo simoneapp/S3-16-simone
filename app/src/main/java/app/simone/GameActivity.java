@@ -1,13 +1,18 @@
 package app.simone;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -217,6 +222,19 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         for (int i = 0; i < this.buttons.size(); i++) {
             int index = shuffle[i];
             layouts[i].addView(buttons.get(index));
+
+            ObjectAnimator objectAnimator = ObjectAnimator.ofObject(buttons.get(i), "backgroundColor",
+                    new ArgbEvaluator(),
+                    ContextCompat.getColor(this, SColor.getColorIdFromButtonId(buttons.get(index).getId())),
+                    ContextCompat.getColor(this, SColor.getColorIdFromButtonId(buttons.get(i).getId())));
+
+// 2
+            objectAnimator.setRepeatCount(0);
+            objectAnimator.setRepeatMode(ValueAnimator.REVERSE);
+
+// 3
+            objectAnimator.setDuration(300);
+            objectAnimator.start();
 
         }
     }

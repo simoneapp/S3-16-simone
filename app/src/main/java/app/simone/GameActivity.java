@@ -1,8 +1,8 @@
 package app.simone;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +12,12 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import akka.actor.ActorRef;
 import app.simone.styleable.SimoneTextView;
@@ -42,6 +48,12 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     private FloatingActionButton gameFab;
     private boolean paused;
 
+    private int chosenMode = Constants.CLASSIC_MODE;
+
+    private List<Button> buttons;
+    private Integer[] shuffle = new Integer[]{0, 1, 2, 3};
+
+    private FrameLayout[] layouts = new FrameLayout[4];
 
     private Handler handler = new Handler() {
         @Override
@@ -61,6 +73,9 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                         simoneTextView.setText(Constants.TURN_PLAYER);
                         simoneTextView.startAnimation(animation);
 
+                        if (chosenMode == Constants.HARD_MODE) {
+                            swapButtonPositions();
+                        }
                     }
                     playerTurn = true;
 
@@ -114,47 +129,17 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int radiobtnIndex = 0;
+        buttons = new ArrayList<>();
 
-        if (savedInstanceState != null) {
-            radiobtnIndex = savedInstanceState.getInt(Constants.RADIOBTN_INDEX_KEY);
-        }
+        Intent intent = getIntent();
+        chosenMode = intent.getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
 
-        initColorButton(SColor.GREEN);
-        initColorButton(SColor.RED);
-        initColorButton(SColor.YELLOW);
-        initColorButton(SColor.BLUE);
+        initAnimation();
 
-        this.rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
-        this.zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
-        this.zoomOut = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
-
-        this.animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        this.animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-                if (playerTurn) {
-                    simoneTextView.setAnimation(zoomIn);
-                    gameFab.startAnimation(zoomIn);
-                } else {
-                    simoneTextView.startAnimation(zoomOut);
-                    gameFab.startAnimation(zoomOut);
-                }
-                simoneTextView.startAnimation(rotate);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
+        layouts[0] = (FrameLayout) findViewById(R.id.game_top_left_frame);
+        layouts[1] = (FrameLayout) findViewById(R.id.game_top_right_frame);
+        layouts[2] = (FrameLayout) findViewById(R.id.game_bottom_left_frame);
+        layouts[3] = (FrameLayout) findViewById(R.id.game_bottom_right_frame);
 
         gameFab = (FloatingActionButton) findViewById(R.id.game_fab);
         simoneTextView = (SimoneTextView) findViewById(R.id.game_simone_textview);
@@ -171,19 +156,11 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
                     Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
                             .tell(new StartGameVsCPUMsg(), ActorRef.noSender());
-
-
                 }
             }
         });
-
-
-        /*
-        Pass the instance of the GameActivity to GameViewActor
-         */
-
         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
-                .tell(new AttachViewMsg(this, radiobtnIndex), ActorRef.noSender());
+                .tell(new AttachViewMsg(this), ActorRef.noSender());
     }
 
     @Override
@@ -192,21 +169,6 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         mContentView = findViewById(R.id.game_fullscreen_content);
     }
 
-    private boolean initColorButton(final SColor color) {
-        final Button button = (Button) findViewById(color.getButtonId());
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (playerTurn && !tapToBegin) {
-                    Message m = new Message();
-                    m.arg1 = color.getButtonId();
-                    m.what = Constants.PLAYER_TURN;
-                    handler.sendMessage(m);
-                }
-            }
-        });
-        return true;
-    }
 
     public Handler getHandler() {
         return this.handler;
@@ -237,12 +199,6 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-
-    }
-
-    @Override
     protected void backTransition() {
         overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
@@ -251,4 +207,70 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     protected void forwardTransition() {
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
+
+    private void swapButtonPositions() {
+        Collections.shuffle(Arrays.asList(shuffle));
+
+        for (FrameLayout f : layouts) {
+            f.removeAllViews();
+        }
+        for (int i = 0; i < this.buttons.size(); i++) {
+            int index = shuffle[i];
+            layouts[i].addView(buttons.get(index));
+
+        }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (buttons.size() == 0) {
+            buttons.add(initColorButton(SColor.GREEN));
+            buttons.add(initColorButton(SColor.RED));
+            buttons.add(initColorButton(SColor.YELLOW));
+            buttons.add(initColorButton(SColor.BLUE));
+        }
+    }
+
+    private void initAnimation(){
+        this.rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
+        this.zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
+        this.zoomOut = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
+        this.animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        this.animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if (playerTurn) {
+                    simoneTextView.setAnimation(zoomIn);
+                    gameFab.startAnimation(zoomIn);
+                } else {
+                    simoneTextView.startAnimation(zoomOut);
+                    gameFab.startAnimation(zoomOut);
+                }
+                simoneTextView.startAnimation(rotate);
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {}
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+    }
+
+    private Button initColorButton(final SColor color) {
+        final Button button = (Button) findViewById(color.getButtonId());
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (playerTurn && !tapToBegin) {
+                    Message m = new Message();
+                    m.arg1 = color.getButtonId();
+                    m.what = Constants.PLAYER_TURN;
+                    handler.sendMessage(m);
+                }
+            }
+        });
+        return button;
+    }
+
 }

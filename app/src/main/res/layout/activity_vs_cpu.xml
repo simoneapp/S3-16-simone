@@ -6,115 +6,121 @@
     android:layout_height="match_parent"
     tools:context="app.simone.VSCpuActivity">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/vs_cpu_fullscreen_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:weightSum="2">
 
 
         <LinearLayout
-            android:id="@+id/vscpu_game_toplayout"
+            android:id="@+id/vscpu_top_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:orientation="horizontal"
+            android:layout_weight="1"
             android:weightSum="2">
 
             <LinearLayout
-                android:id="@+id/vs_cpu_top_layout"
+                android:id="@+id/vs_cpu_top_left_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@color/myGreen"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
             </LinearLayout>
-
-
             <LinearLayout
-                android:id="@+id/vscpu_bottomlayout"
+                android:id="@+id/vs_cpu_top_right_layout"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_horizontal|center_vertical"
-                android:background="@color/myYellow"
-                android:orientation="vertical"
-                >
-                <!--
-                <RadioGroup
-                    android:id="@+id/vs_cpu_radiogroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <RadioButton
-                        android:id="@+id/simpleRadioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="32sp"
-                        android:layout_margin="5sp"
-                        android:textColor="@color/myDarkGreen"
-                        android:backgroundTint="@color/myGreen"
-                        android:checked="true"
-                        android:text="Classic"/>
-                    <RadioButton
-                        android:id="@+id/simpleRadioButton1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5sp"
-                        android:textColor="@color/myDarkGreen"
-                        android:textSize="32sp"
-                        android:text="Harder"/>
-                </RadioGroup>-->
+                android:background="@color/myGreen"
+                android:orientation="vertical">
+
+
             </LinearLayout>
+
+
         </LinearLayout>
-    </FrameLayout>
+        <LinearLayout
+            android:id="@+id/vscpu_bottomlayout"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/myYellow"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="vertical" />
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/vs_cpu_fab"
-        app:layout_anchor="@id/vs_cpu_top_layout"
-        app:layout_anchorGravity="bottom|center"
-        app:backgroundTint="@color/myLightGray"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginEnd="20dp"
-        android:layout_width="100dp"
-        android:layout_height="100dp"/>
+        app:backgroundTint="@color/myLightGray"
+        app:layout_anchor="@id/vs_cpu_top_left_layout"
+        app:layout_anchorGravity="bottom|center" />
 
     <app.simone.styleable.MainTextView
 
-        android:layout_height="wrap_content"
         android:id="@+id/game_textview_vscpu"
         android:layout_width="wrap_content"
-        android:textSize="64sp"
-        android:text="@string/vs_cpu"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20sp"
         android:layout_marginTop="30sp"
-        android:textColor="#FFF"
         android:alpha="0.6"
-        app:layout_anchor="@id/vscpu_game_toplayout"
-        app:layout_anchorGravity="left"
-        />
+        android:text="@string/vs_cpu"
+        android:textColor="#FFF"
+        android:textSize="32sp"
+        app:layout_anchor="@id/vscpu_top_layout"
+        app:layout_anchorGravity="left" />
+
     <app.simone.styleable.MainTextView
 
-        android:layout_height="wrap_content"
         android:id="@+id/game_textview_explain"
         android:layout_width="wrap_content"
-        android:textSize="32sp"
-        android:text="Follow\nsimone's sequence"
+        android:layout_height="wrap_content"
         android:layout_marginStart="20sp"
         android:layout_marginTop="30sp"
-        android:textColor="#FFF"
         android:alpha="0.8"
+        android:text="Follow\nsimone's sequence"
+        android:textColor="#FFF"
+        android:textSize="32sp"
         app:layout_anchor="@id/vscpu_bottomlayout"
-        app:layout_anchorGravity="start|center_vertical"
-        />
+        app:layout_anchorGravity="start|center_vertical" />
+
     <app.simone.styleable.SimoneTextView
-        android:layout_height="wrap_content"
         android:id="@+id/vscpu_simone_textview"
         android:layout_width="wrap_content"
-        android:text="play"
+        android:layout_height="wrap_content"
         android:elevation="6dp"
-        android:textSize="32sp"
+        android:text="classic"
         android:textColor="@color/myDarkGray"
-        app:layout_anchor="@id/vs_cpu_top_layout"
-        app:layout_anchorGravity="bottom|center"/>
+        android:textSize="32sp"
+        app:layout_anchor="@id/vs_cpu_top_left_layout"
+        app:layout_anchorGravity="bottom|center" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/vs_cpu_fab_hard"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginEnd="20dp"
+        app:backgroundTint="@color/myLightGray"
+        app:layout_anchor="@id/vs_cpu_top_right_layout"
+        app:layout_anchorGravity="bottom|center" />
+
+    <app.simone.styleable.SimoneTextView
+        android:id="@+id/vscpu_simone_textview_hard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:text="hard"
+        android:textColor="@color/myDarkGray"
+        android:textSize="32sp"
+        app:layout_anchor="@id/vs_cpu_top_right_layout"
+        app:layout_anchorGravity="bottom|center" />
+
 
 </android.support.design.widget.CoordinatorLayout>

@@ -8,14 +8,9 @@ import app.simone.IGameActivity;
 
 public class AttachViewMsg implements IMessage {
     private IGameActivity activity;
-    private int radiobtnIndex = 0;
 
     public AttachViewMsg(IGameActivity activity){
         this.activity = activity;
-    }
-    public AttachViewMsg(IGameActivity activity, int radiobtnIndex){
-        this.activity = activity;
-        this.radiobtnIndex = radiobtnIndex;
     }
 
     @Override
@@ -25,9 +20,5 @@ public class AttachViewMsg implements IMessage {
 
     public IGameActivity getIActivity(){
         return this.activity;
-    }
-
-    public int getRadiobtnIndex(){
-        return this.radiobtnIndex;
     }
 }

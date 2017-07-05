@@ -55,6 +55,7 @@ class FacebookLoginActivity : AppCompatActivity() {
         if(manager.isLoggedIn()) {
             manager.getFacebookFriends { success, data, error -> updateList(success, data, error) }
             setMyUsername()
+            updateListViewRequests()
         }
 
 
@@ -131,7 +132,7 @@ class FacebookLoginActivity : AppCompatActivity() {
                     runOnUiThread {
                         if(msg.asJsonObject.get("from").asString !=Profile.getCurrentProfile().id.toString() )
                         saveRequestId(msg.asJsonObject)
-                        updateListViewRequests(msg.asJsonObject)
+                        updateListViewRequests()
 
                     }
                 }
@@ -183,7 +184,7 @@ class FacebookLoginActivity : AppCompatActivity() {
         return realm!!.where(PendingRequest::class.java).findAll()
     }
 
-    fun updateListViewRequests(obj: JsonObject){
+    fun updateListViewRequests(){
 
         if(getPendingRequests().isNotEmpty()) {
 
@@ -203,5 +204,6 @@ class FacebookLoginActivity : AppCompatActivity() {
         }
 
     }
+
 
 }

@@ -16,8 +16,13 @@ import com.pubnub.api.models.consumer.PNStatus
 import PubNub.OnlinePlayer
 import android.preference.PreferenceManager
 import PubNub.CustomAdapter
+import android.util.Log
 import android.widget.*
+import app.simone.DataModel.PendingRequest
 import com.google.gson.JsonObject
+import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.RealmResults
 
 
 class FacebookLoginActivity : AppCompatActivity() {
@@ -30,12 +35,14 @@ class FacebookLoginActivity : AppCompatActivity() {
     var adapter : FacebookFriendsAdapter? = null
     var pubnubController = PubnubController("multiplayer")
     var player: OnlinePlayer? = null
+    var realm: Realm ? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         pubnubController.subscribeToChannel()
         this.addPubnubListener(pubnubController.pubnub)
+        initRealm()
 
         setContentView(R.layout.activity_facebook_login)
         manager.registerFacebookButton(this, { success, data, error -> updateList(success, data, error) })
@@ -123,7 +130,7 @@ class FacebookLoginActivity : AppCompatActivity() {
                     val msg = message.message
                     runOnUiThread {
                         if(msg.asJsonObject.get("from").asString !=Profile.getCurrentProfile().id.toString() )
-                        //saveRequestId(msg.asJsonObject)
+                        saveRequestId(msg.asJsonObject)
                         updateListViewRequests(msg.asJsonObject)
 
                     }
@@ -137,42 +144,63 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     }
 
+    private fun fromJSONtoObj(obj: JsonObject):PendingRequest{
+        var id=obj.get("from").asString
+        var name=obj.get("fromName").asString
+        var idTo=obj.get("to").asString
+        var toName=obj.get("toName").asString
+
+        var pr = PendingRequest()
+        pr.id=id
+        pr.name=name
+        pr.idTo=idTo
+        pr.nameTo=toName
+
+        return pr
+ }
+
     fun saveRequestId(obj: JsonObject){
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = preferences.edit()
-        editor.putString("id", "")
-        editor.apply()
+
+        var pr = fromJSONtoObj(obj)
+
+        realm?.executeTransaction { realm ->
+        realm.copyToRealm(pr)
+        }
     }
 
-    fun getPendingRequests():String{
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        var idReq: String = preferences.getString("id", "")
-        if (idReq != null) {
-            return idReq
-        }else{
-            return ""
-        }
+    private fun initRealm(){
+        Realm.init(this)
+        val config = RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .schemaVersion(3)
+                .build()
+        Realm.setDefaultConfiguration(config)
+        realm = Realm.getDefaultInstance()
 
+    }
+
+    fun getPendingRequests():RealmResults<PendingRequest>{
+        return realm!!.where(PendingRequest::class.java).findAll()
     }
 
     fun updateListViewRequests(obj: JsonObject){
-        //if(getPendingRequests()!="") {
+
+        if(getPendingRequests().isNotEmpty()) {
 
             var myTextView = this.findViewById(R.id.textView3) as TextView
             myTextView.text = "Richieste in sospeso:"
             listViewRequests = this.findViewById(R.id.listView_requests) as ListView
             var dataModels = java.util.ArrayList<OnlinePlayer>()
 
-           /* dataModels.add(OnlinePlayer("1", "Ciccio", "1"))*/
-
-            dataModels.add(OnlinePlayer("ID: "+obj.get("to").asString,obj.get("toName").asString,""))
+            var pr = getPendingRequests().first()
+            dataModels.add(OnlinePlayer(pr.idTo,pr.nameTo,""))
             val adapter = CustomAdapter(dataModels, applicationContext)
             listViewRequests?.adapter = adapter
             listView?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
                 val dataModel = dataModels[position]
                 println("cliccato posizione " + dataModel.toString())
             }
-        //}
+        }
 
     }
 

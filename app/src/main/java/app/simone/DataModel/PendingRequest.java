@@ -1,6 +1,7 @@
 package app.simone.DataModel;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Giacomo on 05/07/2017.
@@ -10,6 +11,7 @@ public class PendingRequest extends RealmObject{
 
     private String id;
     private String name;
+    @PrimaryKey
     private String idTo;
     private String nameTo;
 
@@ -25,6 +27,7 @@ public class PendingRequest extends RealmObject{
     public String getName() {
         return name;
     }
+
 
     public String getIdTo() {
         return idTo;

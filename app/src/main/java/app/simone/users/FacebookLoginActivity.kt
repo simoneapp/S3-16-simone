@@ -15,6 +15,10 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.PNStatus
 import PubNub.OnlinePlayer
 import PubNub.CustomAdapter
+import android.app.Notification
+import android.app.NotificationManager
+import android.content.Context
+import android.content.res.Configuration
 import android.util.Log
 import android.widget.*
 import app.simone.DataModel.PendingRequest
@@ -22,6 +26,8 @@ import com.google.gson.JsonObject
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
+import PubNub.PushNotification
+import io.realm.exceptions.RealmPrimaryKeyConstraintException
 
 
 class FacebookLoginActivity : AppCompatActivity() {
@@ -133,7 +139,7 @@ class FacebookLoginActivity : AppCompatActivity() {
                     Log.d("ID: ",myId)
                     runOnUiThread {
                         if(msg.asJsonObject.get("from").asString != myId && msg.asJsonObject.get("to").asString==(myId)) {
-                            Toast.makeText(applicationContext, "Richiesta ricevuta da" + msg.asJsonObject.get("to").asString, Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(applicationContext, "Richiesta ricevuta da" + msg.asJsonObject.get("to").asString, Toast.LENGTH_SHORT).show()
                             saveRequestId(msg.asJsonObject)
                             updateListViewRequests()
                         }
@@ -153,9 +159,17 @@ class FacebookLoginActivity : AppCompatActivity() {
         Log.d("PR JSON",obj.toString())
         var pr = fromJSONtoObj(obj)
         Log.d("PR OBJ",pr.toString())
-        realm?.executeTransaction { realm ->
-            realm.copyToRealm(pr)
+
+        try {
+            realm?.executeTransaction { realm ->
+                realm.copyToRealm(pr)
+            }
+            PushNotification(applicationContext,pr.name).init()
         }
+        catch (e: RealmPrimaryKeyConstraintException) {
+            Log.d("DB","The value is already in the database!")
+        }
+
     }
 
     private fun fromJSONtoObj(obj: JsonObject):PendingRequest{
@@ -204,11 +218,20 @@ class FacebookLoginActivity : AppCompatActivity() {
             listViewRequests?.adapter = adapter
             listView?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
                 val dataModel = dataModels[position]
-                println("cliccato posizione " + dataModel.toString())
+                println("ARRAY: "+position)
             }
         }
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        if(manager.isLoggedIn()) {
+            updateListViewRequests()
+        }
+    }
+
+
 
 
 }

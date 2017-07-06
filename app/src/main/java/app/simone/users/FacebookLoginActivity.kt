@@ -15,10 +15,6 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.PNStatus
 import PubNub.OnlinePlayer
 import PubNub.CustomAdapter
-import android.app.Notification
-import android.app.NotificationManager
-import android.content.Context
-import android.content.res.Configuration
 import android.util.Log
 import android.widget.*
 import app.simone.DataModel.PendingRequest
@@ -27,6 +23,9 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import PubNub.PushNotification
+import android.content.Context
+import android.os.PowerManager
+import com.google.gson.JsonElement
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
 
 
@@ -41,6 +40,7 @@ class FacebookLoginActivity : AppCompatActivity() {
     var pubnubController = PubnubController("multiplayer")
     var player: OnlinePlayer? = null
     var realm: Realm ? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,34 +63,23 @@ class FacebookLoginActivity : AppCompatActivity() {
             updateListViewRequests()
         }
 
-
         val btnInvites = this.findViewById(R.id.btn_invite) as Button
         btnInvites.setOnClickListener({
             manager?.sendGameRequest()
         })
 
         listView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-
             val friend = adapter?.getItem(i)
-
             manager.getFriendScore(friend) {
                 success, score, error ->
-
-                //if(success) {
                     enablePlayButton(friend!!)
-                //} else {
-                  //  Toast.makeText(this, "Error: cannot fetch user's score.", Toast.LENGTH_SHORT).show()
-                //}
             }
         }
 
-        //disablePlayButton()
     }
 
     val updateList = { success: Boolean, data: List<FacebookFriend>?, error: String? ->
-
         adapter?.clear()
-
         if(success) {
             adapter?.addAll(data)
         } else {
@@ -134,11 +123,8 @@ class FacebookLoginActivity : AppCompatActivity() {
             override fun message(pubnub: PubNub, message: PNMessageResult) {
                 if (message.channel != null) {
                     val msg = message.message
-                    val myId = Profile.getCurrentProfile().id.toString()
-                    Log.d("MSG: ",msg.asJsonObject.get("to").asString)
-                    Log.d("ID: ",myId)
                     runOnUiThread {
-                        if(msg.asJsonObject.get("from").asString != myId && msg.asJsonObject.get("to").asString==(myId)) {
+                        if(filter(msg)) {
                             //Toast.makeText(applicationContext, "Richiesta ricevuta da" + msg.asJsonObject.get("to").asString, Toast.LENGTH_SHORT).show()
                             saveRequestId(msg.asJsonObject)
                             updateListViewRequests()
@@ -153,6 +139,13 @@ class FacebookLoginActivity : AppCompatActivity() {
             }
         })
 
+    }
+
+    fun filter(msg: JsonElement):Boolean{
+        val myId = Profile.getCurrentProfile().id.toString()
+        val fromUser = msg.asJsonObject.get("from").asString
+        val toUser = msg.asJsonObject.get("to").asString;
+        return fromUser!=myId && toUser==myId
     }
 
     fun saveRequestId(obj: JsonObject){
@@ -230,6 +223,10 @@ class FacebookLoginActivity : AppCompatActivity() {
             updateListViewRequests()
         }
     }
+
+
+
+
 
 
 

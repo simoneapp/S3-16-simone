@@ -28,7 +28,7 @@ public class PushNotification {
         android.support.v4.app.NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(myContext)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Simone App")
+                        .setContentTitle("Simone app")
                         .setContentText(this.name +" vuole giocare con te!");
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(myContext, FacebookLoginActivity.class);

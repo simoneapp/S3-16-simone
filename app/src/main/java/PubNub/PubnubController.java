@@ -25,8 +25,8 @@ public class PubnubController {
     public PubnubController(String channel) {
         configPubnub();
         this.channel=channel;
-
     }
+
 
     private void configPubnub(){
         //initial configuration
@@ -39,6 +39,7 @@ public class PubnubController {
         pubnub = new PubNub(pnConfiguration);
         Log.d("GIAK","PUBNUB CONFIGURATO");
     }
+
 
     public void subscribeToChannel(){
         // 2 - Subscribe to a channel

@@ -14,7 +14,6 @@ import com.pubnub.api.callbacks.SubscribeCallback
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.PNStatus
 import PubNub.OnlinePlayer
-import android.preference.PreferenceManager
 import PubNub.CustomAdapter
 import android.util.Log
 import android.widget.*
@@ -71,11 +70,11 @@ class FacebookLoginActivity : AppCompatActivity() {
             manager.getFriendScore(friend) {
                 success, score, error ->
 
-                if(success) {
+                //if(success) {
                     enablePlayButton(friend!!)
-                } else {
-                    Toast.makeText(this, "Error: cannot fetch user's score.", Toast.LENGTH_SHORT).show()
-                }
+                //} else {
+                  //  Toast.makeText(this, "Error: cannot fetch user's score.", Toast.LENGTH_SHORT).show()
+                //}
             }
         }
 
@@ -129,10 +128,15 @@ class FacebookLoginActivity : AppCompatActivity() {
             override fun message(pubnub: PubNub, message: PNMessageResult) {
                 if (message.channel != null) {
                     val msg = message.message
+                    val myId = Profile.getCurrentProfile().id.toString()
+                    Log.d("MSG: ",msg.asJsonObject.get("to").asString)
+                    Log.d("ID: ",myId)
                     runOnUiThread {
-                        if(msg.asJsonObject.get("from").asString !=Profile.getCurrentProfile().id.toString() )
-                        saveRequestId(msg.asJsonObject)
-                        updateListViewRequests()
+                        if(msg.asJsonObject.get("from").asString != myId && msg.asJsonObject.get("to").asString==(myId)) {
+                            Toast.makeText(applicationContext, "Richiesta ricevuta da" + msg.asJsonObject.get("to").asString, Toast.LENGTH_SHORT).show()
+                            saveRequestId(msg.asJsonObject)
+                            updateListViewRequests()
+                        }
 
                     }
                 }
@@ -145,29 +149,29 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     }
 
-    private fun fromJSONtoObj(obj: JsonObject):PendingRequest{
-        var id=obj.get("from").asString
-        var name=obj.get("fromName").asString
-        var idTo=obj.get("to").asString
-        var toName=obj.get("toName").asString
+    fun saveRequestId(obj: JsonObject){
+        Log.d("PR JSON",obj.toString())
+        var pr = fromJSONtoObj(obj)
+        Log.d("PR OBJ",pr.toString())
+        realm?.executeTransaction { realm ->
+            realm.copyToRealm(pr)
+        }
+    }
 
-        var pr = PendingRequest()
+    private fun fromJSONtoObj(obj: JsonObject):PendingRequest{
+        val id=obj.get("from").asString
+        val name=obj.get("fromName").asString
+        val idTo=obj.get("to").asString
+        val toName=obj.get("toName").asString
+
+        val pr = PendingRequest()
         pr.id=id
         pr.name=name
         pr.idTo=idTo
         pr.nameTo=toName
-
         return pr
  }
 
-    fun saveRequestId(obj: JsonObject){
-
-        var pr = fromJSONtoObj(obj)
-
-        realm?.executeTransaction { realm ->
-        realm.copyToRealm(pr)
-        }
-    }
 
     private fun initRealm(){
         Realm.init(this)
@@ -187,14 +191,15 @@ class FacebookLoginActivity : AppCompatActivity() {
     fun updateListViewRequests(){
 
         if(getPendingRequests().isNotEmpty()) {
-
             var myTextView = this.findViewById(R.id.textView3) as TextView
             myTextView.text = "Richieste in sospeso:"
             listViewRequests = this.findViewById(R.id.listView_requests) as ListView
             var dataModels = java.util.ArrayList<OnlinePlayer>()
+            var pr = getPendingRequests()
 
-            var pr = getPendingRequests().first()
-            dataModels.add(OnlinePlayer(pr.idTo,pr.nameTo,""))
+            pr.forEach {request-> dataModels.add(OnlinePlayer(request.idTo,request.nameTo,"")) }
+
+
             val adapter = CustomAdapter(dataModels, applicationContext)
             listViewRequests?.adapter = adapter
             listView?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->

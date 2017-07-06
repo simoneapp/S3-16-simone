@@ -36,6 +36,7 @@ android {
     }
     dexOptions {
         javaMaxHeapSize "4g"
+        keepRuntimeAnnotatedClasses false
     }
 }
 

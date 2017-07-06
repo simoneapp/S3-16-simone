@@ -151,7 +151,8 @@ class FacebookManager() : IFacebookManager {
                             val score = (scores.get(0) as JSONObject).getInt("score")
                             completion(true, score, null)
                         } else {
-                            completion(false, -1, "Score not available")
+                            //completion(false, -1, "Score not available")
+                            completion(true, 0, "Score not available")
                         }
                     } else {
                         completion(false, -1, response.error.errorUserMessage)

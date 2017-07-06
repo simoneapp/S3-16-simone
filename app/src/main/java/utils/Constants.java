@@ -7,6 +7,8 @@ package utils;
 public class Constants {
     public static final String CPU_ACTOR_NAME = "cpu-actor";
     public static final String GAMEVIEW_ACTOR_NAME = "view-actor";
+    public static final String FACEBOOK_ACTOR_NAME = "fb-actor";
+    public static final String FBVIEW_ACTOR_NAME = "fb-view-actor";
     public static final String PATH_ACTOR = "/user/";
     public static final String RADIOBTN_INDEX_KEY ="RADIOBTN_INDEX";
     public static final int CLASSIC_MODE = 4;

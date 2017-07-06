@@ -30,6 +30,7 @@ public class GameViewActor extends UntypedActor{
     private List<SColor> playerSequence;
     private int cpuColorIndex;
     private int playerColorIndex;
+
     @Override
     public void preStart() throws Exception {
         super.preStart();

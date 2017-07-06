@@ -34,6 +34,7 @@ import app.simone.users.FacebookLoginActivity;
 public class MainActivity extends FullscreenActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private Button VSCpuButton;
+    private Button multiplayerButton;
     final Handler handler = new Handler();
     private GoogleApiClient mGoogleApiClient;
 
@@ -54,13 +55,21 @@ public class MainActivity extends FullscreenActivity implements GoogleApiClient.
 
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
 
-
         //Listener on vs CPUActor button
         VSCpuButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view) {
                 openActivity(VSCpuActivity.class);
+            }
+        });
+
+
+        multiplayerButton = (Button) findViewById(R.id.main_button_multiplayer);
+        multiplayerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openActivity(FacebookLoginActivity.class);
             }
         });
 
@@ -110,10 +119,6 @@ public class MainActivity extends FullscreenActivity implements GoogleApiClient.
 
     }
 
-    public void openMultiplayer(View view) {
-        Intent intent = new Intent(this, FacebookLoginActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

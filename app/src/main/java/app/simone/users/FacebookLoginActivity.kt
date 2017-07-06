@@ -1,5 +1,6 @@
 package app.simone.users
 
+import akka.actor.ActorRef
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -9,13 +10,15 @@ import android.widget.ListView
 import android.widget.Toast
 import app.simone.R
 import app.simone.users.model.FacebookFriend
+import application.mApplication
+import messages.*
+import utils.Constants
+import utils.Utilities
 
 
 class FacebookLoginActivity : AppCompatActivity() {
 
-    var manager = FacebookManager()
     var listView : ListView? = null
-
     var friends = ArrayList<FacebookFriend>()
     var adapter : FacebookFriendsAdapter? = null
 
@@ -23,52 +26,51 @@ class FacebookLoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_facebook_login)
-        manager.registerFacebookButton(this, { success, data, error -> updateList(success, data, error) })
-
-        adapter = FacebookFriendsAdapter(this, friends, manager)
 
         listView = this.findViewById(R.id.list_friends) as ListView
+        adapter = FacebookFriendsAdapter(this, friends)
         listView?.adapter = adapter
 
-        if(manager.isLoggedIn()) {
-            manager.getFacebookFriends { success, data, error -> updateList(success, data, error) }
-        }
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        actor.tell(FbViewSetupMsg(this), ActorRef.noSender())
 
         val btnInvites = this.findViewById(R.id.btn_invite) as Button
         btnInvites.setOnClickListener({
-            manager?.sendGameRequest()
+            actor.tell(FbSendGameRequestMsg(), ActorRef.noSender())
         })
 
         listView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
 
             val friend = adapter?.getItem(i)
-
-            manager.getFriendScore(friend) {
-                success, score, error ->
-
-                if(success) {
-                    Toast.makeText(this, "Score: " + score, Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Error: cannot fetch user's score.", Toast.LENGTH_SHORT).show()
-                }
-            }
+            actor.tell(FbItemClickMsg(friend), ActorRef.noSender())
         }
     }
 
-    val updateList = { success: Boolean, data: List<FacebookFriend>?, error: String? ->
-
-        adapter?.clear()
-
-        if(success) {
-            adapter?.addAll(data)
-        } else {
-            Toast.makeText(this, error, Toast.LENGTH_SHORT)
+    fun displayToast(text: String) {
+        this.runOnUiThread {
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        manager.onActivityResult(requestCode, resultCode, data)
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        actor.tell(FbOnActivityResultMsg(requestCode, resultCode, data), ActorRef.noSender())
     }
+
+
+    fun updateList (response : FbResponseFriendsMsg) {
+
+        this.runOnUiThread {
+            adapter?.clear()
+
+            if(response.isSuccess) {
+                adapter?.addAll(response.data)
+            } else {
+                displayToast(response.errorMessage)
+            }
+        }
+    }
+
 
 }

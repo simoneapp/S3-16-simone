@@ -1,16 +1,28 @@
 package app.simone;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import akka.actor.ActorRef;
 import app.simone.styleable.SimoneTextView;
@@ -19,7 +31,9 @@ import colors.SColor;
 import messages.AttachViewMsg;
 import messages.GuessColorMsg;
 import messages.NextColorMsg;
+import messages.PauseMsg;
 import messages.StartGameVsCPUMsg;
+import utils.AudioPlayer;
 import utils.Constants;
 import utils.Utilities;
 
@@ -31,10 +45,20 @@ import utils.Utilities;
 public class GameActivity extends FullscreenActivity implements IGameActivity {
     private boolean playerTurn;
     private boolean tapToBegin = true;
-    private SimoneTextView simoneTextView;
-    private Animation animation;
-    private FloatingActionButton gameFab;
 
+    private Animation animation;
+
+    private FloatingActionButton gameFab;
+    private SimoneTextView simoneTextView;
+
+    private boolean paused;
+
+    private int chosenMode = Constants.CLASSIC_MODE;
+
+    private List<Button> buttons;
+    private Integer[] shuffle = new Integer[]{0, 1, 2, 3};
+
+    private FrameLayout[] layouts = new FrameLayout[4];
 
     private Handler handler = new Handler() {
         @Override
@@ -42,17 +66,22 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
             switch (msg.what) {
                 case Constants.CPU_TURN:
-                    if(playerTurn){
-                        simoneTextView.setText(Constants.STRING_EMPTY);
+                    if (playerTurn) {
+
+                        simoneTextView.setText(/*Score*/String.valueOf(msg.arg2 + 1));
                         simoneTextView.startAnimation(animation);
                     }
                     playerTurn = false;
 
                     break;
                 case Constants.PLAYER_TURN:
-                    if(!playerTurn){
+                    if (!playerTurn) {
                         simoneTextView.setText(Constants.TURN_PLAYER);
                         simoneTextView.startAnimation(animation);
+
+                        if (chosenMode == Constants.HARD_MODE) {
+                            swapButtonPositions();
+                        }
                     }
                     playerTurn = true;
 
@@ -66,17 +95,18 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                     break;
             }
 
-            if(msg.arg1 != 0){
+            if (msg.arg1 != 0) {
                 // Message from ViewActor or this activity itself, handling the blinking
                 Button b = (Button) findViewById(msg.arg1);
                 b.setAlpha(0.4f);
+                SColor color = SColor.fromInt(msg.arg1);
+                AudioPlayer player = new AudioPlayer();
+                player.play(getApplicationContext(), color.getSoundId());
                 Message m = new Message();
                 m.what = msg.what;
                 m.arg1 = msg.arg1;
                 vHandler.sendMessageDelayed(m, 300);
             }
-
-
 
 
         }
@@ -105,26 +135,28 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int radiobtnIndex = 0;
+        buttons = new ArrayList<>();
 
-        if (savedInstanceState != null) {
-            radiobtnIndex = savedInstanceState.getInt(Constants.RADIOBTN_INDEX_KEY);
-        }
+        Intent intent = getIntent();
+        chosenMode = intent.getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
 
-        initColorButton(SColor.GREEN);
-        initColorButton(SColor.RED);
-        initColorButton(SColor.YELLOW);
-        initColorButton(SColor.BLUE);
+        initAnimation();
 
-        this.animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        layouts[0] = (FrameLayout) findViewById(R.id.game_top_left_frame);
+        layouts[1] = (FrameLayout) findViewById(R.id.game_top_right_frame);
+        layouts[2] = (FrameLayout) findViewById(R.id.game_bottom_left_frame);
+        layouts[3] = (FrameLayout) findViewById(R.id.game_bottom_right_frame);
 
         gameFab = (FloatingActionButton) findViewById(R.id.game_fab);
         simoneTextView = (SimoneTextView) findViewById(R.id.game_simone_textview);
         gameFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (tapToBegin) {
                     tapToBegin = false;
+                    playerTurn = false;
+                    simoneTextView.startAnimation(animation);
                     simoneTextView.setText(Constants.STRING_EMPTY);
                     simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
                     gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
@@ -135,13 +167,8 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             }
         });
 
-
-        /*
-        Pass the instance of the GameActivity to GameViewActor
-         */
-
         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
-                .tell(new AttachViewMsg(this, radiobtnIndex), ActorRef.noSender());
+                .tell(new AttachViewMsg(this), ActorRef.noSender());
     }
 
     @Override
@@ -150,21 +177,6 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         mContentView = findViewById(R.id.game_fullscreen_content);
     }
 
-    private boolean initColorButton(final SColor color) {
-        Button button = (Button) findViewById(color.getValue());
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (playerTurn) {
-                    Message m = new Message();
-                    m.arg1 = color.getValue();
-                    m.what = Constants.PLAYER_TURN;
-                    handler.sendMessage(m);
-                }
-            }
-        });
-        return true;
-    }
 
     public Handler getHandler() {
         return this.handler;
@@ -172,6 +184,116 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
     public void setPlayerTurn(boolean isPlayerTurn) {
         this.playerTurn = isPlayerTurn;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (!playerTurn) {
+            this.paused = true;
+            Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
+                    .tell(new PauseMsg(true), ActorRef.noSender());
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!playerTurn && paused) {
+            this.paused = false;
+            Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
+                    .tell(new PauseMsg(false), ActorRef.noSender());
+        }
+    }
+
+    @Override
+    protected void backTransition() {
+        overridePendingTransition(R.anim.left_in, R.anim.right_out);
+    }
+
+    @Override
+    protected void forwardTransition() {
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+    }
+
+    private void swapButtonPositions() {
+        Collections.shuffle(Arrays.asList(shuffle));
+
+        for (FrameLayout f : layouts) {
+            f.removeAllViews();
+        }
+        for (int i = 0; i < this.buttons.size(); i++) {
+            int index = shuffle[i];
+            layouts[i].addView(buttons.get(index));
+
+            ObjectAnimator objectAnimator = ObjectAnimator.ofObject(buttons.get(i), "backgroundColor",
+                    new ArgbEvaluator(),
+                    ContextCompat.getColor(this, SColor.getColorIdFromButtonId(buttons.get(index).getId())),
+                    ContextCompat.getColor(this, SColor.getColorIdFromButtonId(buttons.get(i).getId())));
+
+// 2
+            objectAnimator.setRepeatCount(0);
+            objectAnimator.setRepeatMode(ValueAnimator.REVERSE);
+
+// 3
+            objectAnimator.setDuration(300);
+            objectAnimator.start();
+
+        }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (buttons.size() == 0) {
+            buttons.add(initColorButton(SColor.GREEN));
+            buttons.add(initColorButton(SColor.RED));
+            buttons.add(initColorButton(SColor.YELLOW));
+            buttons.add(initColorButton(SColor.BLUE));
+        }
+    }
+
+    private void initAnimation(){
+        final Animation rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
+        final Animation zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
+        final Animation zoomOut = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
+        this.animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        this.animation.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+                if (playerTurn) {
+                    gameFab.startAnimation(zoomIn);
+                    simoneTextView.setAnimation(zoomIn);
+                } else {
+                    simoneTextView.startAnimation(zoomOut);
+                    gameFab.startAnimation(zoomOut);
+                }
+                simoneTextView.startAnimation(rotate);
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) { }
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+    }
+
+    private Button initColorButton(final SColor color) {
+        final Button button = (Button) findViewById(color.getButtonId());
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (playerTurn && !tapToBegin) {
+                    Message m = new Message();
+                    m.arg1 = color.getButtonId();
+                    m.what = Constants.PLAYER_TURN;
+                    handler.sendMessage(m);
+                }
+            }
+        });
+        return button;
     }
 
 }

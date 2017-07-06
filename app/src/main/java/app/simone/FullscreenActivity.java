@@ -107,7 +107,7 @@ public abstract class FullscreenActivity extends AppCompatActivity {
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(initialDelay);
+        //delayedHide(initialDelay);
 
 
     }
@@ -161,12 +161,22 @@ public abstract class FullscreenActivity extends AppCompatActivity {
     public void openActivity(Class activity) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
+        overridePendingTransition(R.anim.left_in, R.anim.right_out);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        backTransition();
     }
 
     public void openActivity(Class activity, String extraName, int extra) {
         Intent intent = new Intent(this, activity);
         intent.putExtra(extraName, extra);
         startActivity(intent);
+        forwardTransition();
     }
 
+    protected abstract void backTransition();
+    protected abstract void forwardTransition();
 }

@@ -38,6 +38,7 @@ public class CPUActor extends UntypedActor {
                 Received StartGameVsCPUMsg from GameViewActor Actor TimeToBlinkMsg to GameViewActor
                  */
                 this.nColors = ((StartGameVsCPUMsg)message).getnColors();
+                this.currentSequence.clear();
                 Log.d("##CPU ACTOR", "Received StartGameVsCpuMSG, " + this.nColors +" colors.");
                 this.generateAndSendColor(Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem()));
                 break;

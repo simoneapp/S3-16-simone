@@ -21,7 +21,7 @@ public class StartGameVsCPUMsg implements IMessage {
 
 
 	public int getnColors(){
-		return radiobtnIndex == 0? Constants.CLASSIC_MODE : Constants.HARDER_MODE;
+		return radiobtnIndex == 0? Constants.CLASSIC_MODE : Constants.HARD_MODE;
 	}
 
 }

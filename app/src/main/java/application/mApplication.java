@@ -2,13 +2,12 @@ package application;
 
 import android.app.Application;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import actors.CPUActor;
 import actors.GameViewActor;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-import app.simone.GameActivity;
+import app.simone.users.FacebookManagerActor;
+import app.simone.users.FacebookViewActor;
 import utils.Constants;
 
 /**
@@ -21,10 +20,11 @@ public class mApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         system = ActorSystem.create("system");
         mApplication.getActorSystem().actorOf(Props.create(CPUActor.class), Constants.CPU_ACTOR_NAME);
         mApplication.getActorSystem().actorOf(Props.create(GameViewActor.class), Constants.GAMEVIEW_ACTOR_NAME);
+        mApplication.getActorSystem().actorOf(Props.create(FacebookViewActor.class), Constants.FBVIEW_ACTOR_NAME);
+        mApplication.getActorSystem().actorOf(Props.create(FacebookManagerActor.class), Constants.FACEBOOK_ACTOR_NAME);
     }
 
     public static ActorSystem getActorSystem(){

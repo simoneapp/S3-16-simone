@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import app.simone.R
@@ -22,10 +21,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 
 class FacebookFriendsAdapter : ArrayAdapter<FacebookFriend> {
 
-    var manager : FacebookManager? = null
-
-    constructor(context: Context, data: List<FacebookFriend>, manager : FacebookManager) : super(context, R.layout.cell_friends) {
-        this.manager = manager
+    constructor(context: Context, data: List<FacebookFriend>) : super(context, R.layout.cell_friends) {
         val config = ImageLoaderConfiguration.createDefault(getContext())
         ImageLoader.getInstance().init(config)
     }

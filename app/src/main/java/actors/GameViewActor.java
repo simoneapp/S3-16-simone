@@ -59,7 +59,6 @@ public class GameViewActor extends UntypedActor {
                 getSelf().tell(new NextColorMsg(), getSelf());
                 break;
             case NEXT_COLOR_MSG:
-                Log.d("##VIEW ACTOR", "" + paused);
                 if (!paused) {
                     if (this.isPlayerTurn()) {
                         playerTurn = true;
@@ -93,7 +92,10 @@ public class GameViewActor extends UntypedActor {
 
                     if (playerSequence.size() > 0 && playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))) {
                         if (sizeDifference == 0) {
-                            gameActivity.getHandler().sendEmptyMessage(Constants.CPU_TURN);
+                            Message m = new Message();
+                            m.what = Constants.CPU_TURN;
+                            m.arg2 = playerColorIndex;
+                            gameActivity.getHandler().sendMessage(m);
                             Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
                                     .tell(new GimmeNewColorMsg(), getSelf());
                             this.playerSequence.clear();

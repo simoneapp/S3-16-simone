@@ -25,7 +25,6 @@ public enum SColor {
 
     public int getButtonId() { return buttonId; }
     public int getSoundId() { return soundId; }
-    public int getColorId(){ return colorId; }
 
     public static SColor fromInt(int number){
         for (SColor type : SColor.values()) {

@@ -107,7 +107,7 @@ public abstract class FullscreenActivity extends AppCompatActivity {
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(initialDelay);
+        //delayedHide(initialDelay);
 
 
     }

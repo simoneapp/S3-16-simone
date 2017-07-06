@@ -45,12 +45,12 @@ import utils.Utilities;
 public class GameActivity extends FullscreenActivity implements IGameActivity {
     private boolean playerTurn;
     private boolean tapToBegin = true;
-    private SimoneTextView simoneTextView;
+
     private Animation animation;
-    private Animation rotate;
-    private Animation zoomIn;
-    private Animation zoomOut;
+
     private FloatingActionButton gameFab;
+    private SimoneTextView simoneTextView;
+
     private boolean paused;
 
     private int chosenMode = Constants.CLASSIC_MODE;
@@ -67,7 +67,8 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             switch (msg.what) {
                 case Constants.CPU_TURN:
                     if (playerTurn) {
-                        simoneTextView.setText(Constants.STRING_EMPTY);
+
+                        simoneTextView.setText(/*Score*/String.valueOf(msg.arg2 + 1));
                         simoneTextView.startAnimation(animation);
                     }
                     playerTurn = false;
@@ -154,6 +155,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
                 if (tapToBegin) {
                     tapToBegin = false;
+                    playerTurn = false;
                     simoneTextView.startAnimation(animation);
                     simoneTextView.setText(Constants.STRING_EMPTY);
                     simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
@@ -164,6 +166,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                 }
             }
         });
+
         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem())
                 .tell(new AttachViewMsg(this), ActorRef.noSender());
     }
@@ -251,16 +254,18 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     }
 
     private void initAnimation(){
-        this.rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
-        this.zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
-        this.zoomOut = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
+        final Animation rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
+        final Animation zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
+        final Animation zoomOut = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
         this.animation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         this.animation.setAnimationListener(new Animation.AnimationListener() {
+
             @Override
             public void onAnimationStart(Animation animation) {
+
                 if (playerTurn) {
-                    simoneTextView.setAnimation(zoomIn);
                     gameFab.startAnimation(zoomIn);
+                    simoneTextView.setAnimation(zoomIn);
                 } else {
                     simoneTextView.startAnimation(zoomOut);
                     gameFab.startAnimation(zoomOut);
@@ -268,7 +273,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                 simoneTextView.startAnimation(rotate);
             }
             @Override
-            public void onAnimationEnd(Animation animation) {}
+            public void onAnimationEnd(Animation animation) { }
             @Override
             public void onAnimationRepeat(Animation animation) {}
         });

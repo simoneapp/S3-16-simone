@@ -124,7 +124,8 @@ class FacebookManagerActor : UntypedActor() {
                             //sender.tell(FbResponseGetUserScoreMsg("Score not available"), self)
                         }
                     } else {
-                        actor.tell(FbResponseGetUserScoreMsg(response.error.errorMessage), self)
+                        //actor.tell(FbResponseGetUserScoreMsg(response.error.errorMessage), self)
+                        actor.tell(FbResponseGetUserScoreMsg(0), self)
                         //sender.tell(FbResponseGetUserScoreMsg(response.error.errorMessage), self)
                     }
                 }

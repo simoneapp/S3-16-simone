@@ -1,5 +1,6 @@
 package app.simone;
 
+import android.app.Activity;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -12,11 +13,23 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.Toast;
+import com.pubnub.api.PubNub;
+import com.pubnub.api.callbacks.SubscribeCallback;
+import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+import org.json.JSONException;
+import PubNub.OnlinePlayer;
+import PubNub.Request;
+import java.util.Random;
+import PubNub.PubnubController;
 import android.widget.FrameLayout;
 
 import java.util.ArrayList;
@@ -49,8 +62,11 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     private Animation animation;
 
     private FloatingActionButton gameFab;
+    private PubnubController pnController;
+    private boolean isMultiplayerMode=false;
     private SimoneTextView simoneTextView;
 
+    private static final int INIT_SEED = 21;
     private boolean paused;
 
     private int chosenMode = Constants.CLASSIC_MODE;
@@ -112,6 +128,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         }
     };
 
+
     private Handler vHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -135,6 +152,23 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(getIntent().getExtras().get("player")!=null){
+            isMultiplayerMode=true;
+            pnController = new PubnubController("multiplayer");
+            pnController.subscribeToChannel();
+
+            OnlinePlayer player = (OnlinePlayer) getIntent().getExtras().getSerializable("player");
+            OnlinePlayer toPlayer = (OnlinePlayer) getIntent().getExtras().getSerializable("toPlayer");
+            Request req = new Request(player,toPlayer);
+            try {
+                pnController.publishToChannel(req);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d("GameActivity","Error while publishing the message on the channel");
+            }
+        }
+
+        int radiobtnIndex = 0;
         buttons = new ArrayList<>();
 
         Intent intent = getIntent();
@@ -300,6 +334,45 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             }
         });
         return button;
+    }
+
+    private void addScoreListener(){
+        pnController.getPubnub().addListener(new SubscribeCallback() {
+            @Override
+            public void status(PubNub pubnub, PNStatus status) {
+
+            }
+
+            @Override
+            public void message(PubNub pubnub, PNMessageResult message) {
+                if (message.getMessage() != null) {
+                    final PNMessageResult msg = message;
+                    System.out.println(message.getMessage().toString());
+
+                    printScore(GameActivity.this,message);
+
+
+                }
+            }
+
+            @Override
+            public void presence(PubNub pubnub, PNPresenceEventResult presence) {
+
+            }
+        });
+    }
+
+    private void printScore(final Activity parent, PNMessageResult message){
+        if (message.getMessage() != null) {
+            final PNMessageResult msg = message;
+            System.out.println(message.getMessage().toString());
+
+            parent.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(parent.getBaseContext(), "Your score is: "+msg.getMessage().toString(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
 }

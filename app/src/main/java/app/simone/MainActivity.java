@@ -34,6 +34,8 @@ import app.simone.users.FacebookLoginActivity;
 public class MainActivity extends FullscreenActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private Button VSCpuButton;
+    private Button connectionButton;
+    private Button btnMultiplayer;
     private Button multiplayerButton;
     final Handler handler = new Handler();
     private GoogleApiClient mGoogleApiClient;
@@ -54,6 +56,9 @@ public class MainActivity extends FullscreenActivity implements GoogleApiClient.
         Fabric.with(this, new Crashlytics());
 
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
+        connectionButton = (Button)findViewById(R.id.button4);
+        btnMultiplayer = (Button)findViewById(R.id.main_button_multiplayer);
+
 
         //Listener on vs CPUActor button
         VSCpuButton.setOnClickListener(new View.OnClickListener(){
@@ -63,6 +68,27 @@ public class MainActivity extends FullscreenActivity implements GoogleApiClient.
                 openActivity(VSCpuActivity.class);
             }
         });
+
+        btnMultiplayer.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                openActivity(FacebookLoginActivity.class);
+            }
+        });
+
+        connectionButton.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                openActivity(SettingsActivity.class);
+            }
+        });
+
+        // Upon interacting with UI controls, delay any scheduled hide()
+        // operations to prevent the jarring behavior of controls going away
+        // while interacting with the UI.
+        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
 
         multiplayerButton = (Button) findViewById(R.id.main_button_multiplayer);

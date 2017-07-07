@@ -122,5 +122,9 @@
     <string name="highscore">high\nscore</string>
     <string name="tap_to_begin">tap to\nbegin</string>
     <string name="gcm_defaultSenderId">1</string>
+    <string name="classic_explanation">repeat\nsimone\'s\nsequence</string>
+    <string name="hard_explanation">+\ncolor\nswipe</string>
+    <string name="classic">classic</string>
+    <string name="hard">hard</string>
 
 </resources>

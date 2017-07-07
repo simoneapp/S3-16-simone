@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="application.mApplication"
@@ -38,6 +40,10 @@
             android:name=".VSCpuActivity"
             android:label="VS CPU"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".users.GoogleGamesActivity"
+            android:label="Games"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -55,12 +61,24 @@
         <activity
             android:name=".GameActivity"
             android:label="Game"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SettingsActivity"></activity>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="578b2c1882d727176d06b548a797e4c9373b27ca" />
 
+        <meta-data android:name="com.google.android.gms.games.APP_ID"
+            android:value="@string/app_id" />
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
 
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
+
+
 </manifest>

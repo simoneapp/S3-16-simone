@@ -1,10 +1,14 @@
 package app.simone.users
 
 import PubNub.PubnubController
+import akka.actor.ActorRef
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import app.simone.GameActivity
+import android.widget.AdapterView
+import android.widget.Button
+import android.widget.ListView
+import android.widget.Toast
 import app.simone.R
 import app.simone.users.model.FacebookFriend
 import com.facebook.Profile
@@ -25,13 +29,17 @@ import io.realm.RealmResults
 import PubNub.PushNotification
 import android.content.Context
 import android.os.PowerManager
+import app.simone.GameActivity
 import com.google.gson.JsonElement
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
+import application.mApplication
+import messages.*
+import utils.Constants
+import utils.Utilities
 
 
 class FacebookLoginActivity : AppCompatActivity() {
 
-    var manager = FacebookManager()
     var listView : ListView? = null
     var listViewRequests : ListView? =null
 
@@ -50,47 +58,55 @@ class FacebookLoginActivity : AppCompatActivity() {
         initRealm()
 
         setContentView(R.layout.activity_facebook_login)
-        manager.registerFacebookButton(this, { success, data, error -> updateList(success, data, error) })
-
-        adapter = FacebookFriendsAdapter(this, friends, manager)
 
         listView = this.findViewById(R.id.list_friends) as ListView
+        adapter = FacebookFriendsAdapter(this, friends)
         listView?.adapter = adapter
 
-        if(manager.isLoggedIn()) {
-            manager.getFacebookFriends { success, data, error -> updateList(success, data, error) }
-            setMyUsername()
-            updateListViewRequests()
-        }
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        actor.tell(FbViewSetupMsg(this), ActorRef.noSender())
+
 
         val btnInvites = this.findViewById(R.id.btn_invite) as Button
         btnInvites.setOnClickListener({
-            manager?.sendGameRequest()
+            actor.tell(FbSendGameRequestMsg(), ActorRef.noSender())
         })
 
         listView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-            val friend = adapter?.getItem(i)
-            manager.getFriendScore(friend) {
-                success, score, error ->
-                    enablePlayButton(friend!!)
-            }
-        }
 
+            val friend = adapter?.getItem(i)
+            actor.tell(FbItemClickMsg(friend), ActorRef.noSender())
+
+            enablePlayButton(friend!!)
+        }
     }
 
-    val updateList = { success: Boolean, data: List<FacebookFriend>?, error: String? ->
-        adapter?.clear()
-        if(success) {
-            adapter?.addAll(data)
-        } else {
-            Toast.makeText(this, error, Toast.LENGTH_SHORT)
+    fun displayToast(text: String) {
+        this.runOnUiThread {
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        manager.onActivityResult(requestCode, resultCode, data)
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        actor.tell(FbOnActivityResultMsg(requestCode, resultCode, data), ActorRef.noSender())
     }
+
+
+    fun updateList (response : FbResponseFriendsMsg) {
+
+        this.runOnUiThread {
+            adapter?.clear()
+
+            if(response.isSuccess) {
+                adapter?.addAll(response.data)
+            } else {
+                displayToast(response.errorMessage)
+            }
+        }
+    }
+
 
     fun setMyUsername(){
         player = OnlinePlayer(Profile.getCurrentProfile().id.toString(),Profile.getCurrentProfile().firstName.toString(),Profile.getCurrentProfile().lastName.toString())
@@ -197,21 +213,23 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     fun updateListViewRequests(){
 
-        if(getPendingRequests().isNotEmpty()) {
-            var myTextView = this.findViewById(R.id.textView3) as TextView
-            myTextView.text = "Richieste in sospeso:"
-            listViewRequests = this.findViewById(R.id.listView_requests) as ListView
-            var dataModels = java.util.ArrayList<OnlinePlayer>()
-            var pr = getPendingRequests()
+        this.runOnUiThread {
+            if (getPendingRequests().isNotEmpty()) {
+                var myTextView = this.findViewById(R.id.textView3) as TextView
+                myTextView.text = "Richieste in sospeso:"
+                listViewRequests = this.findViewById(R.id.listView_requests) as ListView
+                var dataModels = java.util.ArrayList<OnlinePlayer>()
+                var pr = getPendingRequests()
 
-            pr.forEach {request-> dataModels.add(OnlinePlayer(request.idTo,request.nameTo,"")) }
+                pr.forEach { request -> dataModels.add(OnlinePlayer(request.idTo, request.nameTo, "")) }
 
 
-            val adapter = CustomAdapter(dataModels, applicationContext)
-            listViewRequests?.adapter = adapter
-            listView?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-                val dataModel = dataModels[position]
-                println("ARRAY: "+position)
+                val adapter = CustomAdapter(dataModels, applicationContext)
+                listViewRequests?.adapter = adapter
+                listViewRequests?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                    val dataModel = dataModels[position]
+                    println("ARRAY: " + position)
+                }
             }
         }
 
@@ -219,7 +237,7 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if(manager.isLoggedIn()) {
+        if(FacebookManagerActor.isLoggedIn()) {
             updateListViewRequests()
         }
     }

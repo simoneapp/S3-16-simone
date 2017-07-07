@@ -14,19 +14,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Result;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.games.Player;
 
+import app.simone.Controller.ControllerImplementations.DataManager;
+import app.simone.users.FacebookLoginActivity;
 import app.simone.users.GoogleGamesActivity;
 import io.fabric.sdk.android.Fabric;
-
-import app.simone.users.FacebookLoginActivity;
 
 /**
  * @author Michele Sapignoli
@@ -54,6 +49,8 @@ public class MainActivity extends FullscreenActivity implements GoogleApiClient.
 
 
         Fabric.with(this, new Crashlytics());
+
+        DataManager.Companion.getInstance().setup(this);
 
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
         connectionButton = (Button)findViewById(R.id.button4);

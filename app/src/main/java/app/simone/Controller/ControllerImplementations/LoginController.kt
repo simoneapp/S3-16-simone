@@ -2,21 +2,21 @@ package app.simone.Controller.ControllerImplementations
 
 import app.simone.Controller.UserInputController
 import app.simone.DataModel.Match
-
 import app.simone.DataModel.Player
-import io.realm.Realm
 import io.realm.RealmList
 
 /**
  * Created by gzano on 22/06/2017.
  */
 
-class LoginController(private val realm: Realm) : UserInputController {
+class LoginController() : UserInputController {
 
-    val FIELD_PLAYER_NAME="name"
+    val FIELD_PLAYER_NAME = "name"
+    val realm = DataManager.instance.realm
 
     override fun insertMatch(playerName: String) {
-        realm.executeTransaction { realm->
+
+        realm?.executeTransaction { realm->
             val player=realm.where(Player::class.java).equalTo(FIELD_PLAYER_NAME,playerName).findFirst()
             val match1 = realm.createObject(Match::class.java)
             val match2 = realm.createObject(Match::class.java)
@@ -29,32 +29,17 @@ class LoginController(private val realm: Realm) : UserInputController {
             match4.score = 1//Random().nextInt(20)
 
             player.matches = RealmList(match1, match2, match3, match4)
-
         }
     }
-
-
-
-
-
-
 
     override fun insertPlayer(playerName:String) {
 
-
-        realm.executeTransaction { realm ->
-
-
+        realm?.executeTransaction { realm ->
             if (realm.where(Player::class.java).equalTo("name", playerName).findAll().isEmpty()) {
                  realm.createObject(Player::class.java, playerName)
-
-
-
             }
         }
 
-
     }
-
 
 }

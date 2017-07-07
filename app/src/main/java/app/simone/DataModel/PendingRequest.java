@@ -1,5 +1,7 @@
 package app.simone.DataModel;
 
+import com.google.gson.JsonObject;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -52,4 +54,17 @@ public class PendingRequest extends RealmObject{
     public void setNameTo(String nameTo) {
         this.nameTo = nameTo;
     }
+
+
+    public static PendingRequest fromJson(JsonObject obj) {
+
+        PendingRequest pr = new PendingRequest();
+        pr.id = obj.get("from").getAsString();
+        pr.name = obj.get("fromName").getAsString();
+        pr.idTo = obj.get("to").getAsString();
+        pr.nameTo = obj.get("toName").getAsString();
+        return pr;
+    }
+
+
 }

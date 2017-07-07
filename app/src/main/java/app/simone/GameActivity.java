@@ -253,7 +253,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         }
     }
 
-    private void initAnimation(){
+    private void initAnimation() {
         final Animation rotate = AnimationUtils.loadAnimation(this, R.anim.rotate);
         final Animation zoomIn = AnimationUtils.loadAnimation(this, R.anim.zoom_in);
         final Animation zoomOut = AnimationUtils.loadAnimation(this, R.anim.zoom_out);
@@ -262,21 +262,27 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
             @Override
             public void onAnimationStart(Animation animation) {
-
                 if (playerTurn) {
                     gameFab.startAnimation(zoomIn);
-                    simoneTextView.setAnimation(zoomIn);
+                    simoneTextView.startAnimation(zoomIn);
+
                 } else {
                     simoneTextView.startAnimation(zoomOut);
                     gameFab.startAnimation(zoomOut);
                 }
                 simoneTextView.startAnimation(rotate);
             }
+
             @Override
-            public void onAnimationEnd(Animation animation) { }
+            public void onAnimationEnd(Animation animation) {
+            }
+
             @Override
-            public void onAnimationRepeat(Animation animation) {}
+            public void onAnimationRepeat(Animation animation) {
+            }
         });
+
+
     }
 
     private Button initColorButton(final SColor color) {

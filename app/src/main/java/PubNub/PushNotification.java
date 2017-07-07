@@ -6,6 +6,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
 
 import app.simone.R;
@@ -26,10 +27,11 @@ public class PushNotification {
     }
 
     public void init(){
-        android.support.v4.app.NotificationCompat.Builder mBuilder =
+        android.support.v4.appgi.NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(myContext)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Simone app")
+                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                         .setContentText(this.name +" vuole giocare con te!");
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(myContext, FacebookLoginActivity.class);

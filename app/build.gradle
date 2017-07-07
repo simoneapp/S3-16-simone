@@ -5,6 +5,7 @@ buildscript {
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
+
     }
 }
 apply plugin: 'com.android.application'
@@ -35,6 +36,7 @@ android {
     }
     dexOptions {
         javaMaxHeapSize "4g"
+        keepRuntimeAnnotatedClasses false
     }
 }
 
@@ -50,6 +52,10 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile group: 'com.typesafe.akka', name: 'akka-actor_2.10', version: '2.3.16'
     compile group: 'org.scala-lang', name: 'scala-library', version: '2.10.4'
+    compile group: 'com.pubnub', name: 'pubnub-gson', version: '4.6.5'
+    compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.57'
+    // Because RxAndroid releases are few and far between, it is recommended you also
+// explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -63,16 +69,16 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.android.support:multidex:1.0.1'
-    testCompile 'junit:junit:4.12'
+    compile 'org.slf4j:slf4j-api:1.7.5'
+    compile 'org.slf4j:slf4j-log4j12:1.7.5'
+    compile 'com.google.android.gms:play-services:11.0.2'
+    compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
+    compile 'com.beust:klaxon:0.30'
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services-games:11.0.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-
-
-
-
 }
 
 repositories {

@@ -47,6 +47,23 @@
     <ListView
         android:id="@+id/list_friends"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="214dp"/>
+
+    <Button
+        android:id="@+id/playButton"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:enabled="false"
+        android:text="Play" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ListView
+        android:id="@+id/listView_requests"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

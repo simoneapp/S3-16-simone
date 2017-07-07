@@ -47,6 +47,8 @@ class FacebookInstrumentedTest {
 /*
         Espresso.onView(ViewMatchers.withId(R.id.btn_player2player)).perform(click())
 
+        Espresso.onView(ViewMatchers.withId(R.id.button2)).perform(click())
+
         val btnLogin = Espresso.onView(ViewMatchers.withId(R.id.login_button))
         val manager = FacebookManager()
 

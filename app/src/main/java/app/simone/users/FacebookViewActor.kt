@@ -46,6 +46,8 @@ class FacebookViewActor() : UntypedActor() {
 
                 if(FacebookManagerActor.isLoggedIn()) {
                     actor.tell(FbRequestFriendsMsg(), self)
+                    activity?.setMyUsername()
+                    activity?.updateListViewRequests()
                 }
             }
 
@@ -77,9 +79,9 @@ class FacebookViewActor() : UntypedActor() {
                 val msg = message as FbResponseGetUserScoreMsg
 
                 if(msg.isSuccess) {
-                    activity?.displayToast("Score: " + msg.data)
+                    //activity?.displayToast("Score: " + msg.data)
                 } else  {
-                    activity?.displayToast("Error: cannot fetch user's score.")
+                    //activity?.displayToast("Error: cannot fetch user's score.")
                 }
             }
         }

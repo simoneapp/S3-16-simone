@@ -1,6 +1,6 @@
 package messages;
 
-import app.simone.users.model.FacebookFriend;
+import app.simone.users.model.FacebookUser;
 
 /**
  * Created by nicola on 06/07/2017.
@@ -8,9 +8,9 @@ import app.simone.users.model.FacebookFriend;
 
 public class FbItemClickMsg implements IMessage {
 
-    private FacebookFriend friend;
+    private FacebookUser friend;
 
-    public FbItemClickMsg(FacebookFriend friend) {
+    public FbItemClickMsg(FacebookUser friend) {
         this.friend = friend;
     }
 
@@ -19,7 +19,7 @@ public class FbItemClickMsg implements IMessage {
         return MessageType.FB_ITEM_CLICK_MSG;
     }
 
-    public FacebookFriend getFriend() {
+    public FacebookUser getFriend() {
         return friend;
     }
 

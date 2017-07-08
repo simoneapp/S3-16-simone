@@ -2,15 +2,15 @@ package messages;
 
 import java.util.List;
 
-import app.simone.users.model.FacebookFriend;
+import app.simone.users.model.FacebookUser;
 
 /**
  * Created by nicola on 01/07/2017.
  */
 
-public class FbResponseFriendsMsg extends FbOperationCompletedMsg<List<FacebookFriend>> {
+public class FbResponseFriendsMsg extends FbOperationCompletedMsg<List<FacebookUser>> {
 
-    public FbResponseFriendsMsg(List<FacebookFriend> data) {
+    public FbResponseFriendsMsg(List<FacebookUser> data) {
         super(data);
     }
 

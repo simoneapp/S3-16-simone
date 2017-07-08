@@ -1,6 +1,6 @@
 package messages;
 
-import app.simone.users.model.FacebookFriend;
+import app.simone.users.model.FacebookUser;
 
 /**
  * Created by nicola on 01/07/2017.
@@ -8,9 +8,9 @@ import app.simone.users.model.FacebookFriend;
 
 public class FbRequestGetUserScoreMsg implements IMessage {
 
-    private FacebookFriend friend;
+    private FacebookUser friend;
 
-    public FbRequestGetUserScoreMsg(FacebookFriend friend) {
+    public FbRequestGetUserScoreMsg(FacebookUser friend) {
         this.friend = friend;
     }
 
@@ -19,7 +19,7 @@ public class FbRequestGetUserScoreMsg implements IMessage {
         return MessageType.FB_GET_FRIEND_SCORE_MSG;
     }
 
-    public FacebookFriend getFriend() {
+    public FacebookUser getFriend() {
         return friend;
     }
 }

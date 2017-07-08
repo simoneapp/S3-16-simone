@@ -3,7 +3,7 @@ package app.simone.users
 import akka.actor.UntypedActor
 import android.os.Bundle
 import android.util.Log
-import app.simone.users.model.FacebookFriend
+import app.simone.users.model.FacebookUser
 import application.mApplication
 import com.facebook.AccessToken
 import com.facebook.GraphRequest
@@ -60,7 +60,7 @@ class FacebookManagerActor : UntypedActor() {
                     Log.v("Sender Akka", sender.toString())
                     if(response.error == null) {
                         val jsonFriends = response.jsonObject.getJSONArray("data")
-                        val list = FacebookFriend.listFromJson(jsonFriends)
+                        val list = FacebookUser.listFromJson(jsonFriends)
                         actor.tell(FbResponseFriendsMsg(list), self)
                         //sender.tell(FbResponseFriendsMsg(list), self)
                     } else {
@@ -100,7 +100,10 @@ class FacebookManagerActor : UntypedActor() {
 
     fun getMyScore() {  getUserScore("me") }
 
-    fun getFriendScore(user: FacebookFriend?) { getUserScore(user!!.friendId!!) }
+    fun getFriendScore(user: FacebookUser?) {
+        val id = user?.id ?: return
+        getUserScore(id)
+    }
 
     private fun getUserScore(id: String) {
 

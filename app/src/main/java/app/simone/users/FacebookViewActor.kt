@@ -2,6 +2,7 @@ package app.simone.users
 
 import akka.actor.UntypedActor
 import app.simone.R
+import app.simone.users.model.FacebookUser
 import application.mApplication
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -25,6 +26,7 @@ class FacebookViewActor() : UntypedActor() {
     var loginButton : LoginButton? = null
     var requestDialog : GameRequestDialog? = null
     var callbackManager : CallbackManager? = null
+    var currentUser : FacebookUser? = null
 
     val FB_LOGIN_CANCELLED_MSG = "Facebook Login action cancelled from the user!"
     val FB_LOGIN_ERROR_MSG = "Facebook Login Error: "
@@ -46,7 +48,7 @@ class FacebookViewActor() : UntypedActor() {
 
                 if(FacebookManagerActor.isLoggedIn()) {
                     actor.tell(FbRequestFriendsMsg(), self)
-                    activity?.setMyUsername()
+                    activity?.setUser()
                     activity?.updateRequests()
                 }
             }

@@ -34,11 +34,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import PubNub.OnlinePlayer;
 import PubNub.PubnubController;
 import PubNub.Request;
 import akka.actor.ActorRef;
 import app.simone.styleable.SimoneTextView;
+import app.simone.users.model.FacebookUser;
 import application.mApplication;
 import colors.SColor;
 import messages.AttachViewMsg;
@@ -158,8 +158,8 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             pnController = new PubnubController("multiplayer");
             pnController.subscribeToChannel();
 
-            OnlinePlayer player = (OnlinePlayer) getIntent().getExtras().getSerializable("player");
-            OnlinePlayer toPlayer = (OnlinePlayer) getIntent().getExtras().getSerializable("toPlayer");
+            FacebookUser player = (FacebookUser) getIntent().getExtras().getSerializable("player");
+            FacebookUser toPlayer = (FacebookUser) getIntent().getExtras().getSerializable("toPlayer");
             Request req = new Request(player,toPlayer);
             try {
                 pnController.publishToChannel(req);

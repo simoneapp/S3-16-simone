@@ -61,10 +61,10 @@ public class PubnubController {
 
 
         JsonObject obj = new JsonObject();
-        obj.addProperty("from", request.getPlayer().getId());
-        obj.addProperty("fromName",request.getPlayer().getName()+request.getPlayer().getSurname());
-        obj.addProperty("to", request.getToPlayer().getId());
-        obj.addProperty("toName",request.getToPlayer().getName());
+        obj.addProperty("from", request.getSender().getId());
+        obj.addProperty("fromName",request.getSender().getName());
+        obj.addProperty("to", request.getRecipient().getId());
+        obj.addProperty("toName",request.getRecipient().getName());
 
 
         pubnub.publish()

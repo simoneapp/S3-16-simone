@@ -1,7 +1,6 @@
 package app.simone.users
 
 import PubNub.CustomAdapter
-import PubNub.OnlinePlayer
 import PubNub.PubnubController
 import akka.actor.ActorRef
 import android.content.Intent
@@ -11,7 +10,7 @@ import android.widget.*
 import app.simone.Controller.ControllerImplementations.DataManager
 import app.simone.GameActivity
 import app.simone.R
-import app.simone.users.model.FacebookFriend
+import app.simone.users.model.FacebookUser
 import application.mApplication
 import com.facebook.Profile
 import com.google.gson.JsonElement
@@ -31,17 +30,18 @@ class FacebookLoginActivity : AppCompatActivity() {
     var listView : ListView? = null
     var btnPlay : Button? = null
 
-    var friends = ArrayList<FacebookFriend>()
+    var friends = ArrayList<FacebookUser>()
     var adapter : FacebookFriendsAdapter? = null
 
     var pubnubController = PubnubController("multiplayer")
-    var player: OnlinePlayer? = null
+    //var player: OnlinePlayer? = null
 
     var listViewRequests : ListView? = null
-    var requestsUsers = ArrayList<OnlinePlayer>()
+    var requestsUsers = ArrayList<FacebookUser>()
     var requestsAdapter : CustomAdapter? = null
 
-    var selectedFriend : FacebookFriend? = null
+    var currentUser : FacebookUser? = null
+    var selectedUser : FacebookUser? = null
     var realm: Realm ? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +74,7 @@ class FacebookLoginActivity : AppCompatActivity() {
 
         listViewRequests = this.findViewById(R.id.listView_requests) as ListView
 
+        requestsAdapter = CustomAdapter(requestsUsers, applicationContext)
         listViewRequests?.adapter = requestsAdapter
         listViewRequests?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val model = requestsUsers[position]
@@ -82,12 +83,12 @@ class FacebookLoginActivity : AppCompatActivity() {
 
         btnPlay = this.findViewById(R.id.playButton) as Button
         btnPlay?.setOnClickListener({
-            if(selectedFriend != null) {
+            if(selectedUser != null) {
                 val activityIntent = Intent(baseContext, GameActivity::class.java)
                 activityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 println("ME: "+Profile.getCurrentProfile().firstName.toString()+" "+Profile.getCurrentProfile().lastName.toString())
-                activityIntent.putExtra("player", player)
-                activityIntent.putExtra("toPlayer", fromFriendToPlayer(selectedFriend!!))
+                activityIntent.putExtra("player", currentUser)
+                activityIntent.putExtra("toPlayer", selectedUser) // fromFriendToPlayer(selectedUser!!))
                 baseContext.startActivity(activityIntent)
             }
         })
@@ -125,22 +126,9 @@ class FacebookLoginActivity : AppCompatActivity() {
         }
     }
 
-
-    fun setMyUsername(){
-        player = OnlinePlayer(
-                Profile.getCurrentProfile().id.toString(),
-                Profile.getCurrentProfile().firstName.toString(),
-                Profile.getCurrentProfile().lastName.toString()
-        )
-    }
-
-    fun enablePlayButton(friend: FacebookFriend){
-        selectedFriend = friend
+    fun enablePlayButton(user: FacebookUser){
+        selectedUser = user
         btnPlay?.isEnabled = true
-    }
-
-    fun fromFriendToPlayer(friend: FacebookFriend):OnlinePlayer{
-        return OnlinePlayer(friend.friendId,friend.name,"")
     }
 
     fun addPubnubListener(obj: PubNub){
@@ -175,6 +163,12 @@ class FacebookLoginActivity : AppCompatActivity() {
         return fromUser != myId && toUser == myId
     }
 
+    fun setUser() {
+
+        val profile = Profile.getCurrentProfile()
+        currentUser = FacebookUser.with(profile.id, profile.name)
+    }
+
     fun updateRequests(){
         this.runOnUiThread {
             val requests = DataManager.instance.getPendingRequests()
@@ -183,8 +177,9 @@ class FacebookLoginActivity : AppCompatActivity() {
                 tv.text = "Richieste in sospeso:"
 
                 requestsAdapter?.clear()
-                requests.forEach { request -> requestsUsers.add(OnlinePlayer(request.idTo, request.nameTo, "")) }
+                //requests.forEach { request -> requestsUsers.add(OnlinePlayer(request.idTo, request.nameTo, "")) }
                 requestsAdapter?.addAll(requestsUsers)
+                //.addAll(requestsUsers)
             }
         }
     }

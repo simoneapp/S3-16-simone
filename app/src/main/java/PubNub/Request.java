@@ -1,7 +1,6 @@
 package PubNub;
 
-import app.simone.DataModel.PendingRequest;
-import io.realm.RealmResults;
+import app.simone.users.model.FacebookUser;
 
 /**
  * Created by Giacomo on 04/07/2017.
@@ -9,21 +8,21 @@ import io.realm.RealmResults;
 
 public class Request {
 
-    private OnlinePlayer player;
-    private OnlinePlayer toPlayer;
+    private FacebookUser sender;
+    private FacebookUser recipient;
 
 
-    public Request(OnlinePlayer player, OnlinePlayer toPlayer) {
-        this.player = player;
-        this.toPlayer = toPlayer;
+    public Request(FacebookUser sender, FacebookUser recipient) {
+        this.sender = sender;
+        this.recipient = recipient;
     }
 
-    public OnlinePlayer getPlayer() {
-        return player;
+    public FacebookUser getSender() {
+        return sender;
     }
 
-    public OnlinePlayer getToPlayer() {
-        return toPlayer;
+    public FacebookUser getRecipient() {
+        return recipient;
     }
 
 }

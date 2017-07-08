@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.facebook.Profile;
+
 import java.util.ArrayList;
+
 import app.simone.GameActivity;
 import app.simone.R;
-import com.facebook.Profile;
+import app.simone.users.model.FacebookUser;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -19,12 +23,12 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by Giacomo on 03/07/2017.
  */
 
-public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.OnClickListener {
+public class CustomAdapter extends ArrayAdapter<FacebookUser> implements View.OnClickListener {
 
-    private ArrayList<OnlinePlayer> data;
+    private ArrayList<FacebookUser> data;
     Context mContext;
 
-    public CustomAdapter(ArrayList<OnlinePlayer> data, Context context) {
+    public CustomAdapter(ArrayList<FacebookUser> data, Context context) {
         super(context, R.layout.row_item, data);
         this.data=data;
         this.mContext=context;
@@ -42,7 +46,7 @@ public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.On
 
         int position=(Integer) v.getTag();
         Object object= getItem(position);
-        OnlinePlayer dataModel=(OnlinePlayer)object;
+        FacebookUser dataModel=(FacebookUser)object;
 
         switch (v.getId())
         {
@@ -65,7 +69,7 @@ public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.On
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        OnlinePlayer dataModel = getItem(position);
+        FacebookUser dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 

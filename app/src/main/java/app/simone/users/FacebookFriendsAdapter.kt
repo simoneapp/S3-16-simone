@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import app.simone.R
-import app.simone.users.model.FacebookFriend
+import app.simone.users.model.FacebookUser
 import app.simone.users.model.FacebookPicture
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
@@ -19,9 +19,9 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
  * Created by nicola on 23/06/2017.
  */
 
-class FacebookFriendsAdapter : ArrayAdapter<FacebookFriend> {
+class FacebookFriendsAdapter : ArrayAdapter<FacebookUser> {
 
-    constructor(context: Context, data: List<FacebookFriend>) : super(context, R.layout.cell_friends) {
+    constructor(context: Context, data: List<FacebookUser>) : super(context, R.layout.cell_friends) {
         val config = ImageLoaderConfiguration.createDefault(getContext())
         ImageLoader.getInstance().init(config)
     }

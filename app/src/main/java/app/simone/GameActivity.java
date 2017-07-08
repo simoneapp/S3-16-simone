@@ -1,42 +1,42 @@
 package app.simone;
 
-import android.app.Activity;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
+
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.SubscribeCallback;
 import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
+
 import org.json.JSONException;
-import PubNub.OnlinePlayer;
-import PubNub.Request;
-import java.util.Random;
-import PubNub.PubnubController;
-import android.widget.FrameLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import PubNub.OnlinePlayer;
+import PubNub.PubnubController;
+import PubNub.Request;
 import akka.actor.ActorRef;
 import app.simone.styleable.SimoneTextView;
 import application.mApplication;
@@ -46,6 +46,7 @@ import messages.GuessColorMsg;
 import messages.NextColorMsg;
 import messages.PauseMsg;
 import messages.StartGameVsCPUMsg;
+import utils.AudioManager;
 import utils.AudioPlayer;
 import utils.Constants;
 import utils.Utilities;
@@ -186,6 +187,8 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         gameFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                AudioManager.Companion.getInstance().stopSimoneMusic();
 
                 if (tapToBegin) {
                     tapToBegin = false;
@@ -369,4 +372,9 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AudioManager.Companion.getInstance().playSimoneMusic();
+    }
 }

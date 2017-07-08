@@ -44,7 +44,6 @@ class FacebookLoginActivity : AppCompatActivity() {
     var selectedFriend : FacebookFriend? = null
     var realm: Realm ? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

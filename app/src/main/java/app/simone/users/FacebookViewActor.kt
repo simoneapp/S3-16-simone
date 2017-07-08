@@ -47,7 +47,7 @@ class FacebookViewActor() : UntypedActor() {
                 if(FacebookManagerActor.isLoggedIn()) {
                     actor.tell(FbRequestFriendsMsg(), self)
                     activity?.setMyUsername()
-                    activity?.updateListViewRequests()
+                    activity?.updateRequests()
                 }
             }
 

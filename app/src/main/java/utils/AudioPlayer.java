@@ -9,7 +9,7 @@ import android.media.MediaPlayer;
 
 public class AudioPlayer {
 
-    private MediaPlayer mMediaPlayer;
+    protected MediaPlayer mMediaPlayer;
 
     public void stop() {
         if (mMediaPlayer != null) {

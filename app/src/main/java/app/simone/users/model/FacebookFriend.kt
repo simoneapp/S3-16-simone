@@ -20,7 +20,6 @@ class FacebookFriend(json : JSONObject) {
         this.friendId = json.getString("id")
     }
 
-
     companion object {
         fun listFromJson(json : JSONArray) : List<FacebookFriend> {
 

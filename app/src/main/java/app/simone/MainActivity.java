@@ -18,6 +18,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
+import utils.AudioManager;
 import app.simone.Controller.ControllerImplementations.DataManager;
 import app.simone.users.FacebookLoginActivity;
 import app.simone.users.GoogleGamesActivity;
@@ -109,6 +110,9 @@ public class MainActivity extends FullscreenActivity implements GoogleApiClient.
                 startActivity(intent);
             }
         });
+
+        AudioManager.Companion.getInstance().playSimoneMusic();
+
     }
 
     @Override

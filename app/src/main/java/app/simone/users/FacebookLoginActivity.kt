@@ -221,8 +221,7 @@ class FacebookLoginActivity : AppCompatActivity() {
                 var dataModels = java.util.ArrayList<OnlinePlayer>()
                 var pr = getPendingRequests()
 
-                pr.forEach { request -> dataModels.add(OnlinePlayer(request.idTo, request.nameTo, "")) }
-
+                pr.forEach { request -> dataModels.add(OnlinePlayer(request.id, request.name, "")) }
 
                 val adapter = CustomAdapter(dataModels, applicationContext)
                 listViewRequests?.adapter = adapter

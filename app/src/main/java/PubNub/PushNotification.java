@@ -27,7 +27,7 @@ public class PushNotification {
     }
 
     public void init(){
-        android.support.v4.appgi.NotificationCompat.Builder mBuilder =
+        android.support.v4.app.NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(myContext)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Simone app")

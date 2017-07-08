@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -39,6 +41,7 @@ import java.util.List;
 
 import akka.actor.ActorRef;
 import app.simone.styleable.SimoneTextView;
+import app.simone.users.FacebookLoginActivity;
 import application.mApplication;
 import colors.SColor;
 import messages.AttachViewMsg;
@@ -368,5 +371,27 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             });
         }
     }
+
+    public void onBackPressed(){
+        AlertDialog alertDialog = new AlertDialog.Builder(GameActivity.this).create();
+        alertDialog.setTitle("Attention");
+        alertDialog.setMessage("Do you wanna quit the game?\nYour final score will be considered as SCORE_USER");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent facebookLogin = new Intent(GameActivity.this, FacebookLoginActivity.class);
+                        GameActivity.this.startActivity(facebookLogin);
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
+
 
 }

@@ -79,6 +79,7 @@ class FacebookLoginActivity : AppCompatActivity() {
 
             enablePlayButton(friend!!)
         }
+        disablePlayButton()
     }
 
     fun displayToast(text: String) {
@@ -124,6 +125,11 @@ class FacebookLoginActivity : AppCompatActivity() {
             baseContext.startActivity(activityIntent)
 
         })
+    }
+
+    fun disablePlayButton(){
+        val btnPlay = this.findViewById(R.id.playButton) as Button
+        btnPlay.isEnabled = false
     }
 
     fun fromFriendToPlayer(friend: FacebookFriend):OnlinePlayer{
@@ -240,6 +246,7 @@ class FacebookLoginActivity : AppCompatActivity() {
             updateListViewRequests()
         }
     }
+
 
 
 

@@ -27,8 +27,6 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import PubNub.PushNotification
-import android.content.Context
-import android.os.PowerManager
 import app.simone.GameActivity
 import com.google.gson.JsonElement
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
@@ -99,7 +97,6 @@ class FacebookLoginActivity : AppCompatActivity() {
 
         this.runOnUiThread {
             adapter?.clear()
-
             if(response.isSuccess) {
                 adapter?.addAll(response.data)
             } else {
@@ -155,9 +152,7 @@ class FacebookLoginActivity : AppCompatActivity() {
                     }
                 }
             }
-
             override fun presence(pubnub: PubNub, presence: PNPresenceEventResult) {
-
             }
         })
 
@@ -239,20 +234,5 @@ class FacebookLoginActivity : AppCompatActivity() {
         }
 
     }
-
-    override fun onResume() {
-        super.onResume()
-        if(FacebookManagerActor.isLoggedIn()) {
-            updateListViewRequests()
-        }
-    }
-
-
-
-
-
-
-
-
 
 }

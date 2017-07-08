@@ -137,4 +137,6 @@ public class GameViewActor extends UntypedActor {
         return cpuColorIndex >= cpuSequence.size();
     }
 
+    public int getPlayerColorIndex(){ return playerColorIndex; }
+
 }

@@ -345,10 +345,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                 if (message.getMessage() != null) {
                     final PNMessageResult msg = message;
                     System.out.println(message.getMessage().toString());
-
                     printScore(GameActivity.this,message);
-
-
                 }
             }
 
@@ -379,8 +376,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent facebookLogin = new Intent(GameActivity.this, FacebookLoginActivity.class);
-                        GameActivity.this.startActivity(facebookLogin);
+                        finish();
                     }
                 });
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL",

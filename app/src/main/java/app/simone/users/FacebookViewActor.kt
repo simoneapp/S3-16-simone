@@ -1,5 +1,6 @@
 package app.simone.users
 
+import PubNub.PubnubController
 import akka.actor.UntypedActor
 import app.simone.R
 import application.mApplication
@@ -48,6 +49,9 @@ class FacebookViewActor() : UntypedActor() {
                     actor.tell(FbRequestFriendsMsg(), self)
                     activity?.setMyUsername()
                     activity?.updateListViewRequests()
+                    activity?.pubnubController = PubnubController("multiplayer")
+                    activity?.pubnubController?.subscribeToChannel()
+                    activity?.addPubnubListener(activity!!.pubnubController.pubnub)
                 }
             }
 

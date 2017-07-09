@@ -8,7 +8,7 @@ import java.util.Random;
 
 import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
-import application.mApplication;
+import application.App;
 import colors.SColor;
 import messages.TimeToBlinkMsg;
 import messages.IMessage;
@@ -40,7 +40,7 @@ public class CPUActor extends UntypedActor {
                 this.nColors = ((StartGameVsCPUMsg)message).getnColors();
                 this.currentSequence.clear();
                 Log.d("##CPU ACTOR", "Received StartGameVsCpuMSG, " + this.nColors +" colors.");
-                this.generateAndSendColor(Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, mApplication.getActorSystem()));
+                this.generateAndSendColor(Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem()));
                 break;
             case GIMME_NEW_COLOR_MSG:
                 this.generateAndSendColor(getSender());

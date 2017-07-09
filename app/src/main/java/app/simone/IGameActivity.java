@@ -11,5 +11,5 @@ import akka.actor.ActorRef;
 public interface IGameActivity {
 
     Handler getHandler();
-    void setPlayerTurn(boolean isPlayerTurn);
+    void setPlayerBlinking(boolean isPlayerTurn);
 }

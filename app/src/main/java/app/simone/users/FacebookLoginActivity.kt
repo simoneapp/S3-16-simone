@@ -52,11 +52,16 @@ class FacebookLoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        pubnubController.subscribeToChannel()
-        this.addPubnubListener(pubnubController.pubnub)
-        initRealm()
+        //pubnubController.subscribeToChannel()
+        //this.addPubnubListener(pubnubController.pubnub)
+
 
         setContentView(R.layout.activity_facebook_login)
+
+        this.pubnubController = PubnubController("multiplayer")
+        this.pubnubController.subscribeToChannel()
+        this.addPubnubListener(pubnubController.pubnub)
+        initRealm()
 
         listView = this.findViewById(R.id.list_friends) as ListView
         adapter = FacebookFriendsAdapter(this, friends)
@@ -64,6 +69,7 @@ class FacebookLoginActivity : AppCompatActivity() {
 
         val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
         actor.tell(FbViewSetupMsg(this), ActorRef.noSender())
+
 
         val btnInvites = this.findViewById(R.id.btn_invite) as Button
         btnInvites.setOnClickListener({

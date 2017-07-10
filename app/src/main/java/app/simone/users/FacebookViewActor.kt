@@ -2,6 +2,7 @@ package app.simone.users
 
 import PubNub.PubnubController
 import akka.actor.UntypedActor
+import android.util.Log
 import app.simone.R
 import application.mApplication
 import com.facebook.CallbackManager
@@ -48,10 +49,8 @@ class FacebookViewActor() : UntypedActor() {
                 if(FacebookManagerActor.isLoggedIn()) {
                     actor.tell(FbRequestFriendsMsg(), self)
                     activity?.setMyUsername()
-                    activity?.updateListViewRequests()
-                    activity?.pubnubController = PubnubController("multiplayer")
-                    activity?.pubnubController?.subscribeToChannel()
-                    activity?.addPubnubListener(activity!!.pubnubController.pubnub)
+                    //activity?.updateListViewRequests()
+                    //activity?.addPubnubListener(activity!!.pubnubController.pubnub)
                 }
             }
 
@@ -128,6 +127,7 @@ class FacebookViewActor() : UntypedActor() {
         requestDialog?.registerCallback(callbackManager, object: FacebookCallback<GameRequestDialog.Result> {
             override fun onSuccess(result: GameRequestDialog.Result?) {
                 sendGameRequest()
+                Log.d("CIAONE","CIAONE")
             }
 
             override fun onCancel() {

@@ -19,5 +19,6 @@ public class Constants {
     public static final String TURN_PLAYER = "Your\nturn";
     public static final int WHATTASHAMEYOULOST_MSG = -10;
     public static final String  PLAY_AGAIN = "Play\nagain";
+    public static final String BACK_TO_MENU ="Back";
 
 }

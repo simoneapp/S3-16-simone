@@ -8,7 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
+
+import app.simone.DataModel.OnlineMatch;
 import app.simone.GameActivity;
 import app.simone.R;
 import com.facebook.Profile;
@@ -19,12 +23,12 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by Giacomo on 03/07/2017.
  */
 
-public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.OnClickListener {
+public class CustomAdapter extends ArrayAdapter<OnlineMatch> implements View.OnClickListener {
 
-    private ArrayList<OnlinePlayer> data;
+    private ArrayList<OnlineMatch> data;
     Context mContext;
 
-    public CustomAdapter(ArrayList<OnlinePlayer> data, Context context) {
+    public CustomAdapter(ArrayList<OnlineMatch> data, Context context) {
         super(context, R.layout.row_item, data);
         this.data=data;
         this.mContext=context;
@@ -32,9 +36,9 @@ public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.On
 
     // View lookup cache
     private static class ViewHolder {
-        TextView txtName;
-        TextView txtType;
-        Button info;
+        TextView textPlayer1;
+        TextView textPlayer2;
+        Button playButton;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.On
 
         int position=(Integer) v.getTag();
         Object object= getItem(position);
-        OnlinePlayer dataModel=(OnlinePlayer)object;
+        OnlineMatch dataModel=(OnlineMatch)object;
 
         switch (v.getId())
         {
@@ -51,9 +55,25 @@ public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.On
 
                 Intent intent = new Intent(mContext,GameActivity.class);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("multiplayerMode","multiplayerMode");
                 intent.putExtra("id",Profile.getCurrentProfile().getId().toString());
                 intent.putExtra("firstname",Profile.getCurrentProfile().getFirstName().toString());
                 intent.putExtra("surname",Profile.getCurrentProfile().getLastName().toString());
+
+                //dati di chi invia la richiesta
+               /* OnlinePlayer op = new OnlinePlayer(dataModel.getIdP1(),dataModel.getNameP1(),"");
+                Toast.makeText(getContext(),op.getId()+" "+op.getName()+" "+op.getSurname(),Toast.LENGTH_SHORT).show();
+
+                intent.putExtra("idTo",op.getId());
+                intent.putExtra("nameTo",op.getName());*/
+
+                OnlinePlayer toPlayer = new OnlinePlayer(Profile.getCurrentProfile().getId().toString(),Profile.getCurrentProfile().getFirstName().toString(),Profile.getCurrentProfile().getLastName().toString());
+                OnlinePlayer player = new OnlinePlayer(dataModel.getIdP1(),dataModel.getNameP1(),"");
+                player.setScore(dataModel.getScoreP1());
+                toPlayer.setScore(dataModel.getScoreP2());
+                intent.putExtra("player", player);
+                intent.putExtra("toPlayer", toPlayer);
+
 
                 mContext.startActivity(intent);
                 break;
@@ -65,7 +85,7 @@ public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.On
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        OnlinePlayer dataModel = getItem(position);
+        OnlineMatch dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -76,9 +96,9 @@ public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.On
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.row_item, parent, false);
-            viewHolder.txtName = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.txtType = (TextView) convertView.findViewById(R.id.type);
-            viewHolder.info = (Button) convertView.findViewById(R.id.item_info);
+            viewHolder.textPlayer1 = (TextView) convertView.findViewById(R.id.p1);
+            viewHolder.textPlayer2 = (TextView) convertView.findViewById(R.id.p2);
+            viewHolder.playButton = (Button) convertView.findViewById(R.id.item_info);
 
             result=convertView;
 
@@ -91,11 +111,10 @@ public class CustomAdapter extends ArrayAdapter<OnlinePlayer> implements View.On
         lastPosition = position;
 
 
-        viewHolder.txtName.setText(dataModel.getId());
-        viewHolder.txtType.setText(dataModel.getName());
-        viewHolder.info.setOnClickListener(this);
-        viewHolder.info.setTag(position);
-        // Return the completed view to render on screen
+        viewHolder.textPlayer1.setText(dataModel.getNameP1()+" - Score: "+dataModel.getScoreP1());
+        viewHolder.textPlayer2.setText(dataModel.getNameP2()+" - Score: "+dataModel.getScoreP2());
+        viewHolder.playButton.setOnClickListener(this);
+        viewHolder.playButton.setTag(position);
         return convertView;
     }
 }

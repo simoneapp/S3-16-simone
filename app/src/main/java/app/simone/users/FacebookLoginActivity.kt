@@ -21,7 +21,7 @@ import PubNub.OnlinePlayer
 import PubNub.CustomAdapter
 import android.util.Log
 import android.widget.*
-import app.simone.DataModel.PendingRequest
+import app.simone.DataModel.OnlineMatch
 import com.google.gson.JsonObject
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -46,6 +46,7 @@ class FacebookLoginActivity : AppCompatActivity() {
     var pubnubController = PubnubController("multiplayer")
     var player: OnlinePlayer? = null
     var realm: Realm ? = null
+    var tempScore: String =""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +65,6 @@ class FacebookLoginActivity : AppCompatActivity() {
         val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
         actor.tell(FbViewSetupMsg(this), ActorRef.noSender())
 
-
         val btnInvites = this.findViewById(R.id.btn_invite) as Button
         btnInvites.setOnClickListener({
             actor.tell(FbSendGameRequestMsg(), ActorRef.noSender())
@@ -74,7 +74,6 @@ class FacebookLoginActivity : AppCompatActivity() {
 
             val friend = adapter?.getItem(i)
             actor.tell(FbItemClickMsg(friend), ActorRef.noSender())
-
             enablePlayButton(friend!!)
         }
         disablePlayButton()
@@ -120,7 +119,7 @@ class FacebookLoginActivity : AppCompatActivity() {
             activityIntent.putExtra("player", player)
             activityIntent.putExtra("toPlayer", fromFriendToPlayer(friend))
             baseContext.startActivity(activityIntent)
-
+            disablePlayButton()
         })
     }
 
@@ -133,8 +132,9 @@ class FacebookLoginActivity : AppCompatActivity() {
         return OnlinePlayer(friend.friendId,friend.name,"")
     }
 
-    fun addPubnubListener(obj: PubNub){
 
+    fun addPubnubListener(obj: PubNub){
+        //Toast.makeText(applicationContext, "SONO IN ASCOLTO..", Toast.LENGTH_SHORT).show()
         obj.addListener(object : SubscribeCallback() {
             override fun status(pubnub: PubNub, status: PNStatus) {
             }
@@ -145,6 +145,7 @@ class FacebookLoginActivity : AppCompatActivity() {
                     runOnUiThread {
                         if(filter(msg)) {
                             //Toast.makeText(applicationContext, "Richiesta ricevuta da" + msg.asJsonObject.get("to").asString, Toast.LENGTH_SHORT).show()
+                            saveOpponentScore(msg)
                             saveRequestId(msg.asJsonObject)
                             updateListViewRequests()
                         }
@@ -160,21 +161,46 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     fun filter(msg: JsonElement):Boolean{
         val myId = Profile.getCurrentProfile().id.toString()
-        val fromUser = msg.asJsonObject.get("from").asString
-        val toUser = msg.asJsonObject.get("to").asString;
-        return fromUser!=myId && toUser==myId
+        val fromUser = msg.asJsonObject.get("idP1").asString
+        val toUser = msg.asJsonObject.get("idP2").asString
+        return toUser==myId || fromUser==myId
+        //return fromUser!=myId && toUser==myId
+    }
+
+    fun filterNotification(msg: JsonElement):Boolean{
+        val myId = Profile.getCurrentProfile().id.toString()
+        val fromUser = msg.asJsonObject.get("idP1").asString
+        val toUser = msg.asJsonObject.get("idP2").asString
+        val scoreP2=msg.asJsonObject.get("scoreP2").asString
+        val scoreP1=msg.asJsonObject.get("scoreP1").asString
+        return fromUser!=myId && toUser==myId && scoreP2=="--" && scoreP1=="--"
+    }
+
+    fun saveOpponentScore(msg:JsonElement){
+        val scoreP2=msg.asJsonObject.get("scoreP2").asString
+        if(scoreP2!="--" && scoreP2!=null){
+            tempScore=scoreP2
+        }
     }
 
     fun saveRequestId(obj: JsonObject){
         Log.d("PR JSON",obj.toString())
         var pr = fromJSONtoObj(obj)
+        if(tempScore!=""){
+            pr.scoreP2=tempScore
+            tempScore=""
+        }
         Log.d("PR OBJ",pr.toString())
 
         try {
             realm?.executeTransaction { realm ->
-                realm.copyToRealm(pr)
+                realm.insertOrUpdate(pr)
+                //Toast.makeText(applicationContext,"TRANSAZIONE "+ pr.nameP1 +" "+pr.scoreP1+" "+pr.nameP2 +" :"+pr.scoreP2, Toast.LENGTH_SHORT).show()
             }
-            PushNotification(applicationContext,pr.name).init()
+
+            if(filterNotification(obj)) {
+                PushNotification(applicationContext, pr.nameP1).init()
+            }
         }
         catch (e: RealmPrimaryKeyConstraintException) {
             Log.d("DB","The value is already in the database!")
@@ -182,17 +208,22 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     }
 
-    private fun fromJSONtoObj(obj: JsonObject):PendingRequest{
-        val id=obj.get("from").asString
-        val name=obj.get("fromName").asString
-        val idTo=obj.get("to").asString
-        val toName=obj.get("toName").asString
+    private fun fromJSONtoObj(obj: JsonObject): OnlineMatch {
 
-        val pr = PendingRequest()
-        pr.id=id
-        pr.name=name
-        pr.idTo=idTo
-        pr.nameTo=toName
+        val idP1=obj.get("idP1").asString
+        val nameP1=obj.get("nameP1").asString
+        val scoreP1=obj.get("scoreP1").asString
+        val idP2=obj.get("idP2").asString
+        val nameP2=obj.get("nameP2").asString
+        val scoreP2=obj.get("scoreP2").asString
+
+        val pr = OnlineMatch()
+        pr.idP1 =idP1
+        pr.nameP1 =nameP1
+        pr.idP2 =idP2
+        pr.nameP2 =nameP2
+        pr.scoreP1=scoreP1
+        pr.scoreP2=scoreP2
         return pr
  }
 
@@ -208,27 +239,25 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     }
 
-    fun getPendingRequests():RealmResults<PendingRequest>{
-        return realm!!.where(PendingRequest::class.java).findAll()
+    fun getPendingRequests():RealmResults<OnlineMatch>{
+        return realm!!.where(OnlineMatch::class.java).findAll()
     }
 
     fun updateListViewRequests(){
-
         this.runOnUiThread {
             if (getPendingRequests().isNotEmpty()) {
                 var myTextView = this.findViewById(R.id.textView3) as TextView
-                myTextView.text = "Richieste in sospeso:"
+                myTextView.text = "Sfide in sospeso:"
                 listViewRequests = this.findViewById(R.id.listView_requests) as ListView
-                var dataModels = java.util.ArrayList<OnlinePlayer>()
+                var dataModels = java.util.ArrayList<OnlineMatch>()
                 var pr = getPendingRequests()
 
-                pr.forEach { request -> dataModels.add(OnlinePlayer(request.id, request.name, "")) }
+                pr.forEach { request -> dataModels.add(OnlineMatch(request.idP1, request.nameP1, request.scoreP1, request.idP2, request.nameP2, request.scoreP2)) }
 
                 val adapter = CustomAdapter(dataModels, applicationContext)
                 listViewRequests?.adapter = adapter
                 listViewRequests?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
                     val dataModel = dataModels[position]
-                    println("ARRAY: " + position)
                 }
             }
         }

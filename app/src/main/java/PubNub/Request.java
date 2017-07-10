@@ -1,8 +1,5 @@
 package PubNub;
 
-import app.simone.DataModel.PendingRequest;
-import io.realm.RealmResults;
-
 /**
  * Created by Giacomo on 04/07/2017.
  */
@@ -17,6 +14,7 @@ public class Request {
         this.player = player;
         this.toPlayer = toPlayer;
     }
+
 
     public OnlinePlayer getPlayer() {
         return player;

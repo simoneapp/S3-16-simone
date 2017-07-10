@@ -9,61 +9,61 @@ import io.realm.annotations.PrimaryKey;
  * Created by Giacomo on 05/07/2017.
  */
 
-public class PendingRequest extends RealmObject implements Serializable {
+public class OnlineMatch extends RealmObject implements Serializable {
 
-    private String id;
-    private String name;
+    private String idP1;
+    private String nameP1;
     private String scoreP1;
     @PrimaryKey
-    private String idTo;
-    private String nameTo;
+    private String idP2;
+    private String nameP2;
     private String scoreP2;
 
-    public PendingRequest() {
+    public OnlineMatch() {
 
     }
 
-    public PendingRequest(String id, String name, String scoreP1,String idTo, String nameTo, String scoreP2) {
-        this.id=id;
-        this.name=name;
+    public OnlineMatch(String idP1, String nameP1, String scoreP1, String idP2, String nameP2, String scoreP2) {
+        this.idP1 = idP1;
+        this.nameP1 = nameP1;
         this.scoreP1=scoreP1;
-        this.idTo=idTo;
-        this.nameTo=nameTo;
+        this.idP2 = idP2;
+        this.nameP2 = nameP2;
         this.scoreP2=scoreP2;
     }
 
-    public String getId() {
-        return id;
+    public String getIdP1() {
+        return idP1;
     }
 
 
-    public String getName() {
-        return name;
+    public String getNameP1() {
+        return nameP1;
     }
 
 
-    public String getIdTo() {
-        return idTo;
+    public String getIdP2() {
+        return idP2;
     }
 
-    public String getNameTo() {
-        return nameTo;
+    public String getNameP2() {
+        return nameP2;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setIdP1(String idP1) {
+        this.idP1 = idP1;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameP1(String nameP1) {
+        this.nameP1 = nameP1;
     }
 
-    public void setIdTo(String idTo) {
-        this.idTo = idTo;
+    public void setIdP2(String idP2) {
+        this.idP2 = idP2;
     }
 
-    public void setNameTo(String nameTo) {
-        this.nameTo = nameTo;
+    public void setNameP2(String nameP2) {
+        this.nameP2 = nameP2;
     }
 
     public String getScoreP1() {

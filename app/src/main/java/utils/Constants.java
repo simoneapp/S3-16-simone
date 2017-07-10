@@ -9,7 +9,6 @@ public class Constants {
     public static final String GAMEVIEW_ACTOR_NAME = "view-actor";
     public static final String FACEBOOK_ACTOR_NAME = "fb-actor";
     public static final String FBVIEW_ACTOR_NAME = "fb-view-actor";
-    public static final String DATA_ACTOR_NAME = "data-actor";
     public static final String PATH_ACTOR = "/user/";
     public static final String CHOSEN_MODE = "CHOSEN_MODE";
     public static final int CLASSIC_MODE = 4;
@@ -30,7 +29,5 @@ public class Constants {
     public static final int ACHIEVEMENT_SEQ_6 = 42;
     public static final int ACHIEVEMENT_SEQ_7 = 50;
     public static final int ACHIEVEMENT_SEQ_8 = 100;
-
-
 
 }

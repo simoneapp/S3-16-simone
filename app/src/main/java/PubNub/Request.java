@@ -11,7 +11,6 @@ public class Request {
     private FacebookUser sender;
     private FacebookUser recipient;
 
-
     public Request(FacebookUser sender, FacebookUser recipient) {
         this.sender = sender;
         this.recipient = recipient;

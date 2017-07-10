@@ -23,6 +23,15 @@ import messages.*
 import utils.Constants
 import utils.Utilities
 import utils.filterFacebookUser
+import android.util.Log
+import app.simone.DataModel.OnlineMatch
+import com.google.gson.JsonObject
+import io.realm.RealmResults
+import PubNub.PushNotification
+import com.google.gson.JsonElement
+import io.realm.exceptions.RealmPrimaryKeyConstraintException
+import utils.filterNotifications
+
 
 class FacebookLoginActivity : AppCompatActivity() {
 
@@ -35,7 +44,7 @@ class FacebookLoginActivity : AppCompatActivity() {
     var pubnubController = PubnubController("multiplayer")
 
     var listViewRequests : ListView? = null
-    var requestsUsers = ArrayList<FacebookUser>()
+    var requestsUsers = ArrayList<OnlineMatch>()
     var requestsAdapter : CustomAdapter? = null
 
     var currentUser : FacebookUser? = null
@@ -49,6 +58,8 @@ class FacebookLoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        DataManager.instance.resetOpponentScore()
+
         pubnubController.subscribeToChannel()
         this.addPubnubListener(pubnubController.pubnub)
 
@@ -58,7 +69,8 @@ class FacebookLoginActivity : AppCompatActivity() {
         initRequestsList()
 
         val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME,
-                App.getInstance().getActorSystem())
+                App.getInstance().actorSystem)
+
         actor.tell(FbViewSetupMsg(this), ActorRef.noSender())
 
         val btnInvites = this.findViewById(R.id.btn_invite) as Button
@@ -73,8 +85,8 @@ class FacebookLoginActivity : AppCompatActivity() {
                 activityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 println("ME: "+Profile.getCurrentProfile().firstName.toString()+" "+
                         Profile.getCurrentProfile().lastName.toString())
-                activityIntent.putExtra("player", currentUser)
-                activityIntent.putExtra("toPlayer", selectedUser) // fromFriendToPlayer(selectedUser!!))
+                activityIntent.putExtra("sender", currentUser)
+                activityIntent.putExtra("recipient", selectedUser)
                 baseContext.startActivity(activityIntent)
             }
         })
@@ -83,7 +95,7 @@ class FacebookLoginActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME,
-                App.getInstance().getActorSystem())
+                App.getInstance().actorSystem)
         actor.tell(FbOnActivityResultMsg(requestCode, resultCode, data), ActorRef.noSender())
     }
 
@@ -99,13 +111,14 @@ class FacebookLoginActivity : AppCompatActivity() {
         adapter = FacebookFriendsAdapter(this, friends)
         listView?.adapter = adapter
         listView?.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-
             val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME,
-                    App.getInstance().getActorSystem())
+                    App.getInstance().actorSystem)
             val friend = adapter?.getItem(i)
             actor.tell(FbItemClickMsg(friend), ActorRef.noSender())
             enablePlayButton(friend!!)
         }
+
+        btnPlay?.isEnabled = false
     }
 
     fun initRequestsList() {
@@ -128,7 +141,6 @@ class FacebookLoginActivity : AppCompatActivity() {
 
         this.runOnUiThread {
             adapter?.clear()
-
             if(response.isSuccess) {
                 adapter?.addAll(response.data)
             } else {
@@ -154,12 +166,12 @@ class FacebookLoginActivity : AppCompatActivity() {
                         val msg = message.message.asJsonObject
                         if(msg.filterFacebookUser(Profile.getCurrentProfile().id.toString())) {
                             DataManager.instance.saveRequest(msg.asJsonObject)
+                            DataManager.instance.saveOpponentScore(msg)
                             updateRequests()
                         }
                     }
                 }
             }
-
             override fun presence(pubnub: PubNub, presence: PNPresenceEventResult) {
             }
         })
@@ -168,10 +180,10 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     fun setUser() {
         val profile = Profile.getCurrentProfile()
-        currentUser = FacebookUser.with(profile.id, profile.name)
+        currentUser = FacebookUser(profile.id, profile.name)
     }
 
-    fun updateRequests(){
+    fun updateRequests() {
         this.runOnUiThread {
             val requests = DataManager.instance.getPendingRequests()
             if (requests.isNotEmpty()) {
@@ -184,4 +196,21 @@ class FacebookLoginActivity : AppCompatActivity() {
         }
     }
 
+
+
+    /*
+    fun updateListViewRequests(){
+        this.runOnUiThread {
+            if (getPendingRequests().isNotEmpty()) {
+                var myTextView = this.findViewById(R.id.textView3) as TextView
+                myTextView.text = "Sfide in sospeso:"
+                listViewRequests = this.findViewById(R.id.listView_requests) as ListView
+                var dataModels = java.util.ArrayList<OnlineMatch>()
+                var pr = getPendingRequests()
+
+                pr.forEach { request -> dataModels.add(OnlineMatch(request.firstPlayer, request.secondPlayer)) }
+
+            }
+        }
+    }*/
 }

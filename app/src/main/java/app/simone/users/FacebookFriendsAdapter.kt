@@ -9,8 +9,8 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import app.simone.R
-import app.simone.users.model.FacebookUser
 import app.simone.users.model.FacebookPicture
+import app.simone.users.model.FacebookUser
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener

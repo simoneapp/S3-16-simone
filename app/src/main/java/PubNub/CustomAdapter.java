@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.facebook.Profile;
-
 import java.util.ArrayList;
-
+import app.simone.DataModel.OnlineMatch;
 import app.simone.GameActivity;
 import app.simone.R;
 import app.simone.users.model.FacebookUser;
@@ -23,12 +21,14 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by Giacomo on 03/07/2017.
  */
 
-public class CustomAdapter extends ArrayAdapter<FacebookUser> implements View.OnClickListener {
+public class CustomAdapter extends ArrayAdapter<OnlineMatch> implements View.OnClickListener {
 
-    private ArrayList<FacebookUser> data;
+    private ArrayList<OnlineMatch> data;
     Context mContext;
+    FacebookUser sender;
+    FacebookUser recipient;
 
-    public CustomAdapter(ArrayList<FacebookUser> data, Context context) {
+    public CustomAdapter(ArrayList<OnlineMatch> data, Context context) {
         super(context, R.layout.row_item, data);
         this.data=data;
         this.mContext=context;
@@ -36,9 +36,11 @@ public class CustomAdapter extends ArrayAdapter<FacebookUser> implements View.On
 
     // View lookup cache
     private static class ViewHolder {
-        TextView txtName;
-        TextView txtType;
-        Button info;
+        TextView textPlayer1;
+        TextView textPlayer2;
+        TextView scoreP1;
+        TextView scoreP2;
+        Button playButton;
     }
 
     @Override
@@ -46,18 +48,37 @@ public class CustomAdapter extends ArrayAdapter<FacebookUser> implements View.On
 
         int position=(Integer) v.getTag();
         Object object= getItem(position);
-        FacebookUser dataModel=(FacebookUser)object;
+        OnlineMatch dataModel=(OnlineMatch)object;
 
         switch (v.getId())
         {
 
             case R.id.item_info:
 
+                Profile profile = Profile.getCurrentProfile();
+
                 Intent intent = new Intent(mContext,GameActivity.class);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("id",Profile.getCurrentProfile().getId().toString());
-                intent.putExtra("firstname",Profile.getCurrentProfile().getFirstName().toString());
-                intent.putExtra("surname",Profile.getCurrentProfile().getLastName().toString());
+                intent.putExtra("multiplayerMode", "multiplayerMode");
+                intent.putExtra("id", profile.getId());
+                intent.putExtra("name", profile.getName());
+
+                //dati di chi invia la richiesta
+               /* OnlinePlayer op = new OnlinePlayer(dataModel.getIdP1(),dataModel.getNameP1(),"");
+                Toast.makeText(getContext(),op.getId()+" "+op.getName()+" "+op.getSurname(),Toast.LENGTH_SHORT).show();
+
+                intent.putExtra("idTo",op.getId());
+                intent.putExtra("nameTo",op.getName());*/
+
+                recipient = new FacebookUser(profile.getId(), profile.getName());
+
+                sender = dataModel.getFirstPlayer();
+
+                sender.setScore(dataModel.getFirstPlayer().getScore());
+                recipient.setScore(dataModel.getSecondPlayer().getScore());
+                intent.putExtra("sender", sender);
+                intent.putExtra("recipient", recipient);
+
 
                 mContext.startActivity(intent);
                 break;
@@ -69,7 +90,7 @@ public class CustomAdapter extends ArrayAdapter<FacebookUser> implements View.On
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        FacebookUser dataModel = getItem(position);
+        OnlineMatch dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -80,9 +101,11 @@ public class CustomAdapter extends ArrayAdapter<FacebookUser> implements View.On
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.row_item, parent, false);
-            viewHolder.txtName = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.txtType = (TextView) convertView.findViewById(R.id.type);
-            viewHolder.info = (Button) convertView.findViewById(R.id.item_info);
+            viewHolder.textPlayer1 = (TextView) convertView.findViewById(R.id.p1);
+            viewHolder.textPlayer2 = (TextView) convertView.findViewById(R.id.p2);
+            viewHolder.scoreP1 = (TextView) convertView.findViewById(R.id.scoreP1);
+            viewHolder.scoreP2 = (TextView) convertView.findViewById(R.id.scoreP2);
+            viewHolder.playButton = (Button) convertView.findViewById(R.id.item_info);
 
             result=convertView;
 
@@ -94,12 +117,34 @@ public class CustomAdapter extends ArrayAdapter<FacebookUser> implements View.On
 
         lastPosition = position;
 
+        FacebookUser first = dataModel.getFirstPlayer();
+        FacebookUser second = dataModel.getSecondPlayer();
 
-        viewHolder.txtName.setText(dataModel.getId());
-        viewHolder.txtType.setText(dataModel.getName());
-        viewHolder.info.setOnClickListener(this);
-        viewHolder.info.setTag(position);
-        // Return the completed view to render on screen
+        viewHolder.textPlayer1.setText(first.getName());
+        viewHolder.textPlayer2.setText(second.getName());
+
+        viewHolder.scoreP1.setText(first.getName());
+        viewHolder.scoreP2.setText(second.getName());
+
+        viewHolder.playButton.setOnClickListener(this);
+        viewHolder.playButton.setTag(position);
+
+        if(disablePlayButton(dataModel)){
+            viewHolder.playButton.setEnabled(false);
+        }
+
         return convertView;
+    }
+
+    private boolean disablePlayButton(OnlineMatch dataModel) {
+
+        String playerID = Profile.getCurrentProfile().getId();
+
+        FacebookUser first = dataModel.getFirstPlayer();
+        FacebookUser second = dataModel.getSecondPlayer();
+
+        return playerID.equals(first.getId()) && !first.getScore().equals("--")
+                || playerID.equals(second.getId()) && !second.getScore().equals("--")
+                || !second.getScore().equals("--") && !first.getScore().equals("--");
     }
 }

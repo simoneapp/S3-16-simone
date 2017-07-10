@@ -2,7 +2,6 @@ package PubNub;
 
 
 import android.util.Log;
-import com.google.gson.JsonObject;
 import com.pubnub.api.PNConfiguration;
 import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
@@ -10,6 +9,8 @@ import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
 import org.json.JSONException;
 import java.util.Arrays;
+
+import app.simone.DataModel.OnlineMatch;
 
 import static com.github.salomonbrys.kotson.ElementKt.toMap;
 
@@ -26,7 +27,6 @@ public class PubnubController {
         configPubnub();
         this.channel=channel;
     }
-
 
     private void configPubnub(){
         //initial configuration
@@ -49,7 +49,7 @@ public class PubnubController {
     }
 
 
-    public void publishToChannel(Request request) throws JSONException {
+    public void publishToChannel(OnlineMatch match) throws JSONException {
         //3 - Publish to a channel
 
         /* Taken from the documentation:
@@ -59,16 +59,8 @@ public class PubnubController {
         *  the message you just published, because the subscribe operation did not complete before the message was published.
         * */
 
-
-        JsonObject obj = new JsonObject();
-        obj.addProperty("from", request.getSender().getId());
-        obj.addProperty("fromName",request.getSender().getName());
-        obj.addProperty("to", request.getRecipient().getId());
-        obj.addProperty("toName",request.getRecipient().getName());
-
-
         pubnub.publish()
-                .message(toMap(obj))
+                .message(toMap(match.toJson()))
                 .channel(this.channel)
                 .shouldStore(true)
                 .usePOST(true)

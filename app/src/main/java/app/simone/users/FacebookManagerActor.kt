@@ -9,6 +9,8 @@ import application.App
 import com.facebook.AccessToken
 import com.facebook.GraphRequest
 import com.facebook.HttpMethod
+import com.google.gson.Gson
+import com.google.gson.JsonElement
 import messages.*
 import org.json.JSONObject
 import utils.Constants
@@ -60,13 +62,15 @@ class FacebookManagerActor : UntypedActor() {
                 GraphRequest.Callback { response ->
                     Log.v("Sender Akka", sender.toString())
                     if(response.error == null) {
-                        val jsonFriends = response.jsonObject.getJSONArray("data")
+                        val gson = Gson()
+                        val jsonFriends = gson
+                                .fromJson(response.rawResponse, JsonElement::class.java)
+                                .asJsonObject.get("data").asJsonArray
+
                         val list = FacebookUser.listFromJson(jsonFriends)
                         actor.tell(FbResponseFriendsMsg(list), self)
-                        //sender.tell(FbResponseFriendsMsg(list), self)
                     } else {
                         actor.tell(FbResponseFriendsMsg(response.error.errorUserMessage), self)
-                        //sender.tell(FbResponseFriendsMsg(response.error.errorUserMessage), self)
                     }
                 }
         ).executeAsync()

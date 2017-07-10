@@ -27,15 +27,13 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import PubNub.PushNotification
-import android.content.Context
-import android.os.PowerManager
 import app.simone.GameActivity
 import com.google.gson.JsonElement
 import io.realm.exceptions.RealmPrimaryKeyConstraintException
-import application.mApplication
 import messages.*
 import utils.Constants
 import utils.Utilities
+import application.App;
 
 
 class FacebookLoginActivity : AppCompatActivity() {
@@ -63,7 +61,7 @@ class FacebookLoginActivity : AppCompatActivity() {
         adapter = FacebookFriendsAdapter(this, friends)
         listView?.adapter = adapter
 
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
         actor.tell(FbViewSetupMsg(this), ActorRef.noSender())
 
 
@@ -89,7 +87,7 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
         actor.tell(FbOnActivityResultMsg(requestCode, resultCode, data), ActorRef.noSender())
     }
 

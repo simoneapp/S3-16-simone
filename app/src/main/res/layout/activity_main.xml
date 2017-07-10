@@ -7,6 +7,7 @@
     android:launchMode="singleTask"
     tools:context="app.simone.MainActivity">
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -56,7 +57,7 @@
                 android:weightSum="2">
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/main_button_highscore"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

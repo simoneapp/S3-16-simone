@@ -18,14 +18,14 @@ public class VSCpuActivity extends FullscreenActivity {
         FloatingActionButton easyFab = (FloatingActionButton) this.findViewById(R.id.vs_cpu_fab);
         easyFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                openActivity(GameActivity.class, Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
+                openActivity(GameActivity.class, Constants.CHOSEN_MODE, Constants.CLASSIC_MODE, R.anim.right_in, R.anim.left_out);
             }
         });
 
         FloatingActionButton hardFab = (FloatingActionButton) this.findViewById(R.id.vs_cpu_fab_hard);
         hardFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                openActivity(GameActivity.class, Constants.CHOSEN_MODE, Constants.HARD_MODE);
+                openActivity(GameActivity.class, Constants.CHOSEN_MODE, Constants.HARD_MODE, R.anim.right_in, R.anim.left_out);
             }
         });
     }
@@ -41,9 +41,5 @@ public class VSCpuActivity extends FullscreenActivity {
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    @Override
-    protected void forwardTransition() {
-        overridePendingTransition(R.anim.right_in, R.anim.left_out);
-    }
 
 }

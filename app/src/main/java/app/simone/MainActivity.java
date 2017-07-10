@@ -108,11 +108,11 @@ public class MainActivity extends FullscreenActivity {
 
             @Override
             public void execute(Realm realm) {
-          //      if (realm.where(Player.class).findAll().isEmpty()) {
+                if (realm.where(Player.class).findAll().isEmpty()) {
                 Player player=new Player();
                 player.setName(Constants.DEFAULT_PLAYER);
                     realm.copyToRealmOrUpdate(player);
-           //     }
+                }
 
             }
 

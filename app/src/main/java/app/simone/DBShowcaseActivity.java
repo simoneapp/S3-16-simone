@@ -10,10 +10,12 @@ import android.widget.TextView;
 import app.simone.Controller.ControllerImplementations.LocalDataControllerImpl;
 import app.simone.Controller.UserDataController;
 import app.simone.DataModel.Match;
+import app.simone.DataModel.Player;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import utils.Constants;
 
 public class DBShowcaseActivity extends AppCompatActivity {
 
@@ -28,7 +30,6 @@ public class DBShowcaseActivity extends AppCompatActivity {
         initRealm();
         userDataController = new LocalDataControllerImpl(realm);
         TextView bestScoreTextView = (TextView) findViewById(R.id.textView33);
-
         realmResults = userDataController.getMatchesSortedByScore();
         if (realmResults.isEmpty()) {
             bestScoreTextView.setText("NO GAME YET!!");
@@ -67,7 +68,9 @@ public class DBShowcaseActivity extends AppCompatActivity {
         String[] renderedResults = new String[realmResults.size()];
         if (!realmResults.isEmpty()) {
             for (Match m : realmResults) {
-                renderedResults[i] = "score: " + Integer.toString(m.getScore()) + " date: " + m.getGameDate();
+
+                renderedResults[i] = "score: " + Integer.toString(m.getScore()) + " date: " + m.getGameDate()+
+                        " game type: "+(m.getGameType()==Constants.CLASSIC_MODE?"classic":"hard");
                 i++;
             }
         }
@@ -75,18 +78,7 @@ public class DBShowcaseActivity extends AppCompatActivity {
         return renderedResults;
     }
 
-    private String[] render(RealmList<Match> realmList) {
-        int i = 0;
-        String[] renderedResults = new String[realmResults.size()];
-        if (!realmResults.isEmpty()) {
-            for (Match m : realmList) {
-                renderedResults[i] = "score: " + Integer.toString(m.getScore()) + " date: " + m.getGameDate();
-                i++;
-            }
-        }
 
-        return renderedResults;
-    }
 
 
 }

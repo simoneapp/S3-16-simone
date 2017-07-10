@@ -29,7 +29,7 @@ public class Constants {
     public static final int ACHIEVEMENT_SEQ_6 = 42;
     public static final int ACHIEVEMENT_SEQ_7 = 50;
     public static final int ACHIEVEMENT_SEQ_8 = 100;
-
+    public static final String BACK_TO_MENU = "Back";
 
 
 }

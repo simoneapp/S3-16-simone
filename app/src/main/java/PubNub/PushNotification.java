@@ -5,7 +5,8 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
 
 import app.simone.R;
@@ -30,6 +31,8 @@ public class PushNotification {
                 new NotificationCompat.Builder(myContext)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Simone app")
+                        .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                        .setColor(Color.GREEN)
                         .setContentText(this.name +" vuole giocare con te!");
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(myContext, FacebookLoginActivity.class);
@@ -51,7 +54,7 @@ public class PushNotification {
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager)myContext.getSystemService(Context.NOTIFICATION_SERVICE);
-    // mId allows you to update the notification later on.
+        // mId allows you to update the notification later on.
         mNotificationManager.notify(1, mBuilder.build());
     }
 }

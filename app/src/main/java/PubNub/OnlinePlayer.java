@@ -11,6 +11,11 @@ public class OnlinePlayer implements Serializable {
     private String id;
     private String name;
     private String surname;
+    private String score;
+
+    public OnlinePlayer(){
+
+    }
 
     public OnlinePlayer(String id, String name, String surname) {
         this.id = id;
@@ -40,5 +45,13 @@ public class OnlinePlayer implements Serializable {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
     }
 }

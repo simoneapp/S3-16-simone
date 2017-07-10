@@ -11,6 +11,8 @@ import com.pubnub.api.models.consumer.PNStatus;
 import org.json.JSONException;
 import java.util.Arrays;
 
+import app.simone.DataModel.OnlineMatch;
+
 import static com.github.salomonbrys.kotson.ElementKt.toMap;
 
 /**
@@ -49,7 +51,7 @@ public class PubnubController {
     }
 
 
-    public void publishToChannel(Request request) throws JSONException {
+    public void publishToChannel(OnlineMatch match) throws JSONException {
         //3 - Publish to a channel
 
         /* Taken from the documentation:
@@ -59,12 +61,14 @@ public class PubnubController {
         *  the message you just published, because the subscribe operation did not complete before the message was published.
         * */
 
-
         JsonObject obj = new JsonObject();
-        obj.addProperty("from", request.getPlayer().getId());
-        obj.addProperty("fromName",request.getPlayer().getName()+request.getPlayer().getSurname());
-        obj.addProperty("to", request.getToPlayer().getId());
-        obj.addProperty("toName",request.getToPlayer().getName());
+        obj.addProperty("idP1",match.getIdP1());
+        obj.addProperty("nameP1",match.getNameP1());
+        obj.addProperty("scoreP1",match.getScoreP1());
+
+        obj.addProperty("idP2",match.getIdP2());
+        obj.addProperty("nameP2",match.getNameP2());
+        obj.addProperty("scoreP2",match.getScoreP2());
 
 
         pubnub.publish()

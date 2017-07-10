@@ -63,11 +63,7 @@ dependencies {
     compile 'org.scala-lang:scala-library:2.10.4'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    // Because RxAndroid releases are few and far between, it is recommended you also
-// explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'org.slf4j:slf4j-api:1.7.5'
     compile 'org.slf4j:slf4j-log4j12:1.7.5'

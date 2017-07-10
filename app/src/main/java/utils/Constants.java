@@ -11,14 +11,26 @@ public class Constants {
     public static final String FBVIEW_ACTOR_NAME = "fb-view-actor";
     public static final String DATA_ACTOR_NAME = "data-actor";
     public static final String PATH_ACTOR = "/user/";
-    public static final String CHOSEN_MODE ="CHOSEN_MODE";
+    public static final String CHOSEN_MODE = "CHOSEN_MODE";
     public static final int CLASSIC_MODE = 4;
     public static final int HARD_MODE = 6;
     public static final int PLAYER_TURN = 0;
     public static final int CPU_TURN = 1;
-    public static final String STRING_EMPTY ="";
+    public static final String STRING_EMPTY = "";
     public static final String TURN_PLAYER = "Your\nturn";
     public static final int WHATTASHAMEYOULOST_MSG = -10;
-    public static final String  PLAY_AGAIN = "Play\nagain";
+    public static final String PLAY_AGAIN = "Play\nagain";
+    public static final int STD_DELAY_BTN_TIME = 300;
+    public static final String LEADERBOARD_ID = "CgkI6ZOU44EQEAIQAg";
+    public static final int ACHIEVEMENT_SEQ_1 = 3;
+    public static final int ACHIEVEMENT_SEQ_2 = 7;
+    public static final int ACHIEVEMENT_SEQ_3 = 14;
+    public static final int ACHIEVEMENT_SEQ_4 = 20;
+    public static final int ACHIEVEMENT_SEQ_5 = 30;
+    public static final int ACHIEVEMENT_SEQ_6 = 42;
+    public static final int ACHIEVEMENT_SEQ_7 = 50;
+    public static final int ACHIEVEMENT_SEQ_8 = 100;
+
+
 
 }

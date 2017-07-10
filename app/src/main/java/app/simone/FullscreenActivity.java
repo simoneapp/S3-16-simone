@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 
+import application.App;
+
 /**
  * @author Michele Sapignoli
  */
@@ -104,6 +106,9 @@ public abstract class FullscreenActivity extends AppCompatActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
+        if (App.getGoogleApiHelper().getGoogleApiClient() == null || !App.getGoogleApiHelper().getGoogleApiClient().isConnected()) {
+            App.getGoogleApiHelper().buildGoogleApiClient(this.mContentView, this);
+        }
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
@@ -158,10 +163,10 @@ public abstract class FullscreenActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }
 
-    public void openActivity(Class activity) {
+    public void openActivity(Class activity, int enterAnim, int exitAnim) {
         Intent intent = new Intent(this, activity);
         startActivity(intent);
-        overridePendingTransition(R.anim.left_in, R.anim.right_out);
+        overridePendingTransition(enterAnim, exitAnim);
     }
 
     @Override
@@ -170,13 +175,13 @@ public abstract class FullscreenActivity extends AppCompatActivity {
         backTransition();
     }
 
-    public void openActivity(Class activity, String extraName, int extra) {
+    public void openActivity(Class activity, String extraName, int extra, int enterAnim, int exitAnim) {
         Intent intent = new Intent(this, activity);
         intent.putExtra(extraName, extra);
         startActivity(intent);
-        forwardTransition();
+        overridePendingTransition(enterAnim, exitAnim);
     }
 
     protected abstract void backTransition();
-    protected abstract void forwardTransition();
+
 }

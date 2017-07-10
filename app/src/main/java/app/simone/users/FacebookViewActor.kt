@@ -2,8 +2,9 @@ package app.simone.users
 
 import akka.actor.UntypedActor
 import app.simone.R
+
 import app.simone.users.model.FacebookUser
-import application.mApplication
+import application.App
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -34,7 +35,7 @@ class FacebookViewActor() : UntypedActor() {
 
     override fun onReceive(message: Any?) {
 
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FACEBOOK_ACTOR_NAME, mApplication.getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FACEBOOK_ACTOR_NAME, App.getInstance().getActorSystem())
 
         when((message as IMessage).type) {
 
@@ -99,7 +100,7 @@ class FacebookViewActor() : UntypedActor() {
 
     fun registerLoginButton() {
 
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FACEBOOK_ACTOR_NAME, mApplication.getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FACEBOOK_ACTOR_NAME, App.getInstance().getActorSystem())
 
         callbackManager = CallbackManager.Factory.create()
 

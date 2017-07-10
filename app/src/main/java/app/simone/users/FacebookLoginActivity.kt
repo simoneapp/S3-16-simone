@@ -11,7 +11,6 @@ import app.simone.Controller.ControllerImplementations.DataManager
 import app.simone.GameActivity
 import app.simone.R
 import app.simone.users.model.FacebookUser
-import application.mApplication
 import com.facebook.Profile
 import com.google.gson.JsonElement
 import com.pubnub.api.PubNub
@@ -23,7 +22,7 @@ import io.realm.Realm
 import messages.*
 import utils.Constants
 import utils.Utilities
-
+import application.App;
 
 class FacebookLoginActivity : AppCompatActivity() {
 
@@ -56,7 +55,7 @@ class FacebookLoginActivity : AppCompatActivity() {
         adapter = FacebookFriendsAdapter(this, friends)
         listView?.adapter = adapter
 
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
         actor.tell(FbViewSetupMsg(this), ActorRef.noSender())
 
         val btnInvites = this.findViewById(R.id.btn_invite) as Button
@@ -96,7 +95,7 @@ class FacebookLoginActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
         actor.tell(FbOnActivityResultMsg(requestCode, resultCode, data), ActorRef.noSender())
     }
 

@@ -71,11 +71,11 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'org.slf4j:slf4j-api:1.7.5'
     compile 'org.slf4j:slf4j-log4j12:1.7.5'
-    compile 'com.google.android.gms:play-services:11.0.2'
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
     compile 'com.beust:klaxon:0.30'
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services-games:11.0.2'
+    compile 'com.google.android.gms:play-services-identity:11.0.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }

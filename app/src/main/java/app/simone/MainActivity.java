@@ -2,21 +2,13 @@ package app.simone;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.games.Games;
 
 import utils.AudioManager;
 import app.simone.Controller.ControllerImplementations.DataManager;
@@ -27,26 +19,17 @@ import io.fabric.sdk.android.Fabric;
 /**
  * @author Michele Sapignoli
  */
-public class MainActivity extends FullscreenActivity implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class MainActivity extends FullscreenActivity{
 
     private Button VSCpuButton;
     private Button connectionButton;
     private Button btnMultiplayer;
     private Button multiplayerButton;
-    final Handler handler = new Handler();
-    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */,
-                        this /* OnConnectionFailedListener */)
-                .addApi(Games.API)
-                 .addConnectionCallbacks(this)
-                .addScope(Games.SCOPE_GAMES)
-                .build();
 
 
         Fabric.with(this, new Crashlytics());
@@ -57,29 +40,28 @@ public class MainActivity extends FullscreenActivity implements GoogleApiClient.
         connectionButton = (Button)findViewById(R.id.button4);
         btnMultiplayer = (Button)findViewById(R.id.main_button_multiplayer);
 
-
         //Listener on vs CPUActor button
-        VSCpuButton.setOnClickListener(new View.OnClickListener(){
+        VSCpuButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                openActivity(VSCpuActivity.class);
+                openActivity(VSCpuActivity.class, R.anim.left_in, R.anim.right_out);
             }
         });
 
-        btnMultiplayer.setOnClickListener(new View.OnClickListener(){
+        btnMultiplayer.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                openActivity(FacebookLoginActivity.class);
+                openActivity(FacebookLoginActivity.class, R.anim.left_in, R.anim.right_out);
             }
         });
 
-        connectionButton.setOnClickListener(new View.OnClickListener(){
+        connectionButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                openActivity(SettingsActivity.class);
+                openActivity(SettingsActivity.class, R.anim.left_in, R.anim.right_out);
             }
         });
 
@@ -93,7 +75,7 @@ public class MainActivity extends FullscreenActivity implements GoogleApiClient.
         multiplayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openActivity(FacebookLoginActivity.class);
+                openActivity(FacebookLoginActivity.class, R.anim.left_in, R.anim.right_out);
             }
         });
 
@@ -113,52 +95,40 @@ public class MainActivity extends FullscreenActivity implements GoogleApiClient.
 
         AudioManager.Companion.getInstance().playSimoneMusic();
 
+        Button b = (Button) findViewById(R.id.main_button_highscore);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               openActivity(ScoreboardActivity.class, R.anim.slide_up, R.anim.slide_up_existing);
+            }
+        });
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
         //delayedHide(100);
     }
 
+
     @Override
     protected void backTransition() {
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    @Override
-    protected void forwardTransition() {
-        overridePendingTransition(R.anim.right_in, R.anim.left_out);
-    }
 
     protected void setSubclassContentView() {
         setContentView(R.layout.activity_main);
         mContentView = findViewById(R.id.main_fullscreen_content);
         mVisible = true;
     }
-    public void playVsCpu(View view){
-        Intent intent=new Intent(this,LoginActivity.class);
+
+    public void playVsCpu(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-
-    }
-
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d("##MAIN ACTIVITY", "Connection failed");
-    }
-
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
 
     }
 }

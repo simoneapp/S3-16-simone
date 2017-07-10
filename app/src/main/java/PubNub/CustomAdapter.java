@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import app.simone.DataModel.OnlineMatch;
 import app.simone.GameActivity;
@@ -27,6 +28,8 @@ public class CustomAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
 
     private ArrayList<OnlineMatch> data;
     Context mContext;
+    OnlinePlayer toPlayer;
+    OnlinePlayer player;
 
     public CustomAdapter(ArrayList<OnlineMatch> data, Context context) {
         super(context, R.layout.row_item, data);
@@ -38,6 +41,8 @@ public class CustomAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
     private static class ViewHolder {
         TextView textPlayer1;
         TextView textPlayer2;
+        TextView scoreP1;
+        TextView scoreP2;
         Button playButton;
     }
 
@@ -47,6 +52,7 @@ public class CustomAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
         int position=(Integer) v.getTag();
         Object object= getItem(position);
         OnlineMatch dataModel=(OnlineMatch)object;
+
 
         switch (v.getId())
         {
@@ -67,8 +73,8 @@ public class CustomAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
                 intent.putExtra("idTo",op.getId());
                 intent.putExtra("nameTo",op.getName());*/
 
-                OnlinePlayer toPlayer = new OnlinePlayer(Profile.getCurrentProfile().getId().toString(),Profile.getCurrentProfile().getFirstName().toString(),Profile.getCurrentProfile().getLastName().toString());
-                OnlinePlayer player = new OnlinePlayer(dataModel.getIdP1(),dataModel.getNameP1(),"");
+                toPlayer = new OnlinePlayer(Profile.getCurrentProfile().getId().toString(),Profile.getCurrentProfile().getFirstName().toString(),Profile.getCurrentProfile().getLastName().toString());
+                player = new OnlinePlayer(dataModel.getIdP1(),dataModel.getNameP1(),"");
                 player.setScore(dataModel.getScoreP1());
                 toPlayer.setScore(dataModel.getScoreP2());
                 intent.putExtra("player", player);
@@ -98,6 +104,8 @@ public class CustomAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
             convertView = inflater.inflate(R.layout.row_item, parent, false);
             viewHolder.textPlayer1 = (TextView) convertView.findViewById(R.id.p1);
             viewHolder.textPlayer2 = (TextView) convertView.findViewById(R.id.p2);
+            viewHolder.scoreP1 = (TextView) convertView.findViewById(R.id.scoreP1);
+            viewHolder.scoreP2 = (TextView) convertView.findViewById(R.id.scoreP2);
             viewHolder.playButton = (Button) convertView.findViewById(R.id.item_info);
 
             result=convertView;
@@ -111,10 +119,29 @@ public class CustomAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
         lastPosition = position;
 
 
-        viewHolder.textPlayer1.setText(dataModel.getNameP1()+" - Score: "+dataModel.getScoreP1());
-        viewHolder.textPlayer2.setText(dataModel.getNameP2()+" - Score: "+dataModel.getScoreP2());
+        viewHolder.textPlayer1.setText(dataModel.getNameP1());//+" - Score: "+dataModel.getScoreP1());
+        viewHolder.textPlayer2.setText(dataModel.getNameP2());//+" - Score: "+dataModel.getScoreP2());
+        viewHolder.scoreP1.setText(dataModel.getScoreP1());
+        viewHolder.scoreP2.setText(dataModel.getScoreP2());
         viewHolder.playButton.setOnClickListener(this);
         viewHolder.playButton.setTag(position);
+        if(disablePlayButton(dataModel)){
+            viewHolder.playButton.setEnabled(false);
+        }
         return convertView;
+    }
+
+    private boolean disablePlayButton(OnlineMatch dataModel){
+
+        String player=Profile.getCurrentProfile().getFirstName().toString()+" "+Profile.getCurrentProfile().getLastName().toString();
+
+        if(player.equals(dataModel.getNameP1()) && !dataModel.getScoreP1().equals("--"))
+            return true;
+        else if(player.equals(dataModel.getNameP2()) && !dataModel.getScoreP2().equals("--"))
+            return true;
+        else if(!dataModel.getScoreP2().equals("--") && !dataModel.getScoreP1().equals("--"))
+            return true;
+        else
+            return false;
     }
 }

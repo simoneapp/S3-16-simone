@@ -15,22 +15,50 @@
 
 
     <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/p1"
+        android:layout_marginLeft="40dp"
+        android:text="Score: " />
+
+    <TextView
+        android:id="@+id/scoreP1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/textView5"
+        android:layout_marginLeft="5dp"
+        android:text="10" />
+
+    <TextView
         android:id="@+id/p2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/p1"
         android:layout_marginTop="5dp"
-        android:text="ID"
+        android:text="Opponent"
         android:textColor="@android:color/black" />
 
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_below="@+id/textView5"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/p2"
+        android:layout_marginLeft="20dp"
+        android:text="Score: " />
 
+    <TextView
+        android:id="@+id/scoreP2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scoreP1"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/textView6"
+        android:layout_marginLeft="5dp"
+        android:text="5" />
 
-    </LinearLayout>
 
     <Button
         android:id="@+id/item_info"

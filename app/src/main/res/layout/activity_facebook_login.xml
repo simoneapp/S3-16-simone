@@ -7,7 +7,7 @@
     android:layout_marginTop="8dp"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
-    tools:context="app.simone.users.FacebookLoginActivity">
+    tools:context="app.simone.multiplayer.view.FacebookLoginActivity">
 
     <TextView
         android:id="@+id/textView"

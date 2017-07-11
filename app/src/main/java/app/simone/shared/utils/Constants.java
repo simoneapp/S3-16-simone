@@ -20,7 +20,8 @@ public class Constants {
     public static final int WHATTASHAMEYOULOST_MSG = -10;
     public static final String PLAY_AGAIN = "Play\nagain";
     public static final int STD_DELAY_BTN_TIME = 300;
-    public static final String LEADERBOARD_ID = "CgkI6ZOU44EQEAIQAg";
+    public static final String LEADERBOARD_CLASSIC_ID = "CgkI6ZOU44EQEAIQAg";
+    public static final String LEADERBOARD_HARD_ID = "CgkI6ZOU44EQEAIQAw";
     public static final int ACHIEVEMENT_SEQ_1 = 3;
     public static final int ACHIEVEMENT_SEQ_2 = 7;
     public static final int ACHIEVEMENT_SEQ_3 = 14;

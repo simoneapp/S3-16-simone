@@ -115,7 +115,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                 case Constants.WHATTASHAMEYOULOST_MSG:
                     finalScore = msg.arg1;
                     if (App.getGoogleApiHelper().isConnected()) {
-                        Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(), Constants.LEADERBOARD_ID, finalScore)
+                        Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(), chosenMode==Constants.CLASSIC_MODE ? Constants.LEADERBOARD_CLASSIC_ID : Constants.LEADERBOARD_HARD_ID, finalScore)
                                 .setResultCallback(new LeaderboardCallback());
                     } else {
                         //TODO WRITE PENDING SCORE SU DB

@@ -4,7 +4,7 @@ import akka.actor.UntypedActor
 import android.os.Bundle
 import android.util.Log
 import app.simone.users.model.FacebookFriend
-import application.mApplication
+import application.App
 import com.facebook.AccessToken
 import com.facebook.GraphRequest
 import com.facebook.HttpMethod
@@ -49,7 +49,7 @@ class FacebookManagerActor : UntypedActor() {
         parameters.putInt("limit",FRIENDS_LIMIT)
         parameters.putString("fields", FIELDS)
 
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
 
         GraphRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -104,7 +104,7 @@ class FacebookManagerActor : UntypedActor() {
 
     private fun getUserScore(id: String) {
 
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, mApplication.getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
 
         GraphRequest(
                 AccessToken.getCurrentAccessToken(),

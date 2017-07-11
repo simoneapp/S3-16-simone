@@ -8,7 +8,7 @@ import java.util.List;
 
 import app.simone.IGameActivity;
 import akka.actor.UntypedActor;
-import application.mApplication;
+import application.App;
 import colors.SColor;
 import messages.AttachViewMsg;
 import messages.PauseMsg;
@@ -34,13 +34,11 @@ public class GameViewActor extends UntypedActor {
     private boolean playerTurn;
 
     private boolean paused = false;
-    private List<SColor> queue;
 
     @Override
     public void preStart() throws Exception {
         super.preStart();
         this.playerSequence = new ArrayList<>();
-        this.queue = new ArrayList<>();
     }
 
     @Override
@@ -60,7 +58,7 @@ public class GameViewActor extends UntypedActor {
                 break;
             case NEXT_COLOR_MSG:
                 if (!paused) {
-                    if (this.isPlayerTurn()) {
+                    if (cpuColorIndex >= cpuSequence.size() /*Player turn if true*/) {
                         playerTurn = true;
                         getSelf().tell(new PlayerTurnMsg(), getSelf());
                     } else {
@@ -72,48 +70,42 @@ public class GameViewActor extends UntypedActor {
                 break;
             case PLAYER_TURN_MSG:
                 Log.d("##VIEW ACTOR", "Player turn");
-
                 playerColorIndex = 0;
                 playerSequence.clear();
                 gameActivity.getHandler().sendEmptyMessage(Constants.PLAYER_TURN);
                 break;
             case GUESS_COLOR_MSG:
                 if (playerTurn) {
-                    SColor color = ((GuessColorMsg) message).getGuessColor();
-                    Log.d("##VIEW ACTOR", "Player inserted :" + color);
-                    playerSequence.add(color);
+                    Log.d("##VIEW ACTOR", "Player inserted :" + ((GuessColorMsg) message).getGuessColor());
 
-                    int sizeDifference = playerSequence.size() - cpuSequence.size();
-                    Log.d("##VIEW ACTOR", "sizedifference :" + sizeDifference);
-                    //Avoid super fast tap
-                    if (sizeDifference > 0) {
-                        playerSequence = playerSequence.subList(0, cpuSequence.size());
-                    }
+                    if (cpuSequence.size() - playerSequence.size() > 0) { /*Avoid super fast tap*/
+                        playerSequence.add(((GuessColorMsg) message).getGuessColor());
 
-                    if (playerSequence.size() > 0 && playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))) {
-                        if (sizeDifference == 0) {
-                            Message m = new Message();
-                            m.what = Constants.CPU_TURN;
-                            m.arg2 = playerColorIndex;
-                            gameActivity.getHandler().sendMessage(m);
-                            Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, mApplication.getActorSystem())
-                                    .tell(new GimmeNewColorMsg(), getSelf());
-                            this.playerSequence.clear();
+                        if (playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))) { /*1by1 check*/
+                            if (cpuSequence.size() - playerSequence.size() == 0) {
+                                Message m = new Message();
+                                m.what = Constants.CPU_TURN;
+                                m.arg2 = playerColorIndex;
+                                gameActivity.getHandler().sendMessage(m);
+                                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                                        .tell(new GimmeNewColorMsg(), getSelf());
+                                this.playerSequence.clear();
+                            }
+                            this.playerColorIndex++;
+                        } else {
+                            //Player Loss
+
+                            cpuColorIndex = 0;
+                            cpuSequence.clear();
+                            Message msg = new Message();
+                            msg.what = Constants.WHATTASHAMEYOULOST_MSG;
+                            msg.arg1 = cpuSequence.size();
+                            playerColorIndex = 0;
+                            playerSequence.clear();
+                            gameActivity.getHandler().sendMessage(msg);
                         }
-                        this.playerColorIndex++;
-
-                    } else {
-                        //Player Loss
-
-                        playerColorIndex = 0;
-                        playerSequence.clear();
-                        cpuColorIndex = 0;
-                        cpuSequence.clear();
-                        gameActivity.getHandler().sendEmptyMessage(Constants.WHATTASHAMEYOULOST_MSG);
                     }
-
                 }
-
                 break;
             case PAUSE_MSG:
                 Log.d("##VIEW ACTOR", "PAUSE");
@@ -129,13 +121,9 @@ public class GameViewActor extends UntypedActor {
         Message m = new Message();
         m.what = Constants.CPU_TURN;
         m.arg1 = color.getButtonId();
-
-        this.gameActivity.getHandler().sendMessageDelayed(m, 500);
+        this.gameActivity.getHandler().sendMessageDelayed(m, Constants.STD_DELAY_BTN_TIME);
     }
 
-    private boolean isPlayerTurn() {
-        return cpuColorIndex >= cpuSequence.size();
-    }
 
     public int getPlayerColorIndex(){ return playerColorIndex; }
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Google Play game services IDs.
+Save this file as res/values/games-ids.xml in your project.
+-->
+<resources>
+    <string name="app_id">550232197609</string>
+    <string name="package_name">app.simone</string>
+    <string name="achievement_rgb">CgkI6ZOU44EQEAIQBw</string>
+    <string name="achievement_rgb_hard">CgkI6ZOU44EQEAIQCA</string>
+    <string name="achievement_rainbow">CgkI6ZOU44EQEAIQCQ</string>
+    <string name="achievement_rainbow_hard">CgkI6ZOU44EQEAIQCg</string>
+    <string name="achievement_double_rainbow">CgkI6ZOU44EQEAIQCw</string>
+    <string name="achievement_double_rainbow_hard">CgkI6ZOU44EQEAIQDA</string>
+    <string name="achievement_head_full_of_dreams">CgkI6ZOU44EQEAIQDQ</string>
+    <string name="achievement_head_full_of_dreams_hard">CgkI6ZOU44EQEAIQDg</string>
+    <string name="achievement_hard_as_zync">CgkI6ZOU44EQEAIQHg</string>
+    <string name="achievement_hard_as_zync_hard">CgkI6ZOU44EQEAIQHw</string>
+    <string name="achievement_meaning_of_life">CgkI6ZOU44EQEAIQEA</string>
+    <string name="achievement_meaning_of_life_hard">CgkI6ZOU44EQEAIQEQ</string>
+    <string name="achievement_cheater">CgkI6ZOU44EQEAIQEg</string>
+    <string name="achievement_master_of_cheating">CgkI6ZOU44EQEAIQEw</string>
+    <string name="achievement_i_have_nothing_to_do_in_my_life">CgkI6ZOU44EQEAIQFA</string>
+    <string name="achievement_terry">CgkI6ZOU44EQEAIQFQ</string>
+    <string name="achievement_fibonacci">CgkI6ZOU44EQEAIQDw</string>
+    <string name="achievement_cimabue">CgkI6ZOU44EQEAIQFg</string>
+    <string name="achievement_van_gogh">CgkI6ZOU44EQEAIQFw</string>
+    <string name="achievement_giotto">CgkI6ZOU44EQEAIQGA</string>
+    <string name="achievement_chris_martin">CgkI6ZOU44EQEAIQGQ</string>
+    <string name="achievement_simon">CgkI6ZOU44EQEAIQGg</string>
+    <string name="achievement_nyancat">CgkI6ZOU44EQEAIQGw</string>
+    <string name="achievement_unicorn">CgkI6ZOU44EQEAIQHA</string>
+    <string name="achievement_giuliano_e_i_notturni">CgkI6ZOU44EQEAIQHQ</string>
+    <string name="leaderboard_classic">CgkI6ZOU44EQEAIQAg</string>
+    <string name="leaderboard_hard">CgkI6ZOU44EQEAIQAw</string>
+    <string name="leaderboard_multiplayer">CgkI6ZOU44EQEAIQBA</string>
+    <string name="leaderboard_team_play">CgkI6ZOU44EQEAIQBQ</string>
+</resources>

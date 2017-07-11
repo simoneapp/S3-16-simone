@@ -54,7 +54,7 @@ public class PushNotification {
         mBuilder.setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager)myContext.getSystemService(Context.NOTIFICATION_SERVICE);
-    // mId allows you to update the notification later on.
+        // mId allows you to update the notification later on.
         mNotificationManager.notify(1, mBuilder.build());
     }
 }

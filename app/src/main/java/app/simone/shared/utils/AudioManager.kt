@@ -10,7 +10,7 @@ import com.facebook.FacebookSdk.getApplicationContext
 
 class AudioManager private constructor() {
 
-    val IS_DEBUG = true
+    val IS_DEBUG = false
     private val player = AudioPlayer()
     val pref = getApplicationContext().getSharedPreferences("PREF", Context.MODE_PRIVATE)
 

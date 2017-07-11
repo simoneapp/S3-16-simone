@@ -75,6 +75,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     private String whichPlayer = "";
 
     private int currentScore;
+    private int finalScore;
 
     private Handler handler = new Handler() {
         @Override
@@ -86,6 +87,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
                     if (playerBlinking) {
                         simoneTextView.setText(String.valueOf(currentScore));
+                        finalScore = currentScore;
                         simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
                         if (App.getGoogleApiHelper().getGoogleApiClient().isConnected()) {
                             Games.setViewForPopups(App.getGoogleApiHelper().getGoogleApiClient(), mContentView);
@@ -111,9 +113,9 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     }
                     break;
                 case Constants.WHATTASHAMEYOULOST_MSG:
-                    currentScore = msg.arg1;
+                    finalScore = msg.arg1;
                     if (App.getGoogleApiHelper().isConnected()) {
-                        Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(), Constants.LEADERBOARD_ID, currentScore)
+                        Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(), Constants.LEADERBOARD_ID, finalScore)
                                 .setResultCallback(new LeaderboardCallback());
                     } else {
                         //TODO WRITE PENDING SCORE SU DB
@@ -363,18 +365,21 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        AudioManager.Companion.getInstance().playSimoneMusic();
 
-        if(!isGameEnded) {
+        if(!tapToBegin) {
             AlertDialog alertDialog = new AlertDialog.Builder(GameActivity.this).create();
-            alertDialog.setTitle("Attention");
-            alertDialog.setMessage("Do you wanna quit the game?\nYour final score will be considered as "+ currentScore);
+            alertDialog.setTitle("Are you letting Simone win?");
+            alertDialog.setMessage("Your final score will be considered "+ finalScore);
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            sendMsgToOtherPlayer();
+                            if(isMultiplayerMode){
+                                sendMsgToOtherPlayer();
+                            }
+
                             finish();
+                            GameActivity.super.onBackPressed();
+                            AudioManager.Companion.getInstance().playSimoneMusic();
                         }
                     });
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL",
@@ -384,6 +389,8 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                         }
                     });
             alertDialog.show();
+        }else{
+            super.onBackPressed();
         }
     }
 }

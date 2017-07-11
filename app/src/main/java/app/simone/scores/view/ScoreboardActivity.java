@@ -29,29 +29,29 @@ public class ScoreboardActivity extends FullscreenBaseGameActivity {
         FloatingActionButton leaderboardFab = (FloatingActionButton) this.findViewById(R.id.scoreboard_fab_leaderboard);
         leaderboardFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                googleResource = 0;
-                openIfConnected(googleResource);
+                googleResource = Constants.LEADERBOARD;
+                openIfConnected();
             }
         });
 
         FloatingActionButton achievementFab = (FloatingActionButton) this.findViewById(R.id.scoreboard_fab_achievements);
         achievementFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                googleResource = 1;
-                openIfConnected(googleResource);
+                googleResource = Constants.ACHIEVEMENTS;
+                openIfConnected();
             }
         });
         Log.d("Score", "score");
     }
 
-    private void openIfConnected(int googleResource) {
+    private void openIfConnected() {
         if (App.getGoogleApiHelper().getGoogleApiClient() == null || !App.getGoogleApiHelper().getGoogleApiClient().isConnected()) {
             Message msg = new Message();
             msg.what = Constants.CONNECT;
             msg.obj = this;
             googleHandler.sendMessage(msg);
         } else {
-            if (googleResource == 0)
+            if (googleResource == Constants.LEADERBOARD)
                 startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(App.getGoogleApiHelper().getGoogleApiClient()), 1);
             else
                 startActivityForResult(Games.Achievements.getAchievementsIntent(App.getGoogleApiHelper().getGoogleApiClient()), 1);
@@ -78,11 +78,11 @@ public class ScoreboardActivity extends FullscreenBaseGameActivity {
     @Override
     public void onConnected(Bundle bundle) {
         super.onConnected(bundle);
-        if (googleResource == 0)
+        if (googleResource == Constants.LEADERBOARD)
             startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(App.getGoogleApiHelper().getGoogleApiClient()), 1);
         else
             startActivityForResult(Games.Achievements.getAchievementsIntent(App.getGoogleApiHelper().getGoogleApiClient()), 1);
     }
 
-    
+
 }

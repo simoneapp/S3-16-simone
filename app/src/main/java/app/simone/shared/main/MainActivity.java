@@ -125,7 +125,12 @@ public class MainActivity extends FullscreenBaseGameActivity {
         Message msg = new Message();
         msg.what = Constants.CONNECT;
         msg.obj = this;
-        googleHandler.sendMessageDelayed(msg, 500);
+        msg.arg1 = 1;
+        googleHandler.sendMessage(msg);
+        Message m = new Message();
+        m.what = Constants.CONNECT;
+        m.obj = this;
+        googleHandler.sendMessageDelayed(m,100);
     }
 
 

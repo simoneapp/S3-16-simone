@@ -38,6 +38,7 @@ public abstract class FullscreenBaseGameActivity extends AppCompatActivity imple
         }
     };
     protected View mContentView;
+    private int displayAlert;
     protected Handler googleHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -45,11 +46,15 @@ public abstract class FullscreenBaseGameActivity extends AppCompatActivity imple
             switch (msg.what){
                 case Constants.CONNECT:
                     if (App.getGoogleApiHelper().getGoogleApiClient() == null || !App.getGoogleApiHelper().getGoogleApiClient().isConnected()) {
+                        displayAlert = msg.arg1;
                         App.getGoogleApiHelper().buildGoogleApiClient((FullscreenBaseGameActivity)msg.obj, mContentView);
                     }
                     break;
                 case Constants.CONNECTION_ERROR:
-                    showConnectionErrorDialog();
+                    if(displayAlert != 0){
+                        showConnectionErrorDialog();
+                    }
+
                     break;
             }
 
@@ -225,6 +230,7 @@ public abstract class FullscreenBaseGameActivity extends AppCompatActivity imple
         if (connectionResult.hasResolution()) {
             try {
                 // !!!
+                Log.d("##LOG ERROR", connectionResult.toString());
                 connectionResult.startResolutionForResult(this, 1);
             } catch (IntentSender.SendIntentException e) {
                 this.connect();

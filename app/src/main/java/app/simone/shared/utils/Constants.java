@@ -32,6 +32,8 @@ public class Constants {
     public static final String BACK_TO_MENU = "Back";
     public static final int CONNECT = 100;
     public static final int CONNECTION_ERROR = -100;
-    public static final String ACHIEVEMENT_ID ="";
+    public static final int LEADERBOARD = 0;
+    public static final int ACHIEVEMENTS = 1;
+
 
 }

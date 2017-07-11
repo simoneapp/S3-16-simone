@@ -1,14 +1,9 @@
 package app.simone
 
 import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.Espresso
-import android.support.test.espresso.action.ViewActions.click
-import android.support.test.espresso.matcher.ViewMatchers
-import android.support.test.espresso.web.sugar.Web.onWebView
-import android.support.test.espresso.web.webdriver.DriverAtoms.*
-import android.support.test.espresso.web.webdriver.Locator
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import app.simone.shared.main.MainActivity
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test

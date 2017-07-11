@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:launchMode="singleTask"
-    tools:context="app.simone.GameActivity">
+    tools:context="app.simone.singleplayer.view.GameActivity">
 
 
     <FrameLayout
@@ -118,7 +118,7 @@
         app:layout_anchor="@id/game_top_layout"
         app:layout_anchorGravity="bottom|center" />
 
-    <app.simone.styleable.SimoneTextView
+    <app.simone.shared.styleable.SimoneTextView
         android:id="@+id/game_simone_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
         app:layout_anchorGravity="top|left"
         android:layout_margin="20sp"/>
 
-    <app.simone.styleable.SimoneTextView
+    <app.simone.shared.styleable.SimoneTextView
         android:id="@+id/game_score_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

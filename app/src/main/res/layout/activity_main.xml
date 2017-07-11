@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:launchMode="singleTask"
-    tools:context="app.simone.MainActivity">
+    tools:context="app.simone.shared.main.MainActivity">
 
 
     <FrameLayout
@@ -87,7 +87,7 @@
         app:layout_anchorGravity="bottom|center" >
 
         </android.support.design.widget.FloatingActionButton>
-    <app.simone.styleable.SimoneTextView
+    <app.simone.shared.styleable.SimoneTextView
         android:layout_height="wrap_content"
         android:id="@+id/main_simone_textview"
         android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
         app:layout_anchor="@id/main_top_layout"
         app:layout_anchorGravity="bottom|center"/>
 
-    <app.simone.styleable.MainTextView
+    <app.simone.shared.styleable.MainTextView
 
         android:layout_height="wrap_content"
         android:id="@+id/main_textview_vscpu"
@@ -112,7 +112,7 @@
         app:layout_anchor="@id/main_top_layout"
         app:layout_anchorGravity="left"
         />
-    <app.simone.styleable.MainTextView
+    <app.simone.shared.styleable.MainTextView
 
         android:layout_height="wrap_content"
         android:id="@+id/main_textview_multiplayer"
@@ -127,7 +127,7 @@
         app:layout_anchor="@id/main_top_layout"
         app:layout_anchorGravity="right"
         />
-    <app.simone.styleable.MainTextView
+    <app.simone.shared.styleable.MainTextView
 
         android:layout_height="wrap_content"
         android:id="@+id/main_textview_highscore"
@@ -141,7 +141,7 @@
         app:layout_anchor="@id/main_bottom_layout"
         app:layout_anchorGravity="bottom"
         />
-    <app.simone.styleable.MainTextView
+    <app.simone.shared.styleable.MainTextView
 
         android:layout_height="wrap_content"
         android:id="@+id/main_textview_settings"

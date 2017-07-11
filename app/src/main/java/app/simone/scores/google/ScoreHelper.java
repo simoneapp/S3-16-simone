@@ -10,11 +10,12 @@ import app.simone.shared.utils.Constants;
  * Created by sapi9 on 09/07/2017.
  */
 
-public class AchievementHelper {
+public class ScoreHelper {
 
 
     public static void checkAchievement(int score, int mode) {
         String achievement = null;
+
         switch (score) {
             case Constants.ACHIEVEMENT_SEQ_1:
                 achievement = (mode == Constants.CLASSIC_MODE ? String.valueOf(R.string.achievement_rgb) : String.valueOf(R.string.achievement_rgb_hard));
@@ -42,10 +43,24 @@ public class AchievementHelper {
                 break;
         }
         if(achievement!=null){
-            Games.Achievements.unlockImmediate(App.getGoogleApiHelper().getGoogleApiClient(),
-                    (achievement))
-                    .setResultCallback(new AchievementCallback());
+            if (App.getGoogleApiHelper().getGoogleApiClient().isConnected()) {
+                Games.Achievements.unlockImmediate(App.getGoogleApiHelper().getGoogleApiClient(),
+                        (achievement))
+                        .setResultCallback(new AchievementCallback());
+            } else{
+                //TODO WRITE SU SHARED
+            }
         }
 
+    }
+
+    public static void sendResultToLeaderboard(int chosenMode, int finalScore){
+        if (App.getGoogleApiHelper().isConnected()) {
+            Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(),
+                    chosenMode==Constants.CLASSIC_MODE ? Constants.LEADERBOARD_CLASSIC_ID : Constants.LEADERBOARD_HARD_ID, finalScore)
+                    .setResultCallback(new LeaderboardCallback());
+        } else {
+            //TODO SU SHARED
+        }
     }
 }

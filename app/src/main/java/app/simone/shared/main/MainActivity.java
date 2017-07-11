@@ -2,6 +2,8 @@ package app.simone.shared.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.animation.Animation;
@@ -12,25 +14,28 @@ import com.crashlytics.android.Crashlytics;
 
 import app.simone.R;
 import app.simone.scores.view.LoginActivity;
-import app.simone.scores.view.ScoreboardBaseGameActivity;
+import app.simone.scores.view.ScoreboardActivity;
 import app.simone.settings.view.SettingsActivity;
 import app.simone.shared.application.App;
+import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.VSCpuBaseGameActivity;
 import app.simone.shared.utils.AudioManager;
 import app.simone.multiplayer.controller.DataManager;
 import app.simone.multiplayer.view.FacebookLoginActivity;
 import app.simone.scores.google.GoogleGamesActivity;
 import io.fabric.sdk.android.Fabric;
+import scala.collection.immutable.Stream;
 
 /**
  * @author Michele Sapignoli
  */
-public class MainBaseGameActivity extends FullscreenBaseGameActivity {
+public class MainActivity extends FullscreenBaseGameActivity {
 
     private Button VSCpuButton;
     private Button connectionButton;
     private Button btnMultiplayer;
     private Button multiplayerButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +110,7 @@ public class MainBaseGameActivity extends FullscreenBaseGameActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               openActivity(ScoreboardBaseGameActivity.class, R.anim.slide_up, R.anim.slide_up_existing);
+               openActivity(ScoreboardActivity.class, R.anim.slide_up, R.anim.slide_up_existing);
             }
         });
     }
@@ -117,10 +122,10 @@ public class MainBaseGameActivity extends FullscreenBaseGameActivity {
         // created, to briefly hint to the user that UI controls
         // are available.
         //delayedHide(100);
-
-        if (App.getGoogleApiHelper().getGoogleApiClient() == null || !App.getGoogleApiHelper().getGoogleApiClient().isConnected()) {
-            App.getGoogleApiHelper().buildGoogleApiClient(this.mContentView, this);
-        }
+        Message msg = new Message();
+        msg.what = Constants.CONNECT;
+        msg.obj = this;
+        googleHandler.sendMessageDelayed(msg, 500);
     }
 
 

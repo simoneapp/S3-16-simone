@@ -51,7 +51,7 @@ import app.simone.scores.google.LeaderboardCallback;
  * @author Michele Sapignoli
  */
 
-public class GameBaseGameActivity extends FullscreenBaseGameActivity implements IGameActivity {
+public class GameActivity extends FullscreenBaseGameActivity implements IGameActivity {
     private boolean playerBlinking;
     private boolean tapToBegin = true;
 
@@ -182,7 +182,7 @@ public class GameBaseGameActivity extends FullscreenBaseGameActivity implements 
                 pnController.publishToChannel(createMatch(req));
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.d("GameBaseGameActivity", "Error while publishing the message on the channel");
+                Log.d("GameActivity", "Error while publishing the message on the channel");
             }
         } else if (getIntent().hasExtra("multiplayerMode")) {
             // This code is executed by P2
@@ -343,7 +343,7 @@ public class GameBaseGameActivity extends FullscreenBaseGameActivity implements 
                 pnController.publishToChannel(createMatch(req));
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.d("GameBaseGameActivity", "Error while publishing the message on the channel");
+                Log.d("GameActivity", "Error while publishing the message on the channel");
             }
         }
     }
@@ -367,7 +367,7 @@ public class GameBaseGameActivity extends FullscreenBaseGameActivity implements 
         AudioManager.Companion.getInstance().playSimoneMusic();
 
         if(!isGameEnded) {
-            AlertDialog alertDialog = new AlertDialog.Builder(GameBaseGameActivity.this).create();
+            AlertDialog alertDialog = new AlertDialog.Builder(GameActivity.this).create();
             alertDialog.setTitle("Attention");
             alertDialog.setMessage("Do you wanna quit the game?\nYour final score will be considered as "+ currentScore);
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",

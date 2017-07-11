@@ -219,6 +219,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
                 if (tapToBegin) {
                     tapToBegin = false;
+                    finalScore = 0;
                     playerBlinking = false;
                     simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
                     simoneTextView.setText(Constants.STRING_EMPTY);

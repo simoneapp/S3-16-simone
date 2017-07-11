@@ -72,7 +72,10 @@ public class GameViewActor extends UntypedActor {
                 Log.d("##VIEW ACTOR", "Player turn");
                 playerColorIndex = 0;
                 playerSequence.clear();
-                gameActivity.getHandler().sendEmptyMessage(Constants.PLAYER_TURN);
+                Message msg = new Message();
+                msg.what = Constants.PLAYER_TURN;
+                msg.arg2 = cpuSequence.size() -1;
+                gameActivity.getHandler().sendMessage(msg);
                 break;
             case GUESS_COLOR_MSG:
                 if (playerTurn) {
@@ -96,12 +99,12 @@ public class GameViewActor extends UntypedActor {
                             //Player Loss
                             playerSequence.clear();
                             cpuColorIndex = 0;
-                            cpuSequence.clear();
-                            Message msg = new Message();
-                            msg.what = Constants.WHATTASHAMEYOULOST_MSG;
-                            msg.arg1 = playerColorIndex;
+                            Message m = new Message();
+                            m.what = Constants.WHATTASHAMEYOULOST_MSG;
+                            m.arg1 = cpuSequence.size() - 1;
                             playerColorIndex = 0;
-                            gameActivity.getHandler().sendMessage(msg);
+                            cpuSequence.clear();
+                            gameActivity.getHandler().sendMessage(m);
                         }
                     }
                 }

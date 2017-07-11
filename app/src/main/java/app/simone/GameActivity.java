@@ -1,6 +1,5 @@
 package app.simone;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -13,14 +12,8 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.games.Games;
-import com.pubnub.api.PubNub;
-import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 
 import org.json.JSONException;
 
@@ -77,7 +70,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
     private boolean isGameEnded = false;
     private String whichPlayer = "";
 
-    private int currentScore;
+    private int score;
 
     private Handler handler = new Handler() {
         @Override
@@ -85,7 +78,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
             switch (msg.what) {
                 case Constants.CPU_TURN:
-                     currentScore = msg.arg2+1;/*Score*/
+                     int currentScore = msg.arg2+1;/*Score*/
 
                     if (playerBlinking) {
                         simoneTextView.setText(String.valueOf(currentScore));
@@ -102,6 +95,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                     break;
                 case Constants.PLAYER_TURN:
                     if (!playerBlinking) {
+                        score = msg.arg2;
                         simoneTextView.setText(Constants.TURN_PLAYER);
                         simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
                         if (chosenMode == Constants.HARD_MODE) {
@@ -114,9 +108,9 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                     }
                     break;
                 case Constants.WHATTASHAMEYOULOST_MSG:
-                    currentScore = msg.arg1;
+                    score = msg.arg1;
                     if (App.getGoogleApiHelper().isConnected()) {
-                        Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(), Constants.LEADERBOARD_ID, currentScore)
+                        Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(), Constants.LEADERBOARD_ID, score)
                                 .setResultCallback(new LeaderboardCallback());
                     } else {
                         //TODO WRITE PENDING SCORE SU DB
@@ -327,12 +321,12 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                 }
             });
             if (whichPlayer == "p1") {
-                player.setScore("" + currentScore);
+                player.setScore("" + score);
                 //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
             } else if (whichPlayer == "p2") {
                 //player = new OnlinePlayer(getIntent().getExtras().getString("idTo"),getIntent().getExtras().getString("nameTo"),"");
                 //toPlayer = new OnlinePlayer(getIntent().getExtras().getString("id"),getIntent().getExtras().getString("firstname"),getIntent().getExtras().getString("surname"));
-                toPlayer.setScore("" + currentScore);
+                toPlayer.setScore("" + score);
                 //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
 
             }
@@ -361,7 +355,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         if(!isGameEnded) {
             AlertDialog alertDialog = new AlertDialog.Builder(GameActivity.this).create();
             alertDialog.setTitle("Attention");
-            alertDialog.setMessage("Do you wanna quit the game?\nYour final score will be considered as "+ currentScore);
+            alertDialog.setMessage("Do you wanna quit the game?\nYour final score will be considered as "+ score);
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

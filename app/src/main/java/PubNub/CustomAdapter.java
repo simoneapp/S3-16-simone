@@ -24,6 +24,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by Giacomo on 03/07/2017.
  */
 
+
 public class CustomAdapter extends ArrayAdapter<OnlineMatch> implements View.OnClickListener {
 
     private ArrayList<OnlineMatch> data;
@@ -123,6 +124,7 @@ public class CustomAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
         viewHolder.textPlayer2.setText(dataModel.getNameP2());//+" - Score: "+dataModel.getScoreP2());
         viewHolder.scoreP1.setText(dataModel.getScoreP1());
         viewHolder.scoreP2.setText(dataModel.getScoreP2());
+        viewHolder.playButton.setText((dataModel.getScoreP1())+" " +dataModel.getScoreP2());
         viewHolder.playButton.setOnClickListener(this);
         viewHolder.playButton.setTag(position);
         if(disablePlayButton(dataModel)){

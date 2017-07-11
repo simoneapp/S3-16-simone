@@ -2,24 +2,21 @@ package app.simone.scores.google;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.IntentSender;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
+
+import app.simone.shared.main.FullscreenBaseGameActivity;
 
 /**
  * Created by sapi9 on 07/07/2017.
  */
 
-public class GoogleApiHelper implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GoogleApiHelper {
     private static final String TAG = GoogleApiHelper.class.getSimpleName();
     private Context context;
     private GoogleApiClient mGoogleApiClient;
-    private Activity resolutionActivity;
 
     public GoogleApiHelper(Context context) {
         this.context = context;
@@ -29,14 +26,10 @@ public class GoogleApiHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         return this.mGoogleApiClient;
     }
 
-    public void connect() {
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
-    }
+
 
     public void disconnect() {
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
     }
@@ -49,11 +42,10 @@ public class GoogleApiHelper implements GoogleApiClient.ConnectionCallbacks, Goo
         }
     }
 
-    public void buildGoogleApiClient(View view, Activity activity) {
-        resolutionActivity = activity;
+    public void buildGoogleApiClient(FullscreenBaseGameActivity activity, View view) {
         mGoogleApiClient = new GoogleApiClient.Builder(context)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(activity)
+                .addOnConnectionFailedListener(activity)
                 .addScope(Games.SCOPE_GAMES)
                 .setViewForPopups(view)
                 .addApi(Games.API).build();
@@ -61,27 +53,5 @@ public class GoogleApiHelper implements GoogleApiClient.ConnectionCallbacks, Goo
 
     }
 
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.d("##"+TAG, "connected");
-    }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d("##" + TAG, "onConnectionSuspended: googleApiClient.connect()");
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("##" + TAG, "onConnectionFailed: connectionResult.toString() = " + connectionResult.toString());
-        if (connectionResult.hasResolution()) {
-            try {
-                // !!!
-                connectionResult.startResolutionForResult(resolutionActivity, 1);
-            } catch (IntentSender.SendIntentException e) {
-                this.connect();
-            }
-        }
-    }
 }

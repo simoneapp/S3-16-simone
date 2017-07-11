@@ -37,7 +37,7 @@
         <activity android:name=".scores.view.LoginActivity" />
         <activity android:name=".scores.view.DBShowActivity" />
         <activity
-            android:name=".singleplayer.view.VSCpuActivity"
+            android:name=".singleplayer.view.VSCpuBaseGameActivity"
             android:label="VS CPU"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

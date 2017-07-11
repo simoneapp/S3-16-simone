@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="app.simone.singleplayer.view.VSCpuActivity">
+    tools:context="app.simone.singleplayer.view.VSCpuBaseGameActivity">
 
     <LinearLayout
         android:id="@+id/vs_cpu_fullscreen_content"

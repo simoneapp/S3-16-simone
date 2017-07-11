@@ -1,22 +1,32 @@
 package app.simone.shared.main;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import app.simone.shared.application.App;
+import app.simone.shared.utils.Constants;
+import app.simone.singleplayer.view.GameActivity;
 
 /**
  * @author Michele Sapignoli
  */
 
-public abstract class FullscreenActivity extends AppCompatActivity {
+public abstract class FullscreenBaseGameActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     protected int UI_ANIMATION_DELAY = 300;
     protected int initialDelay = 100;
     protected boolean mVisible;
@@ -28,6 +38,28 @@ public abstract class FullscreenActivity extends AppCompatActivity {
         }
     };
     protected View mContentView;
+    private int displayAlert;
+    protected Handler googleHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case Constants.CONNECT:
+                    if (App.getGoogleApiHelper().getGoogleApiClient() == null || !App.getGoogleApiHelper().getGoogleApiClient().isConnected()) {
+                        displayAlert = msg.arg1;
+                        App.getGoogleApiHelper().buildGoogleApiClient((FullscreenBaseGameActivity)msg.obj, mContentView);
+                    }
+                    break;
+                case Constants.CONNECTION_ERROR:
+                    if(displayAlert != 0){
+                        showConnectionErrorDialog();
+                    }
+
+                    break;
+            }
+
+        }
+    };
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -106,9 +138,6 @@ public abstract class FullscreenActivity extends AppCompatActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        if (App.getGoogleApiHelper().getGoogleApiClient() == null || !App.getGoogleApiHelper().getGoogleApiClient().isConnected()) {
-            App.getGoogleApiHelper().buildGoogleApiClient(this.mContentView, this);
-        }
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
@@ -183,5 +212,51 @@ public abstract class FullscreenActivity extends AppCompatActivity {
     }
 
     protected abstract void backTransition();
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d("##FULLSCREEN ACTIVITY", "connected");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d("##FULLSCREEN ACTITIVY", "onConnectionSuspended: googleApiClient.connect()");
+        this.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d("##FULLSCREEN ACTIVITY", "onConnectionFailed: connectionResult.toString() = " + connectionResult.toString());
+        if (connectionResult.hasResolution()) {
+            try {
+                // !!!
+                Log.d("##LOG ERROR", connectionResult.toString());
+                connectionResult.startResolutionForResult(this, 1);
+            } catch (IntentSender.SendIntentException e) {
+                this.connect();
+            }
+        }
+        googleHandler.sendEmptyMessageDelayed(Constants.CONNECTION_ERROR,500);
+
+    }
+
+    public void connect() {
+        if (App.getGoogleApiHelper().getGoogleApiClient() != null) {
+            App.getGoogleApiHelper().getGoogleApiClient().connect();
+        }
+    }
+
+    private void showConnectionErrorDialog(){
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Connection error");
+        alertDialog.setMessage("Simone was not able to reach Google Games. Enable connection to improve your experience with Simone.");
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 
 }

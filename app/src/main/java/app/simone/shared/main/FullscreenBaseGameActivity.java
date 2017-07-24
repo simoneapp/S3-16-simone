@@ -1,9 +1,11 @@
 package app.simone.shared.main;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,10 +19,16 @@ import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
 
+import app.simone.scores.google.ClassicLeaderboardCallback;
+import app.simone.scores.google.HardLeaderboardCallback;
+import app.simone.scores.google.LeaderboardCallback;
 import app.simone.shared.application.App;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.GameActivity;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * @author Michele Sapignoli
@@ -216,6 +224,19 @@ public abstract class FullscreenBaseGameActivity extends AppCompatActivity imple
     @Override
     public void onConnected(Bundle bundle) {
         Log.d("##FULLSCREEN ACTIVITY", "connected");
+        final SharedPreferences pref = this.getSharedPreferences("PREF", Context.MODE_PRIVATE);
+        int needToSyncClassic = pref.getInt(Constants.NEED_TO_SYNC_CLASSIC, 0);
+        int needToSyncHard = pref.getInt(Constants.NEED_TO_SYNC_HARD, 0);
+        if(needToSyncClassic != 0){
+            Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(),
+                    Constants.LEADERBOARD_CLASSIC_ID, pref.getInt(Constants.PREF_KEY_LEAD_CLASSIC, 0))
+                    .setResultCallback(new ClassicLeaderboardCallback());
+        }
+        if(needToSyncHard != 0){
+            Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(),
+                    Constants.LEADERBOARD_CLASSIC_ID, pref.getInt(Constants.PREF_KEY_LEAD_CLASSIC, 0))
+                    .setResultCallback(new HardLeaderboardCallback());
+        }
     }
 
     @Override

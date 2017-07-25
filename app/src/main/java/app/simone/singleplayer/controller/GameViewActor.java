@@ -99,7 +99,7 @@ public class GameViewActor extends UntypedActor {
                             cpuSequence.clear();
                             Message msg = new Message();
                             msg.what = Constants.WHATTASHAMEYOULOST_MSG;
-                            msg.arg1 = cpuSequence.size();
+                            msg.arg1 = cpuSequence.size()-1;
                             playerColorIndex = 0;
                             playerSequence.clear();
                             gameActivity.getHandler().sendMessage(msg);

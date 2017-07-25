@@ -11,6 +11,8 @@ import app.simone.multiplayer.controller.FacebookViewActor;
 import app.simone.shared.utils.Constants;
 import app.simone.scores.google.GoogleApiHelper;
 
+import static android.R.attr.key;
+
 /**
  * @author Michele Sapignoli
  */

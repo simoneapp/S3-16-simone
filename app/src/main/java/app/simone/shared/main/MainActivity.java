@@ -20,6 +20,7 @@ import app.simone.multiplayer.controller.DataManager;
 import app.simone.multiplayer.view.FacebookLoginActivity;
 import app.simone.scores.google.GoogleGamesActivity;
 import io.fabric.sdk.android.Fabric;
+import okhttp3.OkHttpClient;
 
 /**
  * @author Michele Sapignoli
@@ -34,8 +35,6 @@ public class MainActivity extends FullscreenActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         Fabric.with(this, new Crashlytics());
 

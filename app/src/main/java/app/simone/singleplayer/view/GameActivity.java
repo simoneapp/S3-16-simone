@@ -45,6 +45,7 @@ import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
 import app.simone.scores.google.AchievementHelper;
 import app.simone.scores.google.LeaderboardCallback;
+import io.realm.Realm;
 
 
 /**
@@ -69,12 +70,14 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
     private FrameLayout[] layouts = new FrameLayout[4];
 
+
     private FacebookUser sender;
     private FacebookUser recipient;
     private boolean isGameEnded = false;
     private String whichPlayer = "";
 
-    private int currentScore;
+    private int currentScore = 0;
+    private int opponentScore;
 
     private Handler handler = new Handler() {
         @Override
@@ -162,15 +165,38 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         }
     };
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FacebookUser sender = (FacebookUser) getIntent().getExtras().getSerializable("sender");
-        FacebookUser recipient = (FacebookUser) getIntent().getExtras().getSerializable("recipient");
+        String senderID = (String) getIntent().getExtras().getSerializable("sender");
+        String recipientID = (String) getIntent().getExtras().getSerializable("recipient");
+
+        try {
+            sender = Realm.getDefaultInstance().where(FacebookUser.class).equalTo("id", senderID).findFirst();
+            recipient = Realm.getDefaultInstance().where(FacebookUser.class).equalTo("id", recipientID).findFirst();
+
+            //this code should be refactorized
+
+            Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    if (sender.getScore() == null) {
+                        sender.setScore("--");
+                    }
+                    if (recipient.getScore() == null) {
+                        recipient.setScore("--");
+                    }
+                }
+            });
+        }catch (ExceptionInInitializerError e){
+            System.out.println("error initializing activity!");
+        }
 
         //Giaki
-        if (getIntent().getExtras().get("player") != null && !getIntent().hasExtra("multiplayerMode")) {
+        if (sender != null && !getIntent().hasExtra("multiplayerMode")) {
             // This code is executed by P1
             whichPlayer = "p1";
             isMultiplayerMode = true;
@@ -190,6 +216,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             isMultiplayerMode = true;
             pnController = new PubnubController("multiplayer");
             pnController.subscribeToChannel();
+            opponentScore=Integer.parseInt(getIntent().getExtras().getString("temporaryScore"));
 
             this.sender = sender;
             this.recipient = recipient;
@@ -327,12 +354,13 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                 }
             });
             if (whichPlayer == "p1") {
-                sender.setScore("" + currentScore);
+                sender.setScore("" + 25);
                 //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
             } else if (whichPlayer == "p2") {
-                //player = new OnlinePlayer(getIntent().getExtras().getString("idTo"),getIntent().getExtras().getString("nameTo"),"");
-                //toPlayer = new OnlinePlayer(getIntent().getExtras().getString("id"),getIntent().getExtras().getString("firstname"),getIntent().getExtras().getString("surname"));
-                recipient.setScore("" + currentScore);
+                //sender.setScore("" + currentScore);
+                sender.setScore(""+opponentScore);
+                Log.d("GIAK: ",""+opponentScore);
+                recipient.setScore("" + 14);
                 //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
 
             }

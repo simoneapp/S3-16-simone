@@ -58,7 +58,27 @@ class DataManager private constructor() {
 
         try {
             realm?.executeTransaction { realm ->
-                realm.insertOrUpdate(pr)
+                val fbU1=pr.firstPlayer
+                val fbU2=pr.secondPlayer
+
+                val otherMatches = realm.where(OnlineMatch::class.java).findAll().filter { it ->
+                    it.secondPlayer.id == fbU2.id
+                }
+
+                var onlineMatch : OnlineMatch?
+
+                if(otherMatches.size == 0){
+                    onlineMatch=realm.createObject(OnlineMatch::class.java,fbU2.id)
+                } else {
+                    onlineMatch = otherMatches.first()
+                }
+
+                val first = realm.copyToRealm(pr.firstPlayer)
+                val second = realm.copyToRealm(pr.secondPlayer)
+
+                onlineMatch.firstPlayer = first
+                onlineMatch.secondPlayer = second
+
             }
 
             if(obj.filterNotifications(Profile.getCurrentProfile().id.toString())) {
@@ -66,6 +86,13 @@ class DataManager private constructor() {
             }
         } catch (e: RealmPrimaryKeyConstraintException) {
             Log.d("DB", "The value is already in the database!")
+        }
+    }
+
+    fun setScore(match: OnlineMatch, score: String){
+        realm?.executeTransaction { realm ->
+           match.firstPlayer.score=score
+            realm.copyToRealm(match)
         }
     }
 

@@ -1,11 +1,7 @@
 package app.simone.multiplayer.view
 
 import android.content.Intent
-import android.util.Log
 import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.TextView
-import app.simone.R
 import app.simone.multiplayer.controller.DataManager
 import app.simone.multiplayer.controller.FacebookManagerActor
 import app.simone.multiplayer.controller.PubnubController
@@ -17,7 +13,6 @@ import app.simone.shared.utils.Utilities
 import app.simone.shared.utils.filterFacebookUser
 import app.simone.singleplayer.view.GameActivity
 import com.facebook.Profile
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
@@ -169,7 +164,6 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
                             //displayToast("msg ricevuto..")
                             //displayToast(msg.toString())
                             DataManager.Companion.instance.saveRequest(msg.asJsonObject)
-                            //saveOpponentScore(msg)
                             updateRequests()
                         }
                     }

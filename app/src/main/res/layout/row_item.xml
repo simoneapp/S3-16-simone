@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="Name"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="14sp"
         android:textColor="@android:color/black" />
 
 

@@ -4,9 +4,7 @@ import app.simone.multiplayer.model.PushNotification
 import android.content.Context
 import android.util.Log
 import app.simone.multiplayer.model.OnlineMatch
-import app.simone.multiplayer.model.FacebookUser
 import com.facebook.Profile
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -89,23 +87,11 @@ class DataManager private constructor() {
         }
     }
 
-    fun setScore(match: OnlineMatch, score: String){
-        realm?.executeTransaction { realm ->
-           match.firstPlayer.score=score
-            realm.copyToRealm(match)
-        }
-    }
 
     fun getPendingRequests(): RealmResults<OnlineMatch> {
         return realm!!.where(OnlineMatch::class.java).findAll()
     }
 
-    fun saveOpponentScore(msg: JsonElement){
-        val scoreP2=msg.asJsonObject.get(OnlineMatch.kSECOND).asJsonObject.get(FacebookUser.kSCORE).asString
-        if(scoreP2 != "--" && scoreP2 != null){
-            opponentTemporaryScore = scoreP2
-        }
-    }
 
     fun resetOpponentScore() {
         opponentTemporaryScore = ""

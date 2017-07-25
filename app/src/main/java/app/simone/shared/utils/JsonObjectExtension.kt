@@ -33,5 +33,5 @@ fun JsonObject.filterNotifications(userID : String) : Boolean {
         scoreP2 = second.get("score").asString
     }
 
-    return fromUser != userID && toUser == userID && scoreP2 == "--" && scoreP1 == "--"
+    return fromUser != userID && toUser == userID && scoreP2 == "" && scoreP1 == ""
 }

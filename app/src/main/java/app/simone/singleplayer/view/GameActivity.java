@@ -14,8 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import com.google.android.gms.games.Games;
-
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -24,10 +22,11 @@ import java.util.Collections;
 import java.util.List;
 
 import app.simone.multiplayer.controller.PubnubController;
+import app.simone.multiplayer.controller.ScoreHandler;
 import app.simone.multiplayer.model.Request;
 import akka.actor.ActorRef;
 import app.simone.multiplayer.model.OnlineMatch;
-import app.simone.shared.main.FullscreenActivity;
+import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.R;
 import app.simone.singleplayer.model.SColor;
 import app.simone.shared.styleable.SimoneTextView;
@@ -43,16 +42,14 @@ import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.AudioPlayer;
 import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
-import app.simone.scores.google.AchievementHelper;
-import app.simone.scores.google.LeaderboardCallback;
 import io.realm.Realm;
 
+import app.simone.scores.google.ScoreHelper;
 
 /**
  * @author Michele Sapignoli
  */
-
-public class GameActivity extends FullscreenActivity implements IGameActivity {
+public class GameActivity extends FullscreenBaseGameActivity implements IGameActivity {
     private boolean playerBlinking;
     private boolean tapToBegin = true;
 
@@ -70,13 +67,13 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
     private FrameLayout[] layouts = new FrameLayout[4];
 
-
     private FacebookUser sender;
     private FacebookUser recipient;
     private boolean isGameEnded = false;
     private String whichPlayer = "";
 
-    private int currentScore = 0;
+    private int currentScore;
+    private int finalScore;
     private int opponentScore;
 
     private Handler handler = new Handler() {
@@ -89,11 +86,9 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
                     if (playerBlinking) {
                         simoneTextView.setText(String.valueOf(currentScore));
+                        finalScore = currentScore;
                         simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                        if (App.getGoogleApiHelper().getGoogleApiClient().isConnected()) {
-                            Games.setViewForPopups(App.getGoogleApiHelper().getGoogleApiClient(), mContentView);
-                            AchievementHelper.checkAchievement(currentScore, chosenMode);
-                        }
+                        ScoreHelper.checkAchievement(currentScore, chosenMode);
                     }
                     playerBlinking = false;
                     if (/*arg1 = 0 when PLAYER_TURN_MSG comes from GameViewActor*/msg.arg1 != 0) {
@@ -114,14 +109,8 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                     }
                     break;
                 case Constants.WHATTASHAMEYOULOST_MSG:
-                    currentScore = msg.arg1;
-                    if (App.getGoogleApiHelper().isConnected()) {
-                        Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(), Constants.LEADERBOARD_ID, currentScore)
-                                .setResultCallback(new LeaderboardCallback());
-                    } else {
-                        //TODO WRITE PENDING SCORE SU DB
-                    }
-
+                    finalScore = msg.arg1;
+                    ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
                     tapToBegin = true;
                     simoneTextView.setText(Constants.PLAY_AGAIN);
                     simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
@@ -165,7 +154,6 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         }
     };
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,26 +161,10 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
         String senderID = (String) getIntent().getExtras().getSerializable("sender");
         String recipientID = (String) getIntent().getExtras().getSerializable("recipient");
 
-        try {
-            sender = Realm.getDefaultInstance().where(FacebookUser.class).equalTo("id", senderID).findFirst();
-            recipient = Realm.getDefaultInstance().where(FacebookUser.class).equalTo("id", recipientID).findFirst();
-
-            //this code should be refactorized
-
-            Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-
-                    if (sender.getScore() == null) {
-                        sender.setScore("--");
-                    }
-                    if (recipient.getScore() == null) {
-                        recipient.setScore("--");
-                    }
-                }
-            });
-        }catch (ExceptionInInitializerError e){
-            System.out.println("error initializing activity!");
+        try{
+            checkingExistingData(senderID,recipientID);
+        }catch (Exception e){
+            System.out.println("error while retrieving data from DB");
         }
 
         //Giaki
@@ -212,14 +184,14 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
             }
         } else if (getIntent().hasExtra("multiplayerMode")) {
             // This code is executed by P2
+
+            checkingExistingData(senderID,recipientID);
             whichPlayer = "p2";
             isMultiplayerMode = true;
             pnController = new PubnubController("multiplayer");
             pnController.subscribeToChannel();
             opponentScore=Integer.parseInt(getIntent().getExtras().getString("temporaryScore"));
 
-            this.sender = sender;
-            this.recipient = recipient;
         }
 
         chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
@@ -244,6 +216,7 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
                 if (tapToBegin) {
                     tapToBegin = false;
+                    finalScore = 0;
                     playerBlinking = false;
                     simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
                     simoneTextView.setText(Constants.STRING_EMPTY);
@@ -354,13 +327,12 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                 }
             });
             if (whichPlayer == "p1") {
-                sender.setScore("" + 25);
+                sender.setScore("" + finalScore);
                 //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
             } else if (whichPlayer == "p2") {
                 //sender.setScore("" + currentScore);
                 sender.setScore(""+opponentScore);
-                Log.d("GIAK: ",""+opponentScore);
-                recipient.setScore("" + 14);
+                recipient.setScore("" + finalScore);
                 //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
 
             }
@@ -391,18 +363,21 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        AudioManager.Companion.getInstance().playSimoneMusic();
 
-        if(!isGameEnded) {
+        if(!tapToBegin) {
             AlertDialog alertDialog = new AlertDialog.Builder(GameActivity.this).create();
-            alertDialog.setTitle("Attention");
-            alertDialog.setMessage("Do you wanna quit the game?\nYour final score will be considered as "+ currentScore);
+            alertDialog.setTitle("Are you letting Simone win?");
+            alertDialog.setMessage("Your final score will be considered "+ finalScore);
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            sendMsgToOtherPlayer();
+                            if(isMultiplayerMode){
+                                sendMsgToOtherPlayer();
+                            }
                             finish();
+                            ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
+                            GameActivity.super.onBackPressed();
+                            AudioManager.Companion.getInstance().playSimoneMusic();
                         }
                     });
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL",
@@ -412,6 +387,16 @@ public class GameActivity extends FullscreenActivity implements IGameActivity {
                         }
                     });
             alertDialog.show();
+        }else{
+            super.onBackPressed();
         }
     }
+
+    private void checkingExistingData(String senderID,String recipientID) {
+
+        sender = ScoreHandler.checkingExistingUser(senderID);
+        recipient = ScoreHandler.checkingExistingUser(recipientID);
+
+    }
+
 }

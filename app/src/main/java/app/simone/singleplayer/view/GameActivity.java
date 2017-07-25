@@ -14,8 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import com.google.android.gms.games.Games;
-
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -43,14 +41,11 @@ import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.AudioPlayer;
 import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
-import app.simone.scores.google.AchievementHelper;
-import app.simone.scores.google.LeaderboardCallback;
-
+import app.simone.scores.google.ScoreHelper;
 
 /**
  * @author Michele Sapignoli
  */
-
 public class GameActivity extends FullscreenBaseGameActivity implements IGameActivity {
     private boolean playerBlinking;
     private boolean tapToBegin = true;
@@ -89,10 +84,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                         simoneTextView.setText(String.valueOf(currentScore));
                         finalScore = currentScore;
                         simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                        if (App.getGoogleApiHelper().getGoogleApiClient().isConnected()) {
-                            Games.setViewForPopups(App.getGoogleApiHelper().getGoogleApiClient(), mContentView);
-                            AchievementHelper.checkAchievement(currentScore, chosenMode);
-                        }
+                        ScoreHelper.checkAchievement(currentScore, chosenMode);
                     }
                     playerBlinking = false;
                     if (/*arg1 = 0 when PLAYER_TURN_MSG comes from GameViewActor*/msg.arg1 != 0) {
@@ -114,13 +106,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     break;
                 case Constants.WHATTASHAMEYOULOST_MSG:
                     finalScore = msg.arg1;
-                    if (App.getGoogleApiHelper().isConnected()) {
-                        Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(), chosenMode==Constants.CLASSIC_MODE ? Constants.LEADERBOARD_CLASSIC_ID : Constants.LEADERBOARD_HARD_ID, finalScore)
-                                .setResultCallback(new LeaderboardCallback());
-                    } else {
-                        //TODO WRITE PENDING SCORE SU DB
-                    }
-
+                    ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
                     tapToBegin = true;
                     simoneTextView.setText(Constants.PLAY_AGAIN);
                     simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
@@ -377,8 +363,8 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                             if(isMultiplayerMode){
                                 sendMsgToOtherPlayer();
                             }
-
                             finish();
+                            ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
                             GameActivity.super.onBackPressed();
                             AudioManager.Companion.getInstance().playSimoneMusic();
                         }

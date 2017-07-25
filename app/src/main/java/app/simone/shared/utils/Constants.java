@@ -35,6 +35,11 @@ public class Constants {
     public static final int CONNECTION_ERROR = -100;
     public static final int LEADERBOARD = 0;
     public static final int ACHIEVEMENTS = 1;
+    public static final String PREF_KEY_LEAD_CLASSIC = "CLASSIC";
+    public static final String PREF_KEY_LEAD_HARD = "HARD";
+    public static final String PREF_KEY = "PREF";
+    public static final String NEED_TO_SYNC_CLASSIC= "NTSC";
+    public static final String NEED_TO_SYNC_HARD= "NTSH";
 
 
 }

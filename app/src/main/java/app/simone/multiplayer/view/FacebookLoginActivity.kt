@@ -2,6 +2,8 @@ package app.simone.multiplayer.view
 
 import android.content.Intent
 import android.widget.AdapterView
+import android.widget.Toolbar
+import app.simone.R
 import app.simone.multiplayer.controller.DataManager
 import app.simone.multiplayer.controller.FacebookManagerActor
 import app.simone.multiplayer.controller.PubnubController
@@ -194,5 +196,6 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
             }
         }
     }
+
 
 }

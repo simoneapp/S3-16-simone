@@ -174,7 +174,6 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
             isMultiplayerMode = true;
             pnController = new PubnubController("multiplayer");
             pnController.subscribeToChannel();
-
             Request req = new Request(sender,recipient);
             try {
                 pnController.publishToChannel(createMatch(req));
@@ -191,7 +190,6 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
             pnController = new PubnubController("multiplayer");
             pnController.subscribeToChannel();
             opponentScore=Integer.parseInt(getIntent().getExtras().getString("temporaryScore"));
-
         }
 
         chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);

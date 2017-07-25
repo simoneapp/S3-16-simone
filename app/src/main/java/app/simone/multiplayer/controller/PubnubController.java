@@ -9,6 +9,7 @@ import com.pubnub.api.PubNub;
 import com.pubnub.api.callbacks.PNCallback;
 import com.pubnub.api.models.consumer.PNPublishResult;
 import com.pubnub.api.models.consumer.PNStatus;
+import com.pubnub.api.models.consumer.history.PNHistoryResult;
 
 import org.json.JSONException;
 
@@ -87,5 +88,17 @@ public class PubnubController {
     }
 
     public PubNub getPubnub(){return this.pubnub;}
+
+    public void getHistory(){
+        pubnub.history()
+                .channel(channel) // where to fetch history from
+                .count(2) // how many items to fetch
+                .async(new PNCallback<PNHistoryResult>() {
+                    @Override
+                    public void onResponse(PNHistoryResult result, PNStatus status) {
+
+                    }
+                });
+    }
 
 }

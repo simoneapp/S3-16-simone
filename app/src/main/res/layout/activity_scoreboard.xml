@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="app.simone.ScoreboardActivity">
+    tools:context="app.simone.scores.view.ScoreboardActivity">
 
     <LinearLayout
         android:id="@+id/scoreboard_fullscreen_content"
@@ -85,7 +85,7 @@
         app:layout_anchor="@id/scoreboard_top_layout"
         app:layout_anchorGravity="center" />
 
-    <app.simone.styleable.SimoneTextView
+    <app.simone.shared.styleable.SimoneTextView
         android:id="@+id/scoreboard_simone_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
         app:layout_anchor="@id/scoreboard_bottomlayout"
         app:layout_anchorGravity="center" />
 
-    <app.simone.styleable.SimoneTextView
+    <app.simone.shared.styleable.SimoneTextView
         android:id="@+id/scoreboard_simone_textview_hard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
         android:textSize="32sp"
         app:layout_anchor="@id/scoreboard_bottomlayout"
         app:layout_anchorGravity="center" />
-    <app.simone.styleable.MainTextView
+    <app.simone.shared.styleable.MainTextView
 
         android:id="@+id/scoreboard_textview_scoreboard"
         android:layout_width="wrap_content"

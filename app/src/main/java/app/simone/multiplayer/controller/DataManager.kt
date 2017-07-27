@@ -3,6 +3,7 @@ package app.simone.multiplayer.controller
 import app.simone.multiplayer.model.PushNotification
 import android.content.Context
 import android.util.Log
+import app.simone.multiplayer.model.FacebookUser
 import app.simone.multiplayer.model.OnlineMatch
 import com.facebook.Profile
 import com.google.gson.JsonObject
@@ -45,9 +46,15 @@ class DataManager private constructor() {
         realm = Realm.getDefaultInstance()
     }
 
+    fun updateExistingRequest(obj: JsonObject){
+
+    }
+
     fun saveRequest(obj: JsonObject) {
 
         var pr = OnlineMatch.with(obj)
+        //pr.matchId=getNextId()
+        printValues(pr)
 
         if(opponentTemporaryScore != ""){
             pr.secondPlayer.score = opponentTemporaryScore
@@ -56,29 +63,15 @@ class DataManager private constructor() {
 
         try {
             realm?.executeTransaction { realm ->
-                val fbU1=pr.firstPlayer
-                val fbU2=pr.secondPlayer
-
-                val otherMatches = realm.where(OnlineMatch::class.java).findAll().filter { it ->
-                    it.secondPlayer.id == fbU2.id
+                if(pr.kindOfMsg=="insert") {
+                    //new record on the DB
+                    pr.matchId=getNextId()
+                    realm.copyToRealm(pr)
+                }else{
+                    //updating an existing record
+                    realm.copyToRealmOrUpdate(pr)
                 }
-
-                var onlineMatch : OnlineMatch?
-
-                if(otherMatches.size == 0){
-                    onlineMatch=realm.createObject(OnlineMatch::class.java,fbU2.id)
-                } else {
-                    onlineMatch = otherMatches.first()
-                }
-
-                val first = realm.copyToRealm(pr.firstPlayer)
-                val second = realm.copyToRealm(pr.secondPlayer)
-
-                onlineMatch.firstPlayer = first
-                onlineMatch.secondPlayer = second
-
             }
-
             if(obj.filterNotifications(Profile.getCurrentProfile().id.toString())) {
                 PushNotification(this.context, pr.firstPlayer.name).init()
             }
@@ -87,6 +80,48 @@ class DataManager private constructor() {
         }
     }
 
+    fun saveRequestLocally(pr: OnlineMatch) {
+
+
+        if(opponentTemporaryScore != ""){
+            pr.secondPlayer.score = opponentTemporaryScore
+            opponentTemporaryScore = ""
+        }
+
+
+        try {
+            realm?.executeTransaction { realm ->
+                if(pr.kindOfMsg=="insert") {
+                    //new record on the DB
+                    pr.matchId=getNextId()
+                    printValues(pr)
+                    realm.copyToRealm(pr)
+                }else{
+                    //updating an existing record
+                    realm.copyToRealmOrUpdate(pr)
+                }
+            }
+        } catch (e: RealmPrimaryKeyConstraintException) {
+            Log.d("DB", "The value is already in the database!")
+        }
+    }
+
+    fun printValues(pr: OnlineMatch){
+        Log.d("PLAYERONE1",pr.firstPlayer.name)
+        Log.d("PLAYERONE2",pr.secondPlayer.name)
+        Log.d("PLAYERONE_MATCH",""+pr.matchId)
+    }
+
+
+    fun getNextId():Int{
+        var id = realm!!.where(OnlineMatch::class.java).max("matchId")
+        if(id==null){
+            return 0
+        }else{
+            id=id.toInt()
+            return id+1
+        }
+    }
 
     fun getPendingRequests(): RealmResults<OnlineMatch> {
         return realm!!.where(OnlineMatch::class.java).findAll()

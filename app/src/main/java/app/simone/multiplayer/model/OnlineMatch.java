@@ -1,9 +1,16 @@
 package app.simone.multiplayer.model;
 
 import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import app.simone.singleplayer.model.SColor;
 import io.realm.RealmList;
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import scala.Int;
 
 
 /**
@@ -25,20 +32,29 @@ public class OnlineMatch extends RealmObject {
 
     private RealmList<FacebookUser> usersList=new RealmList<>();
 
+    private String kindOfMsg="";
+
     @PrimaryKey
-    private String idSecondUser;
+    private int matchId;
 
     public static final String kFIRST = "first";
     public static final String kSECOND = "second";
+    public static final String kMSG = "kindOfMsg";
 
-    public OnlineMatch() {
+
+    public OnlineMatch(){
+
+    }
+
+    public OnlineMatch(FacebookUser firstPlayer, FacebookUser secondPlayer,int matchId) {
+        this.firstPlayer = firstPlayer;
+        this.secondPlayer = secondPlayer;
+        this.matchId=matchId;
     }
 
     public OnlineMatch(FacebookUser firstPlayer, FacebookUser secondPlayer) {
         this.firstPlayer = firstPlayer;
         this.secondPlayer = secondPlayer;
-        this.idSecondUser=secondPlayer.getId();
-
     }
 
     public FacebookUser getFirstPlayer() {
@@ -53,6 +69,22 @@ public class OnlineMatch extends RealmObject {
         return secondPlayer;
     }
 
+    public String getKindOfMsg() {
+        return kindOfMsg;
+    }
+
+    public void setKindOfMsg(String kindOfMsg) {
+        this.kindOfMsg = kindOfMsg;
+    }
+
+    public int getMatchId() {
+        return matchId;
+    }
+
+    public void setMatchId(int matchId) {
+        this.matchId = matchId;
+    }
+
     public void setSecondPlayer(FacebookUser secondPlayer) {
         this.secondPlayer = secondPlayer;
     }
@@ -62,6 +94,7 @@ public class OnlineMatch extends RealmObject {
         FacebookUser first = new FacebookUser(obj.get(kFIRST).getAsJsonObject());
         FacebookUser second = new FacebookUser(obj.get(kSECOND).getAsJsonObject());
         OnlineMatch pr = new OnlineMatch(first,second);
+        pr.setKindOfMsg(obj.get(kMSG).getAsString());
         return pr;
     }
 
@@ -69,6 +102,7 @@ public class OnlineMatch extends RealmObject {
         JsonObject obj = new JsonObject();
         obj.add(kFIRST, firstPlayer.toJson());
         obj.add(kSECOND, secondPlayer.toJson());
+        obj.addProperty(kMSG,this.kindOfMsg);
         return obj;
     }
 

@@ -42,7 +42,6 @@ import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.AudioPlayer;
 import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
-import io.realm.Realm;
 
 import app.simone.scores.google.ScoreHelper;
 
@@ -78,11 +77,11 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
     private Handler handler = new Handler() {
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
 
             switch (msg.what) {
                 case Constants.CPU_TURN:
-                     currentScore = msg.arg2+1;/*Score*/
+                    currentScore = msg.arg2 + 1;/*Score*/
 
                     if (playerBlinking) {
                         simoneTextView.setText(String.valueOf(currentScore));
@@ -161,35 +160,38 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         String senderID = (String) getIntent().getExtras().getSerializable("sender");
         String recipientID = (String) getIntent().getExtras().getSerializable("recipient");
 
-        try{
-            checkingExistingData(senderID,recipientID);
-        }catch (Exception e){
+        try {
+            checkingExistingData(senderID, recipientID);
+        } catch (Exception e) {
             System.out.println("error while retrieving data from DB");
         }
 
         //Giaki
         if (sender != null && !getIntent().hasExtra("multiplayerMode")) {
-            // This code is executed by P1
             whichPlayer = "p1";
             isMultiplayerMode = true;
             pnController = new PubnubController("multiplayer");
             pnController.subscribeToChannel();
-            Request req = new Request(sender,recipient);
+            Request req = new Request(sender, recipient);
             try {
-                pnController.publishToChannel(createMatch(req));
+                OnlineMatch newMatch = createMatch(req);
+                newMatch.setKindOfMsg("insert");
+                pnController.publishToChannel(newMatch);
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.d("GameActivity", "Error while publishing the message on the channel");
             }
+
+
         } else if (getIntent().hasExtra("multiplayerMode")) {
             // This code is executed by P2
 
-            checkingExistingData(senderID,recipientID);
+            checkingExistingData(senderID, recipientID);
             whichPlayer = "p2";
             isMultiplayerMode = true;
             pnController = new PubnubController("multiplayer");
             pnController.subscribeToChannel();
-            opponentScore=Integer.parseInt(getIntent().getExtras().getString("temporaryScore"));
+            opponentScore = Integer.parseInt(getIntent().getExtras().getString("temporaryScore"));
         }
 
         chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
@@ -223,9 +225,11 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
                     Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
                             .tell(new StartGameVsCPUMsg(), ActorRef.noSender());
+
                 }
             }
         });
+
 
         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
                 .tell(new AttachViewMsg(this), ActorRef.noSender());
@@ -327,22 +331,31 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
             if (whichPlayer == "p1") {
                 sender.setScore("" + finalScore);
                 //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
+                Request req = new Request(sender, recipient);
+
+                try {
+                    pnController.publishToChannel(createMatch(req));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("GameActivity", "Error while publishing the message on the channel");
+                }
             } else if (whichPlayer == "p2") {
                 //sender.setScore("" + currentScore);
-                sender.setScore(""+opponentScore);
+                sender.setScore("" + opponentScore);
                 recipient.setScore("" + finalScore);
                 //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
+                Request req = new Request(sender, recipient);
+                OnlineMatch om = createMatch(req);
+                om.setKindOfMsg("update");
+                try {
+                    pnController.publishToChannel(om);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("GameActivity", "Error while publishing the message on the channel");
+                }
 
             }
 
-            Request req = new Request(sender, recipient);
-
-            try {
-                pnController.publishToChannel(createMatch(req));
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.d("GameActivity", "Error while publishing the message on the channel");
-            }
         }
     }
 
@@ -355,21 +368,20 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         if (om.getFirstPlayer().getScore() == null) {
             om.getFirstPlayer().setScore("--");
         }
-
         return om;
     }
 
     @Override
     public void onBackPressed() {
 
-        if(!tapToBegin) {
+        if (!tapToBegin) {
             AlertDialog alertDialog = new AlertDialog.Builder(GameActivity.this).create();
             alertDialog.setTitle("Are you letting Simone win?");
-            alertDialog.setMessage("Your final score will be considered "+ finalScore);
+            alertDialog.setMessage("Your final score will be considered " + finalScore);
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if(isMultiplayerMode){
+                            if (isMultiplayerMode) {
                                 sendMsgToOtherPlayer();
                             }
                             finish();
@@ -385,12 +397,12 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                         }
                     });
             alertDialog.show();
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
 
-    private void checkingExistingData(String senderID,String recipientID) {
+    private void checkingExistingData(String senderID, String recipientID) {
 
         sender = ScoreHandler.checkingExistingUser(senderID);
         recipient = ScoreHandler.checkingExistingUser(recipientID);

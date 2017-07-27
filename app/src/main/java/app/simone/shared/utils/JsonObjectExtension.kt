@@ -13,7 +13,13 @@ fun JsonObject.filterFacebookUser(userID : String) : Boolean {
     Log.d("fromUser: ",fromUser)
     Log.d("toUser: ",toUser)
 
-    return fromUser == userID || toUser == userID
+    val ciao=this.get("kindOfMsg").asString
+    Log.d("CIAO",ciao)
+    if(ciao=="update"){
+        return fromUser == userID || toUser == userID
+    }else{
+        return toUser == userID
+    }
 }
 
 fun JsonObject.filterNotifications(userID : String) : Boolean {

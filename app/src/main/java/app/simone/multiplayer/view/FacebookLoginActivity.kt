@@ -75,14 +75,13 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
             if(selectedUser != null) {
                 val activityIntent = Intent(baseContext, GameActivity::class.java)
                 activityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                println("ME: "+ com.facebook.Profile.getCurrentProfile().firstName.toString()+" "+
-                        com.facebook.Profile.getCurrentProfile().lastName.toString())
+                println("ME: "+ com.facebook.Profile.getCurrentProfile().firstName.toString()+" "+ com.facebook.Profile.getCurrentProfile().lastName.toString())
                 setUser()
 
-                Realm.getDefaultInstance().executeTransaction {
-                    Realm.getDefaultInstance().insertOrUpdate(currentUser)
-                    Realm.getDefaultInstance().insertOrUpdate(selectedUser)
-                }
+                val onlineMatch=OnlineMatch(currentUser,selectedUser)
+                onlineMatch.kindOfMsg="insert"
+                DataManager.instance.saveRequestLocally(onlineMatch)
+
                 //sending data to the GameActivity
                 activityIntent.putExtra("sender", currentUser?.id)
                 activityIntent.putExtra("recipient", selectedUser?.id)
@@ -159,11 +158,13 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
             }
 
             override fun message(pubnub: PubNub, message: PNMessageResult) {
+
                 if (message.channel != null) {
                     runOnUiThread {
+
                         val msg = message.message as JsonObject
                         if(msg.filterFacebookUser(Profile.getCurrentProfile().id.toString())) {
-                            //displayToast("msg ricevuto..")
+                            displayToast("msg ricevuto..")
                             //displayToast(msg.toString())
                             DataManager.Companion.instance.saveRequest(msg.asJsonObject)
                             updateRequests()

@@ -1,6 +1,9 @@
 package app.simone.multiplayer.controller;
 
+import android.util.Log;
+
 import app.simone.multiplayer.model.FacebookUser;
+import app.simone.multiplayer.model.OnlineMatch;
 import io.realm.Realm;
 
 /**
@@ -28,6 +31,23 @@ public class ScoreHandler {
             System.out.println(SCORE_ERROR);
         }
         return null;
+    }
+
+    public static String getUserScore(String matchId){
+
+        try{
+            OnlineMatch currentMatch = Realm.getDefaultInstance().where(OnlineMatch.class).equalTo("matchId",Integer.parseInt(matchId)).findFirst();
+            FacebookUser secondP = currentMatch.getSecondPlayer();
+            FacebookUser primoP = currentMatch.getFirstPlayer();
+            String score = currentMatch.getFirstPlayer().getScore();
+            Log.d("SCOREUSER2",score);
+            return currentMatch.getSecondPlayer().getScore();
+        }catch (Exception e){
+            System.out.println(SCORE_ERROR);
+        }
+
+        return "";
+
     }
 
 }

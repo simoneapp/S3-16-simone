@@ -39,20 +39,24 @@ class DataManager private constructor() {
         Realm.init(context)
         val config = RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
-                .schemaVersion(3)
+                .schemaVersion(4)
+                .name("default.realm")
                 .build()
         Realm.setDefaultConfiguration(config)
 
         realm = Realm.getDefaultInstance()
     }
 
-    fun updateExistingRequest(obj: JsonObject){
-
-    }
 
     fun saveRequest(obj: JsonObject) {
 
         var pr = OnlineMatch.with(obj)
+        try{
+            opponentTemporaryScore=pr.secondPlayer.score
+        }catch (e: Exception){
+            System.out.println("score not available yet (P2)")
+        }
+
         //pr.matchId=getNextId()
         printValues(pr)
 
@@ -69,6 +73,7 @@ class DataManager private constructor() {
                     realm.copyToRealm(pr)
                 }else{
                     //updating an existing record
+
                     realm.copyToRealmOrUpdate(pr)
                 }
             }
@@ -107,8 +112,8 @@ class DataManager private constructor() {
     }
 
     fun printValues(pr: OnlineMatch){
-        Log.d("PLAYERONE1",pr.firstPlayer.name)
-        Log.d("PLAYERONE2",pr.secondPlayer.name)
+        Log.d("PLAYERONE1",pr.firstPlayer.name+" "+pr.firstPlayer.score)
+        Log.d("PLAYERONE2",pr.secondPlayer.name+" "+pr.secondPlayer.score)
         Log.d("PLAYERONE_MATCH",""+pr.matchId)
     }
 

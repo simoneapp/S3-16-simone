@@ -130,7 +130,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
 
     fun displayToast(text: String) {
         this.runOnUiThread {
-            android.widget.Toast.makeText(this, text, android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(this, text, android.widget.Toast.LENGTH_LONG).show()
         }
     }
 
@@ -164,8 +164,8 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
 
                         val msg = message.message as JsonObject
                         if(msg.filterFacebookUser(Profile.getCurrentProfile().id.toString())) {
-                            displayToast("msg ricevuto..")
-                            //displayToast(msg.toString())
+                            //displayToast("msg ricevuto..")
+                            displayToast(msg.toString())
                             DataManager.Companion.instance.saveRequest(msg.asJsonObject)
                             updateRequests()
                         }

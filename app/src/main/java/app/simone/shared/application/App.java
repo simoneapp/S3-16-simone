@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.facebook.stetho.Stetho;
 
+import java.util.regex.Pattern;
+
 import app.simone.singleplayer.controller.CPUActor;
 import app.simone.singleplayer.controller.GameViewActor;
 import akka.actor.ActorSystem;
@@ -29,7 +31,9 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+
         Stetho.initializeWithDefaults(this);
+
         mInstance = this;
         googleApiHelper = new GoogleApiHelper(mInstance);
 

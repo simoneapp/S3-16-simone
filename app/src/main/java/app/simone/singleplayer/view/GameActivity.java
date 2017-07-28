@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import app.simone.multiplayer.controller.DataManager;
 import app.simone.multiplayer.controller.PubnubController;
 import app.simone.multiplayer.controller.ScoreHandler;
 import app.simone.multiplayer.model.Request;
@@ -73,7 +74,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
     private int currentScore;
     private int finalScore;
-    private int opponentScore;
+    private int opponentScore = -1;
 
     private Handler handler = new Handler() {
         @Override
@@ -191,7 +192,12 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
             isMultiplayerMode = true;
             pnController = new PubnubController("multiplayer");
             pnController.subscribeToChannel();
-            opponentScore = Integer.parseInt(getIntent().getExtras().getString("temporaryScore"));
+            try {
+                opponentScore = Integer.parseInt(getIntent().getExtras().getString("temporaryScore"));
+                Log.d("OPPONENT SCORE",""+opponentScore);
+            }catch (Exception e){
+                System.out.println("Opponent score not available yet");
+            }
         }
 
         chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
@@ -332,16 +338,23 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                 sender.setScore("" + finalScore);
                 //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
                 Request req = new Request(sender, recipient);
-
+                OnlineMatch om = createMatch(req);
+                if(ScoreHandler.getUserScore(""+om.getMatchId())!=""){
+                    om.getSecondPlayer().setScore(ScoreHandler.getUserScore(""+om.getMatchId()));
+                    om.setKindOfMsg("update");
+                }
                 try {
-                    pnController.publishToChannel(createMatch(req));
+                    pnController.publishToChannel(om);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("GameActivity", "Error while publishing the message on the channel");
                 }
             } else if (whichPlayer == "p2") {
                 //sender.setScore("" + currentScore);
-                sender.setScore("" + opponentScore);
+                Log.d("OPPONENT SCORE FINAL",""+opponentScore);
+                if(opponentScore!=-1) {
+                    sender.setScore("" + opponentScore);
+                }
                 recipient.setScore("" + finalScore);
                 //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
                 Request req = new Request(sender, recipient);

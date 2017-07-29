@@ -71,13 +71,8 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
                 intent.putExtra("name", profile.getName());
 
                 recipient = new FacebookUser(profile.getId(), profile.getName());
-
-               // RealmResults<OnlineMatch> rmResult = DataManager.Companion.getInstance().getPendingRequests();
-                //sender=rmResult.first().getFirstPlayer();
                 sender = dataModel.getFirstPlayer();
-
                 sender.setScore(dataModel.getFirstPlayer().getScore());
-                //recipient.setScore(dataModel.getSecondPlayer().getScore());
 
 
                 intent.putExtra("sender", sender.getId());
@@ -123,15 +118,10 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
 
         FacebookUser first = dataModel.getFirstPlayer();
         FacebookUser second = dataModel.getSecondPlayer();
-        Log.d("CIAO",first.getName()+" "+first.getScore());
-        Log.d("CIAO",second.getName()+" "+second.getScore());
-//        Log.d("FIRST: ",first.getName()+" "+first.getScore());
         viewHolder.textPlayer1.setText(first.getName());
         viewHolder.textPlayer2.setText(second.getName());
-  //      Log.d("FIRST: ",second.getName()+" "+second.getScore());
         viewHolder.scoreP1.setText(first.getScore());
         viewHolder.scoreP2.setText(second.getScore());
-
         viewHolder.playButton.setOnClickListener(this);
         viewHolder.playButton.setTag(position);
 

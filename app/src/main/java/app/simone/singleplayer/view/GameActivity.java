@@ -3,9 +3,7 @@ package app.simone.singleplayer.view;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.*;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -13,37 +11,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-
-import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import app.simone.multiplayer.controller.DataManager;
-import app.simone.multiplayer.controller.PubnubController;
-import app.simone.multiplayer.controller.ScoreHandler;
-import app.simone.multiplayer.model.Request;
+import java.util.*;
+import app.simone.multiplayer.controller.*;
+import app.simone.multiplayer.model.*;
 import akka.actor.ActorRef;
-import app.simone.multiplayer.model.OnlineMatch;
 import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.R;
 import app.simone.singleplayer.model.SColor;
 import app.simone.shared.styleable.SimoneTextView;
 import app.simone.multiplayer.model.FacebookUser;
 import app.simone.shared.application.App;
-import app.simone.singleplayer.messages.AttachViewMsg;
-import app.simone.singleplayer.messages.GuessColorMsg;
-import app.simone.singleplayer.messages.NextColorMsg;
-import app.simone.singleplayer.messages.PauseMsg;
-import app.simone.singleplayer.messages.StartGameVsCPUMsg;
-import app.simone.shared.utils.AnimationHandler;
-import app.simone.shared.utils.AudioManager;
-import app.simone.shared.utils.AudioPlayer;
-import app.simone.shared.utils.Constants;
-import app.simone.shared.utils.Utilities;
-
+import app.simone.singleplayer.messages.*;
+import app.simone.shared.utils.*;
 import app.simone.scores.google.ScoreHelper;
 
 /**
@@ -54,7 +33,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     private boolean tapToBegin = true;
 
     private FloatingActionButton gameFab;
-    private PubnubController pnController;
+    private MessageHandler msgHandler;
     private boolean isMultiplayerMode = false;
     private SimoneTextView simoneTextView;
 
@@ -171,14 +150,13 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         if (sender != null && !getIntent().hasExtra("multiplayerMode")) {
             whichPlayer = "p1";
             isMultiplayerMode = true;
-            pnController = new PubnubController("multiplayer");
-            pnController.subscribeToChannel();
-            Request req = new Request(sender, recipient);
+            msgHandler = new MessageHandler(new PubnubController("multiplayer"));
+            Request request = new Request(sender, recipient);
             try {
-                OnlineMatch newMatch = createMatch(req);
+                OnlineMatch newMatch = msgHandler.createMatch(request);
                 newMatch.setKindOfMsg("insert");
-                pnController.publishToChannel(newMatch);
-            } catch (JSONException e) {
+                msgHandler.publishMessage(newMatch);
+            } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("GameActivity", "Error while publishing the message on the channel");
             }
@@ -186,12 +164,10 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
         } else if (getIntent().hasExtra("multiplayerMode")) {
             // This code is executed by P2
-
             checkingExistingData(senderID, recipientID);
             whichPlayer = "p2";
             isMultiplayerMode = true;
-            pnController = new PubnubController("multiplayer");
-            pnController.subscribeToChannel();
+            msgHandler = new MessageHandler(new PubnubController("multiplayer"));
             try {
                 opponentScore = Integer.parseInt(getIntent().getExtras().getString("temporaryScore"));
                 Log.d("OPPONENT SCORE",""+opponentScore);
@@ -336,53 +312,29 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
             });
             if (whichPlayer == "p1") {
                 sender.setScore("" + finalScore);
-                //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
-                Request req = new Request(sender, recipient);
-                OnlineMatch om = createMatch(req);
-                if(ScoreHandler.getUserScore(""+om.getMatchId())!=""){
-                    om.getSecondPlayer().setScore(ScoreHandler.getUserScore(""+om.getMatchId()));
-                    om.setKindOfMsg("update");
-                }
-                try {
-                    pnController.publishToChannel(om);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.d("GameActivity", "Error while publishing the message on the channel");
-                }
+                Request request = new Request(sender, recipient);
+                OnlineMatch newMatch = msgHandler.createMatch(request);
+                msgHandler.setMessageFields(newMatch);
+                msgHandler.publishMessage(newMatch);
             } else if (whichPlayer == "p2") {
-                //sender.setScore("" + currentScore);
-                Log.d("OPPONENT SCORE FINAL",""+opponentScore);
-                if(opponentScore!=-1) {
-                    sender.setScore("" + opponentScore);
-                }
+                updateOpponentScore();
                 recipient.setScore("" + finalScore);
-                //Toast.makeText(getBaseContext(), "Your score is: "+score, Toast.LENGTH_SHORT).show();
-                Request req = new Request(sender, recipient);
-                OnlineMatch om = createMatch(req);
-                om.setKindOfMsg("update");
-                try {
-                    pnController.publishToChannel(om);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.d("GameActivity", "Error while publishing the message on the channel");
-                }
+                Request request = new Request(sender, recipient);
+                OnlineMatch newMatch = msgHandler.createMatch(request);
+                newMatch.setKindOfMsg("update");
+                msgHandler.publishMessage(newMatch);
 
             }
 
         }
     }
 
-    private OnlineMatch createMatch(Request rec) {
-        OnlineMatch om = new OnlineMatch(rec.getSender(), rec.getRecipient());
-
-        if (om.getFirstPlayer().getScore() == null) {
-            om.getFirstPlayer().setScore("--");
+    private void updateOpponentScore(){
+        if(opponentScore!=-1) {
+            sender.setScore("" + opponentScore);
         }
-        if (om.getFirstPlayer().getScore() == null) {
-            om.getFirstPlayer().setScore("--");
-        }
-        return om;
     }
+
 
     @Override
     public void onBackPressed() {

@@ -125,9 +125,11 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
         viewHolder.playButton.setOnClickListener(this);
         viewHolder.playButton.setTag(position);
 
-       /* if(disablePlayButton(dataModel,viewHolder)){
+        Log.d("DISABLE",""+disablePlayButton(dataModel,viewHolder));
+
+       if(!disablePlayButton(dataModel,viewHolder)){
             viewHolder.playButton.setEnabled(false);
-        }*/
+        }
 
         return convertView;
     }
@@ -138,11 +140,12 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
 
         FacebookUser first = dataModel.getFirstPlayer();
         FacebookUser second = dataModel.getSecondPlayer();
+        Log.d("TESTA",viewHolder.scoreP1.getText().toString());
 
         if(playerID.equals(first.getId()) && viewHolder.scoreP1.getText()!="")
             return true;
         else if(viewHolder.scoreP1.getText()!="" && viewHolder.scoreP2.getText()!="")
-            return true;
+            return false;
         else
             return false;
 

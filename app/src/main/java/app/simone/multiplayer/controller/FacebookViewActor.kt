@@ -11,7 +11,7 @@ import com.facebook.share.widget.GameRequestDialog
  * Created by nicola on 01/07/2017.
  */
 
-class FacebookViewActor() : akka.actor.UntypedActor() {
+class FacebookViewActor : akka.actor.UntypedActor() {
 
     var activity : app.simone.multiplayer.view.FacebookLoginActivity? = null
 

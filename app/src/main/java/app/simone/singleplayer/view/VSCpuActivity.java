@@ -13,7 +13,7 @@ import app.simone.shared.utils.Constants;
  * @author Michele Sapignoli
  */
 
-public class VSCpuBaseGameActivity extends FullscreenBaseGameActivity {
+public class VSCpuActivity extends FullscreenBaseGameActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

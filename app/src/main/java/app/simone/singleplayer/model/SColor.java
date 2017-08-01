@@ -44,4 +44,5 @@ public enum SColor {
         return 0;
     }
 
+
 }

@@ -1,7 +1,11 @@
 package app.simone.singleplayer.messages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import app.simone.shared.messages.IMessage;
 import app.simone.shared.utils.Constants;
+import app.simone.singleplayer.model.SColor;
 
 /**
  * Start Game Message.
@@ -14,7 +18,6 @@ public class StartGameVsCPUMsg implements IMessage {
 	public StartGameVsCPUMsg(int radiobtnIndex){
 		this.radiobtnIndex = radiobtnIndex;
 	}
-
 	@Override
 	public MessageType getType() {
 		return MessageType.START_GAME_VS_CPU;

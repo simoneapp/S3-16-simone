@@ -1,5 +1,7 @@
 package app.simone.multiplayer.model;
 
+import android.os.Parcel;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -7,14 +9,16 @@ import com.google.gson.JsonObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 
 /**
  * Created by nicola on 11/07/2017.
  */
 
-public class FacebookUser extends RealmObject implements Serializable {
+public class FacebookUser extends RealmObject {
 
 
     public static final String kNAME = "name";
@@ -27,7 +31,7 @@ public class FacebookUser extends RealmObject implements Serializable {
     private String name;
     private FacebookPicture picture;
 
-    private String score;
+    private String score = "";
 
     public FacebookUser() {
 
@@ -38,8 +42,14 @@ public class FacebookUser extends RealmObject implements Serializable {
         JsonObject obj = json.getAsJsonObject();
 
         this.name = obj.get(kNAME).getAsString();
-        this.picture = new FacebookPicture(obj.get(kPICTURE).getAsJsonObject().get(kDATA).getAsJsonObject());
+        if(obj.get(kPICTURE)!=null){
+            this.picture = new FacebookPicture(obj.get(kPICTURE).getAsJsonObject().get(kDATA).getAsJsonObject());
+        }
         this.id = obj.get(kID).getAsString();
+
+        if(obj.get(kSCORE)!=null) {
+            this.score = obj.get(kSCORE).getAsString();
+        }
     }
 
     public FacebookUser(String id, String name) {
@@ -82,8 +92,27 @@ public class FacebookUser extends RealmObject implements Serializable {
         return score;
     }
 
-    public void setScore(String score) {
-        this.score = score;
+    public void setScore(final String sc) {
+
+        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                score = sc;
+            }
+        });
+
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPicture(FacebookPicture picture) {
+        this.picture = picture;
     }
 
 }

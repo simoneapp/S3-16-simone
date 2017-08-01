@@ -2,6 +2,10 @@ package app.simone.shared.application;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
+
+import java.util.regex.Pattern;
+
 import app.simone.singleplayer.controller.CPUActor;
 import app.simone.singleplayer.controller.GameViewActor;
 import akka.actor.ActorSystem;
@@ -10,6 +14,8 @@ import app.simone.multiplayer.controller.FacebookManagerActor;
 import app.simone.multiplayer.controller.FacebookViewActor;
 import app.simone.shared.utils.Constants;
 import app.simone.scores.google.GoogleApiHelper;
+
+import static android.R.attr.key;
 
 /**
  * @author Michele Sapignoli
@@ -24,6 +30,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+
+        Stetho.initializeWithDefaults(this);
 
         mInstance = this;
         googleApiHelper = new GoogleApiHelper(mInstance);

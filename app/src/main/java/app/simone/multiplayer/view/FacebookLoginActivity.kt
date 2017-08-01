@@ -1,13 +1,25 @@
 package app.simone.multiplayer.view
 
+import android.content.Context
+import android.content.Intent
+import android.widget.AdapterView
 import app.simone.multiplayer.controller.DataManager
 import app.simone.multiplayer.controller.FacebookManagerActor
 import app.simone.multiplayer.controller.PubnubController
 import app.simone.multiplayer.messages.*
+import app.simone.multiplayer.model.FacebookUser
 import app.simone.multiplayer.model.OnlineMatch
 import app.simone.shared.application.App
+import app.simone.shared.utils.Utilities
 import app.simone.shared.utils.filterFacebookUser
 import app.simone.singleplayer.view.GameActivity
+import com.facebook.Profile
+import com.google.gson.JsonObject
+import com.pubnub.api.PubNub
+import com.pubnub.api.callbacks.SubscribeCallback
+import com.pubnub.api.models.consumer.PNStatus
+import com.pubnub.api.models.consumer.pubsub.PNMessageResult
+import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 
 
 class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
@@ -24,8 +36,8 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
     var requestsUsers = ArrayList<OnlineMatch>()
     var requestsAdapter : PubnubAdapter? = null
 
-    var currentUser : app.simone.multiplayer.model.FacebookUser? = null
-    var selectedUser : app.simone.multiplayer.model.FacebookUser? = null
+    var currentUser : FacebookUser? = null
+    var selectedUser : FacebookUser? = null
     var realm: io.realm.Realm? = null
 
     companion object {
@@ -59,12 +71,18 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
         btnPlay = this.findViewById(app.simone.R.id.playButton) as android.widget.Button
         btnPlay?.setOnClickListener({
             if(selectedUser != null) {
-                val activityIntent = android.content.Intent(baseContext, GameActivity::class.java)
-                activityIntent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-                println("ME: "+ com.facebook.Profile.getCurrentProfile().firstName.toString()+" "+
-                        com.facebook.Profile.getCurrentProfile().lastName.toString())
-                activityIntent.putExtra("sender", currentUser)
-                activityIntent.putExtra("recipient", selectedUser)
+                val activityIntent = Intent(baseContext, GameActivity::class.java)
+                activityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                println("ME: "+ com.facebook.Profile.getCurrentProfile().firstName.toString()+" "+ com.facebook.Profile.getCurrentProfile().lastName.toString())
+                setUser()
+
+                val onlineMatch=OnlineMatch(currentUser,selectedUser)
+                onlineMatch.kindOfMsg="insert"
+                DataManager.instance.saveRequestLocally(onlineMatch)
+
+                //sending data to the GameActivity
+                activityIntent.putExtra("sender", currentUser?.id)
+                activityIntent.putExtra("recipient", selectedUser?.id)
                 baseContext.startActivity(activityIntent)
             }
         })
@@ -89,13 +107,12 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
         adapter = FacebookFriendsAdapter(this, friends)
         listView?.adapter = adapter
         listView?.onItemClickListener = android.widget.AdapterView.OnItemClickListener { adapterView, view, i, l ->
-            val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
+            val actor = Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
                     App.getInstance().actorSystem)
             val friend = adapter?.getItem(i)
             actor.tell(FbItemClickMsg(friend), akka.actor.ActorRef.noSender())
             enablePlayButton(friend!!)
         }
-
         btnPlay?.isEnabled = false
     }
 
@@ -103,7 +120,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
         listViewRequests = this.findViewById(app.simone.R.id.listView_requests) as android.widget.ListView
         requestsAdapter = PubnubAdapter(requestsUsers, applicationContext)
         listViewRequests?.adapter = requestsAdapter
-        listViewRequests?.onItemClickListener = android.widget.AdapterView.OnItemClickListener { parent, view, position, id ->
+        listViewRequests?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
             val model = requestsUsers[position]
             println("ARRAY: " + position)
         }
@@ -111,7 +128,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
 
     fun displayToast(text: String) {
         this.runOnUiThread {
-            android.widget.Toast.makeText(this, text, android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(this, text, android.widget.Toast.LENGTH_LONG).show()
         }
     }
 
@@ -132,45 +149,51 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
         btnPlay?.isEnabled = true
     }
 
-    fun addPubnubListener(obj: com.pubnub.api.PubNub){
+    fun addPubnubListener(obj: PubNub){
 
-        obj.addListener(object : com.pubnub.api.callbacks.SubscribeCallback() {
-            override fun status(pubnub: com.pubnub.api.PubNub, status: com.pubnub.api.models.consumer.PNStatus) {
+        obj.addListener(object : SubscribeCallback() {
+            override fun status(pubnub: PubNub, status: PNStatus) {
             }
 
-            override fun message(pubnub: com.pubnub.api.PubNub, message: com.pubnub.api.models.consumer.pubsub.PNMessageResult) {
+            override fun message(pubnub: PubNub, message: PNMessageResult) {
+
                 if (message.channel != null) {
                     runOnUiThread {
-                        val msg = message.message.asJsonObject
-                        if(msg.filterFacebookUser(com.facebook.Profile.getCurrentProfile().id.toString())) {
+                        val msg = message.message as JsonObject
+                        if(msg.filterFacebookUser(Profile.getCurrentProfile().id.toString())) {
+                            //displayToast("msg ricevuto..")
+                            displayToast(msg.toString())
                             DataManager.Companion.instance.saveRequest(msg.asJsonObject)
-                            DataManager.Companion.instance.saveOpponentScore(msg)
                             updateRequests()
                         }
                     }
                 }
             }
-            override fun presence(pubnub: com.pubnub.api.PubNub, presence: com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult) {
+            override fun presence(pubnub: PubNub, presence: PNPresenceEventResult) {
+
             }
         })
 
     }
 
     fun setUser() {
-        val profile = com.facebook.Profile.getCurrentProfile()
-        currentUser = app.simone.multiplayer.model.FacebookUser(profile.id, profile.name)
+        val profile = Profile.getCurrentProfile()
+        currentUser = FacebookUser(profile.id, profile.name)
     }
 
     fun updateRequests() {
         this.runOnUiThread {
             val requests = DataManager.Companion.instance.getPendingRequests()
             if (requests.isNotEmpty()) {
+                //Log.d("SAM",requests.first().firstPlayer.name+" "+requests.first().secondPlayer.name + " " +requests.first().firstPlayer.score+" "+requests.first().secondPlayer.score)
                 var tv = this.findViewById(app.simone.R.id.textView3) as android.widget.TextView
-                tv.text = app.simone.multiplayer.view.FacebookLoginActivity.Companion.PENDING_REQUESTS
+                tv.text = Companion.PENDING_REQUESTS
 
                 requestsAdapter?.clear()
-                requestsAdapter?.addAll(requestsUsers)
+                requestsAdapter?.addAll(requests)
             }
         }
     }
+
+
 }

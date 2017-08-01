@@ -29,10 +29,10 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnClickListener {
 
     private ArrayList<OnlineMatch> data;
-    Context mContext;
-    FacebookUser sender;
-    FacebookUser recipient;
-    OnlineMatch dataModel;
+    private Context mContext;
+    private FacebookUser sender;
+    private FacebookUser recipient;
+    private OnlineMatch dataModel;
 
     public PubnubAdapter(ArrayList<OnlineMatch> data, Context context) {
         super(context, R.layout.row_item, data);
@@ -74,7 +74,6 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
                 sender = dataModel.getFirstPlayer();
                 sender.setScore(dataModel.getFirstPlayer().getScore());
 
-
                 intent.putExtra("sender", sender.getId());
                 intent.putExtra("recipient", recipient.getId());
                 intent.putExtra("temporaryScore",sender.getScore());
@@ -115,6 +114,16 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
         }
 
         lastPosition = position;
+        updateCellText(viewHolder,position);
+
+       /*if(disablePlayButton(dataModel,viewHolder)){
+            viewHolder.playButton.setEnabled(false);
+        }*/
+
+        return convertView;
+    }
+
+    private void updateCellText(ViewHolder viewHolder,int position){
 
         FacebookUser first = dataModel.getFirstPlayer();
         FacebookUser second = dataModel.getSecondPlayer();
@@ -125,13 +134,6 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
         viewHolder.playButton.setOnClickListener(this);
         viewHolder.playButton.setTag(position);
 
-        Log.d("DISABLE",""+disablePlayButton(dataModel,viewHolder));
-
-       if(!disablePlayButton(dataModel,viewHolder)){
-            viewHolder.playButton.setEnabled(false);
-        }
-
-        return convertView;
     }
 
     private boolean disablePlayButton(OnlineMatch dataModel,ViewHolder viewHolder) {
@@ -145,12 +147,9 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
         if(playerID.equals(first.getId()) && viewHolder.scoreP1.getText()!="")
             return true;
         else if(viewHolder.scoreP1.getText()!="" && viewHolder.scoreP2.getText()!="")
-            return false;
+            return true;
         else
             return false;
 
-        /*return (playerID.equals(first.getId()) && !first.getScore().equals(null))
-                || (playerID.equals(second.getId()) && !second.getScore().equals(null))
-                || (!second.getScore().equals(null) && !first.getScore().equals(null));*/
     }
 }

@@ -1,9 +1,8 @@
 package app.simone.multiplayer.view
 
+import android.content.Context
 import android.content.Intent
 import android.widget.AdapterView
-import android.widget.Toolbar
-import app.simone.R
 import app.simone.multiplayer.controller.DataManager
 import app.simone.multiplayer.controller.FacebookManagerActor
 import app.simone.multiplayer.controller.PubnubController
@@ -14,7 +13,10 @@ import app.simone.shared.application.App
 import app.simone.shared.utils.Utilities
 import app.simone.shared.utils.filterFacebookUser
 import app.simone.singleplayer.view.GameActivity
+import com.facebook.AccessToken
 import com.facebook.Profile
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.gson.JsonObject
 import com.pubnub.api.PubNub
 import com.pubnub.api.callbacks.SubscribeCallback
@@ -22,9 +24,17 @@ import com.pubnub.api.models.consumer.PNStatus
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult
 import io.realm.Realm
+import io.realm.SyncConfiguration
+import io.realm.SyncCredentials
+import io.realm.SyncUser
 
 
 class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
+
+    val AUTH_URL = "http://178.62.127.147:9080/auth"
+    val REALM_URL = "realm://178.62.127.147:9080/~/shared.application.App"
+    val DEFAULT_LIST_ID = "80EB1620-165B-4600-A1B1-D97032FDD9A0"
+    var DEFAULT_LIST_NAME = "My Tasks"
 
     var listView : android.widget.ListView? = null
     var btnPlay : android.widget.Button? = null
@@ -49,7 +59,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
     override fun onCreate(savedInstanceState: android.os.Bundle?) {
         super.onCreate(savedInstanceState)
 
-        DataManager.Companion.instance.resetOpponentScore()
+        //DataManager.Companion.instance.resetOpponentScore()
 
         pubnubController.subscribeToChannel()
         this.addPubnubListener(pubnubController.pubnub)
@@ -64,6 +74,8 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
                 App.getInstance().actorSystem)
 
         actor.tell(FbViewSetupMsg(this), akka.actor.ActorRef.noSender())
+
+        createDBandConnectToServer(applicationContext,LoginResult())
 
         val btnInvites = this.findViewById(app.simone.R.id.btn_invite) as android.widget.Button
         btnInvites.setOnClickListener({
@@ -90,6 +102,32 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
         })
     }
 
+    fun createDBandConnectToServer(c: Context,lr: LoginResult) {
+
+
+        val token = AccessToken.getCurrentAccessToken().token // a string representation of a token obtained by Facebook Login API
+        val myCredentials = SyncCredentials.facebook(lr.accessToken.token)
+
+        Realm.init(c)
+        val user = SyncUser.login(myCredentials, AUTH_URL)
+        val config = SyncConfiguration.Builder(user, REALM_URL)
+                .disableSSLVerification()
+                .schemaVersion(4)
+                .name("default.realm")
+                .build()
+        Realm.setDefaultConfiguration(config)
+
+
+        realm = Realm.getInstance(config)
+
+        realm?.executeTransaction { realm ->
+            val fb1 = FacebookUser("ciro", "ferrara")
+            val fb2 = FacebookUser("rino", "gattuso")
+            val om = OnlineMatch(fb1, fb2, 10)
+            realm.copyToRealm(om)
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
@@ -100,7 +138,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if(FacebookManagerActor.Companion.isLoggedIn()) {
-            updateRequests()
+            //updateRequests()
         }
     }
 
@@ -161,13 +199,12 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
 
                 if (message.channel != null) {
                     runOnUiThread {
-
                         val msg = message.message as JsonObject
                         if(msg.filterFacebookUser(Profile.getCurrentProfile().id.toString())) {
                             //displayToast("msg ricevuto..")
-                            //displayToast(msg.toString())
+                            displayToast(msg.toString())
                             DataManager.Companion.instance.saveRequest(msg.asJsonObject)
-                            updateRequests()
+                            //updateRequests()
                         }
                     }
                 }
@@ -186,7 +223,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
 
     fun updateRequests() {
         this.runOnUiThread {
-            val requests = DataManager.Companion.instance.getPendingRequests()
+          /*  val requests = DataManager.Companion.instance.getPendingRequests()
             if (requests.isNotEmpty()) {
                 //Log.d("SAM",requests.first().firstPlayer.name+" "+requests.first().secondPlayer.name + " " +requests.first().firstPlayer.score+" "+requests.first().secondPlayer.score)
                 var tv = this.findViewById(app.simone.R.id.textView3) as android.widget.TextView
@@ -194,7 +231,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
 
                 requestsAdapter?.clear()
                 requestsAdapter?.addAll(requests)
-            }
+            }*/
         }
     }
 

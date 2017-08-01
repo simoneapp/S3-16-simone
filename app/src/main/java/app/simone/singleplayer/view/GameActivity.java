@@ -136,6 +136,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DataManager.Companion.getInstance().setup(this);
 
         String senderID = (String) getIntent().getExtras().getSerializable("sender");
         String recipientID = (String) getIntent().getExtras().getSerializable("recipient");
@@ -155,6 +156,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
             try {
                 OnlineMatch newMatch = msgHandler.createMatch(request);
                 newMatch.setKindOfMsg("insert");
+                newMatch.getFirstPlayer().setScore("");
                 msgHandler.publishMessage(newMatch);
             } catch (Exception e) {
                 e.printStackTrace();

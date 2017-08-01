@@ -39,6 +39,9 @@ android {
         keepRuntimeAnnotatedClasses false
     }
 }
+realm {
+    syncEnabled = true;
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

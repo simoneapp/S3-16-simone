@@ -93,20 +93,6 @@ class DataManager private constructor() {
         }
     }
 
-   /* fun findCorrectID(pr: OnlineMatch):Int{
-        if(this.getNextId()>1){
-            //I need to find the correct match ID
-            return 1
-            Realm.getDefaultInstance().use {
-                    //to do
-            }
-
-            }
-        }else{
-            return 0
-        }
-    }*/
-
     fun saveRequestLocally(pr: OnlineMatch) {
 
 

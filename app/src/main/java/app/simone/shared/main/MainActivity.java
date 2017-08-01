@@ -41,7 +41,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
 
         Fabric.with(this, new Crashlytics());
 
-        //DataManager.Companion.getInstance().setup(this);
+        DataManager.Companion.getInstance().setup(this);
 
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
         connectionButton = (Button)findViewById(R.id.button4);

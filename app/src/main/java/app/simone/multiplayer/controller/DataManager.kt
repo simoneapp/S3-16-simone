@@ -25,11 +25,6 @@ import io.realm.SyncCredentials
 
 class DataManager private constructor() {
 
-    val AUTH_URL = "http://178.62.127.147:9080/auth"
-    val REALM_URL = "realm://178.62.127.147:9080/~/default"
-    val DEFAULT_LIST_ID = "80EB1620-165B-4600-A1B1-D97032FDD9A0"
-    var DEFAULT_LIST_NAME = "Simone"
-
     var realm: Realm? = null
     var context: Context? = null
     var opponentTemporaryScore = ""
@@ -46,29 +41,14 @@ class DataManager private constructor() {
 
         this.context = context
 
-        val token = AccessToken.getCurrentAccessToken().token // a string representation of a token obtained by Facebook Login API
-        val myCredentials = SyncCredentials.facebook(token)
-
         Realm.init(context)
-        val user = SyncUser.login(myCredentials, AUTH_URL)
-        val config = SyncConfiguration.Builder(user, REALM_URL)
-                .disableSSLVerification()
-                .schemaVersion(4)
-                .name("simone.realm")
+        val config = RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                        .schemaVersion(3)
+                        .name("default.realm")
                 .build()
         Realm.setDefaultConfiguration(config)
-
-
-        realm = Realm.getInstance(config)
-
-        realm?.executeTransaction { realm ->
-            val fb1 = FacebookUser("ciro","ferrara")
-            val fb2 = FacebookUser("rino","gattuso")
-            val om = OnlineMatch(fb1,fb2,10)
-            realm.copyToRealm(om)
-        }
-        //realm = Realm.getDefaultInstance()
-
+        realm = Realm.getDefaultInstance()
 
     }
 

@@ -49,7 +49,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
         setContentView(app.simone.R.layout.activity_facebook_login)
 
         initMainList()
-        initRequestsList()
+       // initRequestsList()
         listenForChanges()
         val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR
                 + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
@@ -97,9 +97,11 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
                    repeat(keysArray.list.size){ i->
                        val onlineMatch = dataSnapshot.child(keysArray.getElement(i)).getValue(OnlineMatch::class.java)!!
                        requestsUsers.add(onlineMatch)
+
                    }
 
                     // Devo aggiornare la GUI!
+                    initRequestsList()
                     updateRequests()
                 }
 
@@ -189,7 +191,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
                 var tv = this.findViewById(app.simone.R.id.textView3) as android.widget.TextView
                 tv.text = Companion.PENDING_REQUESTS
 
-                requestsAdapter?.clear()
+                //requestsAdapter?.clear()
                 requestsAdapter?.addAll(requestsUsers)
             }
         }

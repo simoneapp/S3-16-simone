@@ -19,7 +19,6 @@ class DataManager private constructor() {
 
     var realm: Realm? = null
     var context: Context? = null
-    var opponentTemporaryScore = ""
     var database = FirebaseDatabase.getInstance().getReference("multiplayer")
 
     private object Holder {
@@ -33,7 +32,6 @@ class DataManager private constructor() {
     fun setup(context: Context) {
 
         this.context = context
-
         Realm.init(context)
         val config = RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
@@ -46,20 +44,22 @@ class DataManager private constructor() {
     }
 
 
-    fun printValues(pr: OnlineMatch){
-        Log.d("PLAYERONE1",pr.firstplayer.name+" "+pr.firstplayer.score)
-        Log.d("PLAYERONE2",pr.secondplayer.name+" "+pr.secondplayer.score)
-    }
-
-
-    fun getPendingRequests(): OnlineMatch {
-        return database.child("multiplayer").limitToFirst(0) as OnlineMatch
-    }
-
-
     fun createMatch(match: OnlineMatch) {
         val matchList = database.push()
         matchList.setValue(match)
+    }
+
+    fun filterRequests(matches: List<OnlineMatch>,id: String):List<OnlineMatch>{
+
+        val filteredMatches : MutableList<OnlineMatch> = arrayListOf()
+        repeat(matches.size){ i->
+            if ((matches[i].firstplayer.id==id) ||(matches[i].secondplayer.id==id))
+                filteredMatches.add(matches[i])
+
+        }
+
+        return filteredMatches
+
     }
 
 }

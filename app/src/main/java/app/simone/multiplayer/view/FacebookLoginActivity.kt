@@ -49,7 +49,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
         setContentView(app.simone.R.layout.activity_facebook_login)
 
         initMainList()
-       // initRequestsList()
+        initRequestsList()
         listenForChanges()
         val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR
                 + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
@@ -101,7 +101,6 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
                    }
 
                     // Devo aggiornare la GUI!
-                    initRequestsList()
                     updateRequests()
                 }
 
@@ -190,9 +189,10 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
             if (requestsUsers.isNotEmpty()) {
                 var tv = this.findViewById(app.simone.R.id.textView3) as android.widget.TextView
                 tv.text = Companion.PENDING_REQUESTS
-
-                //requestsAdapter?.clear()
-                requestsAdapter?.addAll(requestsUsers)
+                if (FacebookManagerActor.isLoggedIn()) {
+                    //requestsAdapter?.clear()
+                    requestsAdapter?.addAll(DataManager.instance.filterRequests(requestsUsers, com.facebook.Profile.getCurrentProfile().id))
+                }
             }
         }
     }

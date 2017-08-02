@@ -63,6 +63,7 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'org.scala-lang:scala-library:2.10.4'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.google.android.gms:play-services:11.0.2'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'org.slf4j:slf4j-api:1.7.5'

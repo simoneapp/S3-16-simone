@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 
-import app.simone.shared.main.FullscreenActivity;
+import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.R;
 import app.simone.shared.utils.Constants;
 
@@ -13,7 +13,7 @@ import app.simone.shared.utils.Constants;
  * @author Michele Sapignoli
  */
 
-public class VSCpuActivity extends FullscreenActivity {
+public class VSCpuActivity extends FullscreenBaseGameActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

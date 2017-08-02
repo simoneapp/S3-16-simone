@@ -2,14 +2,15 @@ package app.simone.shared.application;
 
 import android.app.Application;
 
-import app.simone.singleplayer.controller.CPUActor;
-import app.simone.singleplayer.controller.GameViewActor;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import app.simone.multiplayer.controller.FacebookManagerActor;
 import app.simone.multiplayer.controller.FacebookViewActor;
-import app.simone.shared.utils.Constants;
 import app.simone.scores.google.GoogleApiHelper;
+import app.simone.shared.utils.Constants;
+import app.simone.singleplayer.controller.CPUActor;
+import app.simone.singleplayer.controller.GameViewActor;
+
 
 /**
  * @author Michele Sapignoli

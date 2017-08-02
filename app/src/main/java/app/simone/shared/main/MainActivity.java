@@ -2,6 +2,7 @@ package app.simone.shared.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.animation.Animation;
@@ -15,6 +16,7 @@ import app.simone.R;
 import app.simone.scores.view.LoginActivity;
 import app.simone.scores.view.ScoreboardActivity;
 import app.simone.settings.view.SettingsActivity;
+import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.VSCpuActivity;
 import app.simone.shared.utils.AudioManager;
 import app.simone.multiplayer.controller.DataManager;
@@ -25,7 +27,7 @@ import io.fabric.sdk.android.Fabric;
 /**
  * @author Michele Sapignoli
  */
-public class MainActivity extends FullscreenActivity{
+public class MainActivity extends FullscreenBaseGameActivity {
 
     private Button VSCpuButton;
     private Button connectionButton;
@@ -118,6 +120,15 @@ public class MainActivity extends FullscreenActivity{
         // created, to briefly hint to the user that UI controls
         // are available.
         //delayedHide(100);
+        Message msg = new Message();
+        msg.what = Constants.CONNECT;
+        msg.obj = this;
+        msg.arg1 = 1;
+        googleHandler.sendMessage(msg);
+        Message m = new Message();
+        m.what = Constants.CONNECT;
+        m.obj = this;
+        googleHandler.sendMessageDelayed(m,100);
     }
 
 

@@ -20,7 +20,8 @@ public class Constants {
     public static final int WHATTASHAMEYOULOST_MSG = -10;
     public static final String PLAY_AGAIN = "Play\nagain";
     public static final int STD_DELAY_BTN_TIME = 300;
-    public static final String LEADERBOARD_ID = "CgkI6ZOU44EQEAIQAg";
+    public static final String LEADERBOARD_CLASSIC_ID = "CgkI6ZOU44EQEAIQAg";
+    public static final String LEADERBOARD_HARD_ID = "CgkI6ZOU44EQEAIQAw";
     public static final int ACHIEVEMENT_SEQ_1 = 3;
     public static final int ACHIEVEMENT_SEQ_2 = 7;
     public static final int ACHIEVEMENT_SEQ_3 = 14;
@@ -30,5 +31,15 @@ public class Constants {
     public static final int ACHIEVEMENT_SEQ_7 = 50;
     public static final int ACHIEVEMENT_SEQ_8 = 100;
     public static final String BACK_TO_MENU = "Back";
+    public static final int CONNECT = 100;
+    public static final int CONNECTION_ERROR = -100;
+    public static final int LEADERBOARD = 0;
+    public static final int ACHIEVEMENTS = 1;
+    public static final String PREF_KEY_LEAD_CLASSIC = "CLASSIC";
+    public static final String PREF_KEY_LEAD_HARD = "HARD";
+    public static final String PREF_KEY = "PREF";
+    public static final String NEED_TO_SYNC_CLASSIC= "NTSC";
+    public static final String NEED_TO_SYNC_HARD= "NTSH";
+    public static final int FULL_SEQUENCE_MSG_4_MPLAY = 46;
 
 }

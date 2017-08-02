@@ -29,7 +29,7 @@ public class PushNotification {
     public void init(){
         android.support.v4.app.NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(myContext)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.mipmap.ic_push)
                         .setContentTitle("Simone app")
                         .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                         .setColor(Color.GREEN)

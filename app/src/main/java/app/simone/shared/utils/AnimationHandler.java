@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 
 import java.util.List;
 
-import app.simone.shared.main.FullscreenActivity;
+import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.singleplayer.view.GameActivity;
 import app.simone.R;
 import app.simone.shared.styleable.SimoneTextView;
@@ -60,7 +60,7 @@ public class AnimationHandler {
         return gameButtonAnimation;
     }
 
-    public static void performColorSwapAnimation(FullscreenActivity context, Integer[] shuffle, List<Button> buttons, FrameLayout[] layouts) {
+    public static void performColorSwapAnimation(FullscreenBaseGameActivity context, Integer[] shuffle, List<Button> buttons, FrameLayout[] layouts) {
         for (int i = 0; i < buttons.size(); i++) {
             int index = shuffle[i];
             layouts[i].addView(buttons.get(index));

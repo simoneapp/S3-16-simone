@@ -1,5 +1,6 @@
 package app.simone.singleplayer.controller;
 
+import android.os.Message;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -37,9 +38,9 @@ public class CPUActor extends UntypedActor {
                 /*
                 Received StartGameVsCPUMsg from GameViewActor Actor TimeToBlinkMsg to GameViewActor
                  */
-                this.nColors = ((StartGameVsCPUMsg)message).getnColors();
+                this.nColors = ((StartGameVsCPUMsg) message).getnColors();
                 this.currentSequence.clear();
-                Log.d("##CPU ACTOR", "Received StartGameVsCpuMSG, " + this.nColors +" colors.");
+                Log.d("##CPU ACTOR", "Received StartGameVsCpuMSG, " + this.nColors + " colors.");
                 this.generateAndSendColor(Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem()));
                 break;
             case GIMME_NEW_COLOR_MSG:
@@ -48,11 +49,13 @@ public class CPUActor extends UntypedActor {
         }
     }
 
-    private void generateAndSendColor(ActorRef viewActor){
+    private void generateAndSendColor(ActorRef viewActor) {
         this.currentSequence.add(SColor.values()[new Random().nextInt(nColors)]);
+
         Log.d("##CPU ACTOR", "Generated new color in sequence, now sequence is" + this.currentSequence.toString());
-        viewActor.tell(new TimeToBlinkMsg(this.currentSequence),getSelf());
+        viewActor.tell(new TimeToBlinkMsg(this.currentSequence), getSelf());
     }
+
 
 }
 

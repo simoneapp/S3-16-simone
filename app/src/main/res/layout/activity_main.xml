@@ -44,6 +44,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/myRed"
+                    android:onClick="multiplayerSetUp"
                     android:textColor="@color/myMainTextColor" />
             </LinearLayout>
 
@@ -62,7 +63,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/myYellow"
-                    android:onClick="playVsCpu"
                     android:textColor="@color/myMainTextColor" />
 
                 <Button

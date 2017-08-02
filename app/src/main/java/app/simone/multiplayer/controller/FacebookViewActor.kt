@@ -41,7 +41,7 @@ class FacebookViewActor : akka.actor.UntypedActor() {
                 if(FacebookManagerActor.Companion.isLoggedIn()) {
                     actor.tell(FbRequestFriendsMsg(), self)
                     activity?.setUser()
-                    activity?.updateRequests()
+                    //activity?.updateRequests()
                 }
             }
 

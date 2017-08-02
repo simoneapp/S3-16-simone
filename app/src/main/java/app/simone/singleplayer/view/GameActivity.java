@@ -138,45 +138,10 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         super.onCreate(savedInstanceState);
         DataManager.Companion.getInstance().setup(this);
 
-        String senderID = (String) getIntent().getExtras().getSerializable("sender");
-        String recipientID = (String) getIntent().getExtras().getSerializable("recipient");
-
-        try {
-            checkingExistingData(senderID, recipientID);
-        } catch (Exception e) {
-            System.out.println("error while retrieving data from DB");
+        if(getIntent().hasExtra("multiplayerMode")){
+            this.isMultiplayerMode=true;
         }
 
-        //Giaki
-        if (sender != null && !getIntent().hasExtra("multiplayerMode")) {
-            whichPlayer = "p1";
-            isMultiplayerMode = true;
-            msgHandler = new MessageHandler(new PubnubController("multiplayer"));
-            Request request = new Request(sender, recipient);
-            try {
-                OnlineMatch newMatch = msgHandler.createMatch(request);
-                newMatch.setKindOfMsg("insert");
-                newMatch.getFirstPlayer().setScore("");
-                msgHandler.publishMessage(newMatch);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d("GameActivity", "Error while publishing the message on the channel");
-            }
-
-
-        } else if (getIntent().hasExtra("multiplayerMode")) {
-            // This code is executed by P2
-            checkingExistingData(senderID, recipientID);
-            whichPlayer = "p2";
-            isMultiplayerMode = true;
-            msgHandler = new MessageHandler(new PubnubController("multiplayer"));
-            try {
-                opponentScore = Integer.parseInt(getIntent().getExtras().getString("temporaryScore"));
-                Log.d("OPPONENT SCORE",""+opponentScore);
-            }catch (Exception e){
-                System.out.println("Opponent score not available yet");
-            }
-        }
 
         chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
 
@@ -312,7 +277,9 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     finish();
                 }
             });
-            if (whichPlayer == "p1") {
+
+
+           /* if (whichPlayer == "p1") {
                 sender.setScore("" + finalScore);
                 Request request = new Request(sender, recipient);
                 OnlineMatch newMatch = msgHandler.createMatch(request);
@@ -326,7 +293,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                 newMatch.setKindOfMsg("update");
                 msgHandler.publishMessage(newMatch);
 
-            }
+            }*/
 
         }
     }
@@ -369,11 +336,5 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         }
     }
 
-    private void checkingExistingData(String senderID, String recipientID) {
-
-        sender = ScoreHandler.checkingExistingUser(senderID);
-        recipient = ScoreHandler.checkingExistingUser(recipientID);
-
-    }
 
 }

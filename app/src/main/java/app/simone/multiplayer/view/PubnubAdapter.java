@@ -12,13 +12,10 @@ import android.widget.TextView;
 import com.facebook.Profile;
 import java.util.ArrayList;
 
-import app.simone.multiplayer.controller.DataManager;
 import app.simone.multiplayer.model.OnlineMatch;
 import app.simone.singleplayer.view.GameActivity;
 import app.simone.R;
 import app.simone.multiplayer.model.FacebookUser;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -71,8 +68,8 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
                 intent.putExtra("name", profile.getName());
 
                 recipient = new FacebookUser(profile.getId(), profile.getName());
-                sender = dataModel.getFirstPlayer();
-                sender.setScore(dataModel.getFirstPlayer().getScore());
+                sender = dataModel.getFirstplayer();
+                sender.setScore(dataModel.getFirstplayer().getScore());
 
                 intent.putExtra("sender", sender.getId());
                 intent.putExtra("recipient", recipient.getId());
@@ -125,8 +122,8 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
 
     private void updateCellText(ViewHolder viewHolder,int position){
 
-        FacebookUser first = dataModel.getFirstPlayer();
-        FacebookUser second = dataModel.getSecondPlayer();
+        FacebookUser first = dataModel.getFirstplayer();
+        FacebookUser second = dataModel.getSecondplayer();
         viewHolder.textPlayer1.setText(first.getName());
         viewHolder.textPlayer2.setText(second.getName());
         viewHolder.scoreP1.setText(first.getScore());
@@ -140,8 +137,8 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
 
         String playerID = Profile.getCurrentProfile().getId();
 
-        FacebookUser first = dataModel.getFirstPlayer();
-        FacebookUser second = dataModel.getSecondPlayer();
+        FacebookUser first = dataModel.getFirstplayer();
+        FacebookUser second = dataModel.getSecondplayer();
         Log.d("TESTA",viewHolder.scoreP1.getText().toString());
 
         if(playerID.equals(first.getId()) && viewHolder.scoreP1.getText()!="")

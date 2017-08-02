@@ -63,7 +63,7 @@ public class PubnubController {
         * */
 
         pubnub.publish()
-                .message(ElementKt.toMap(match.toJson()))
+                .message(match)
                 .channel(this.channel)
                 .shouldStore(true)
                 .usePOST(true)

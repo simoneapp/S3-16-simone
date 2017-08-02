@@ -23,15 +23,13 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by Giacomo on 03/07/2017.
  */
 
-public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnClickListener {
+public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements View.OnClickListener {
 
     private ArrayList<OnlineMatch> data;
     private Context mContext;
-    private FacebookUser sender;
-    private FacebookUser recipient;
     private OnlineMatch dataModel;
 
-    public PubnubAdapter(ArrayList<OnlineMatch> data, Context context) {
+    public PendingRequestsAdapter(ArrayList<OnlineMatch> data, Context context) {
         super(context, R.layout.row_item, data);
         this.data=data;
         this.mContext=context;
@@ -59,22 +57,12 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
 
             case R.id.item_info:
 
-                Profile profile = Profile.getCurrentProfile();
-
                 Intent intent = new Intent(mContext,GameActivity.class);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("multiplayerMode", "multiplayerMode");
-                intent.putExtra("id", profile.getId());
-                intent.putExtra("name", profile.getName());
+                intent.putExtra("key",dataModel.getKey());
+                intent.putExtra("whichPlayer","secondplayer");
 
-                recipient = new FacebookUser(profile.getId(), profile.getName());
-                sender = dataModel.getFirstplayer();
-                sender.setScore(dataModel.getFirstplayer().getScore());
-
-                intent.putExtra("sender", sender.getId());
-                intent.putExtra("recipient", recipient.getId());
-                intent.putExtra("temporaryScore",sender.getScore());
-                Log.d("SCORE",sender.getScore());
                 mContext.startActivity(intent);
                 break;
         }
@@ -113,7 +101,7 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
         lastPosition = position;
         updateCellText(viewHolder,position);
 
-       /*if(disablePlayButton(dataModel,viewHolder)){
+       /*if(disablePlayButton(dataModel)==true){
             viewHolder.playButton.setEnabled(false);
         }*/
 
@@ -133,20 +121,14 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
 
     }
 
-    private boolean disablePlayButton(OnlineMatch dataModel,ViewHolder viewHolder) {
+    private boolean disablePlayButton(OnlineMatch dataModel) {
 
         String playerID = Profile.getCurrentProfile().getId();
 
-        FacebookUser first = dataModel.getFirstplayer();
-        FacebookUser second = dataModel.getSecondplayer();
-        Log.d("TESTA",viewHolder.scoreP1.getText().toString());
-
-        if(playerID.equals(first.getId()) && viewHolder.scoreP1.getText()!="")
+        if((dataModel.getFirstplayer().getScore()!=null) && (dataModel.getSecondplayer().getScore()!=null))
             return true;
-        else if(viewHolder.scoreP1.getText()!="" && viewHolder.scoreP2.getText()!="")
-            return true;
-        else
-            return false;
+       else
+           return false;
 
     }
 }

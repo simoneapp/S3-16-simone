@@ -5,7 +5,6 @@ import android.widget.AdapterView
 import app.simone.multiplayer.controller.DataManager
 import app.simone.multiplayer.controller.FacebookManagerActor
 import app.simone.multiplayer.controller.KeysHandler
-import app.simone.multiplayer.controller.PubnubController
 import app.simone.multiplayer.messages.*
 import app.simone.multiplayer.model.FacebookUser
 import app.simone.multiplayer.model.OnlineMatch
@@ -16,9 +15,7 @@ import com.facebook.Profile
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
-import scala.util.parsing.combinator.testing.Str
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
@@ -29,11 +26,9 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
     var friends = ArrayList<app.simone.multiplayer.model.FacebookUser>()
     var adapter: FacebookFriendsAdapter? = null
 
-    var pubnubController = PubnubController("multiplayer")
-
     var listViewRequests: android.widget.ListView? = null
-    var requestsUsers = ArrayList<OnlineMatch>()
-    var requestsAdapter: PubnubAdapter? = null
+    var requestsUsers:MutableList<OnlineMatch> = arrayListOf()
+    var requestsAdapter: PendingRequestsAdapter? = null
 
     var currentUser: FacebookUser? = null
     var selectedUser: FacebookUser? = null
@@ -48,9 +43,10 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
 
         setContentView(app.simone.R.layout.activity_facebook_login)
 
+
         initMainList()
-        initRequestsList()
         listenForChanges()
+        initRequestsList()
         val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR
                 + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
                 App.getInstance().actorSystem)
@@ -71,8 +67,9 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
                 setUser()
 
                 val onlineMatch = OnlineMatch(currentUser, selectedUser)
-                DataManager.instance.createMatch(onlineMatch)
                 activityIntent.putExtra("multiplayerMode", "multiplayerMode")
+                activityIntent.putExtra("key", DataManager.instance.createMatch(onlineMatch))
+                activityIntent.putExtra("whichPlayer","firstplayer")
                 baseContext.startActivity(activityIntent)
             }
         })
@@ -81,39 +78,40 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
 
     fun listenForChanges() {
 
-        val postListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
-                //displayToast("Sono in ascolto..")
+            val postListener = object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // Get Post object and use the values to update the UI
+                    requestsUsers?.clear()
+                    val match = dataSnapshot.children
+                    val keysArray = KeysHandler()
+                    if (match != null) {
 
-                val match = dataSnapshot.children
-                var keysArray = KeysHandler()
-                if(match!=null){
+                        for (data in match) {
+                            keysArray.addToList(data.key)
+                        }
+                        if (keysArray.list.size > 0) {
+                            repeat(keysArray.list.size) { i ->
+                                val onlineMatch = dataSnapshot.child(keysArray.getElement(i)).getValue(OnlineMatch::class.java)!!
+                                onlineMatch.key = keysArray.list[i]
+                                requestsUsers.add(onlineMatch)
+                            }
+                        }
 
-                    for (data in match){
-                        keysArray.addToList(data.key)
+                        //Updating GUI
+                        updateRequests()
                     }
 
-                   repeat(keysArray.list.size){ i->
-                       val onlineMatch = dataSnapshot.child(keysArray.getElement(i)).getValue(OnlineMatch::class.java)!!
-                       requestsUsers.add(onlineMatch)
 
-                   }
-
-                    // Devo aggiornare la GUI!
-                    updateRequests()
                 }
 
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                displayToast("Error while retrieving data from DB")
-                // ...
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Getting Post failed, log a message
+                    displayToast("Error while retrieving data from DB")
+                    // ...
+                }
             }
-        }
-        DataManager.instance.database.addValueEventListener(postListener)
-        //DataManager.instance.database.addValueEventListener(postListener)
+            DataManager.instance.database.addValueEventListener(postListener)
     }
 
 
@@ -128,7 +126,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if(FacebookManagerActor.Companion.isLoggedIn()) {
-           // updateRequests()
+            updateRequests()
         }
     }
 
@@ -148,11 +146,14 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
 
     fun initRequestsList() {
         listViewRequests = this.findViewById(app.simone.R.id.listView_requests) as android.widget.ListView
-        requestsAdapter = PubnubAdapter(requestsUsers, applicationContext)
-        listViewRequests?.adapter = requestsAdapter
-        listViewRequests?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            val model = requestsUsers[position]
-            println("ARRAY: " + position)
+        if(FacebookManagerActor.isLoggedIn()) {
+            requestsAdapter = PendingRequestsAdapter(requestsUsers as ArrayList<OnlineMatch>, applicationContext)
+            listViewRequests?.adapter = requestsAdapter
+            listViewRequests?.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                val model = requestsUsers[position]
+                println("ARRAY: " + position)
+            }
+            updateRequests()
         }
     }
 
@@ -190,8 +191,11 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
                 var tv = this.findViewById(app.simone.R.id.textView3) as android.widget.TextView
                 tv.text = Companion.PENDING_REQUESTS
                 if (FacebookManagerActor.isLoggedIn()) {
-                    //requestsAdapter?.clear()
-                    requestsAdapter?.addAll(DataManager.instance.filterRequests(requestsUsers, com.facebook.Profile.getCurrentProfile().id))
+                    requestsUsers=DataManager.instance.filterRequests(requestsUsers, Profile.getCurrentProfile().id)
+                    requestsAdapter?.clear()
+                    //requestsAdapter = PendingRequestsAdapter(requestsUsers as ArrayList<OnlineMatch>, applicationContext)
+                    requestsAdapter?.addAll(requestsUsers)
+
                 }
             }
         }

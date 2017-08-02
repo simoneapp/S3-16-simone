@@ -9,7 +9,7 @@ import java.util.List;
 
 public class KeysHandler {
 
-    private List<String> list;
+    private ArrayList<String> list;
 
     public KeysHandler(){
         list = new ArrayList<>();
@@ -27,7 +27,7 @@ public class KeysHandler {
         return list.get(index);
     }
 
-    public List<String> getList(){
+    public ArrayList<String> getList(){
         return this.list;
     }
 

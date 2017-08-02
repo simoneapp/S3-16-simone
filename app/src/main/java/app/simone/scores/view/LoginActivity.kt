@@ -7,13 +7,11 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import app.simone.R
-import app.simone.scores.controller.LoginController
 import app.simone.scores.controller.ResultNotFoundException
 
 
 class LoginActivity : AppCompatActivity() {
 
-    private var controller = LoginController()
     private var editText: EditText? = null
     private var playerName: String? = null
     val PLAYER_NAME="player_name"
@@ -27,8 +25,6 @@ class LoginActivity : AppCompatActivity() {
     @Throws(ResultNotFoundException::class)
     fun onSubscribe(view: View) {
         playerName = editText?.text.toString()
-        controller.insertPlayer(playerName!!)
-        controller.insertMatch(playerName!!)
         val textView = findViewById(R.id.loginTextView) as TextView
         textView.text = playerName
 

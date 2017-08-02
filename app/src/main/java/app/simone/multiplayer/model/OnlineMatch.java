@@ -10,6 +10,7 @@ public class OnlineMatch{
 
     private FacebookUser firstplayer;
     private FacebookUser secondplayer;
+    private String key;
 
 
     public OnlineMatch(){
@@ -38,4 +39,11 @@ public class OnlineMatch{
         this.secondplayer = secondplayer;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
 }

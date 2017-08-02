@@ -7,19 +7,19 @@ import android.os.*;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+
+import com.facebook.Profile;
+
 import java.util.*;
 import app.simone.multiplayer.controller.*;
-import app.simone.multiplayer.model.*;
 import akka.actor.ActorRef;
 import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.R;
 import app.simone.singleplayer.model.SColor;
 import app.simone.shared.styleable.SimoneTextView;
-import app.simone.multiplayer.model.FacebookUser;
 import app.simone.shared.application.App;
 import app.simone.singleplayer.messages.*;
 import app.simone.shared.utils.*;
@@ -33,7 +33,6 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     private boolean tapToBegin = true;
 
     private FloatingActionButton gameFab;
-    private MessageHandler msgHandler;
     private boolean isMultiplayerMode = false;
     private SimoneTextView simoneTextView;
 
@@ -46,14 +45,12 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
     private FrameLayout[] layouts = new FrameLayout[4];
 
-    private FacebookUser sender;
-    private FacebookUser recipient;
     private boolean isGameEnded = false;
-    private String whichPlayer = "";
 
     private int currentScore;
     private int finalScore;
-    private int opponentScore = -1;
+    private String key;
+    private String whichPlayer;
 
     private Handler handler = new Handler() {
         @Override
@@ -94,7 +91,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     simoneTextView.setText(Constants.PLAY_AGAIN);
                     simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
                     gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#990000")));
-                    sendMsgToOtherPlayer();
+                    saveScore();
                     simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
                     break;
             }
@@ -136,12 +133,12 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DataManager.Companion.getInstance().setup(this);
 
         if(getIntent().hasExtra("multiplayerMode")){
             this.isMultiplayerMode=true;
+            this.key=getIntent().getExtras().get("key").toString();
+            this.whichPlayer=getIntent().getExtras().get("whichPlayer").toString();
         }
-
 
         chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
 
@@ -267,7 +264,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         return button;
     }
 
-    private void sendMsgToOtherPlayer() {
+    private void saveScore() {
         if (isMultiplayerMode) {
             isGameEnded = true;
             simoneTextView.setText(Constants.BACK_TO_MENU);
@@ -278,6 +275,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                 }
             });
 
+            DataManager.Companion.getInstance().getDatabase().child(key).child(whichPlayer).child("score").setValue(""+finalScore);
 
            /* if (whichPlayer == "p1") {
                 sender.setScore("" + finalScore);
@@ -298,11 +296,6 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         }
     }
 
-    private void updateOpponentScore(){
-        if(opponentScore!=-1) {
-            sender.setScore("" + opponentScore);
-        }
-    }
 
 
     @Override
@@ -316,7 +309,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (isMultiplayerMode) {
-                                sendMsgToOtherPlayer();
+                                saveScore();
                             }
                             finish();
                             ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);

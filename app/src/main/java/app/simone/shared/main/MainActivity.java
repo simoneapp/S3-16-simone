@@ -9,18 +9,21 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.crashlytics.android.Crashlytics;
 
 import app.simone.R;
+import app.simone.multiplayer.controller.DataManager;
+import app.simone.multiplayer.controller.FCMTokenService;
+import app.simone.multiplayer.view.FacebookLoginActivity;
+import app.simone.multiplayer.view.MultiplayerTypeActivity;
+import app.simone.scores.google.GoogleGamesActivity;
 import app.simone.scores.view.LoginActivity;
 import app.simone.scores.view.ScoreboardActivity;
 import app.simone.settings.view.SettingsActivity;
+import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.VSCpuActivity;
-import app.simone.shared.utils.AudioManager;
-import app.simone.multiplayer.controller.DataManager;
-import app.simone.multiplayer.view.FacebookLoginActivity;
-import app.simone.scores.google.GoogleGamesActivity;
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -36,8 +39,6 @@ public class MainActivity extends FullscreenBaseGameActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         Fabric.with(this, new Crashlytics());
 
@@ -82,7 +83,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
         multiplayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openActivity(FacebookLoginActivity.class, R.anim.left_in, R.anim.right_out);
+                openActivity(MultiplayerTypeActivity.class, R.anim.slide_down, R.anim.slide_down_existing);
             }
         });
 
@@ -127,6 +128,10 @@ public class MainActivity extends FullscreenBaseGameActivity {
         m.what = Constants.CONNECT;
         m.obj = this;
         googleHandler.sendMessageDelayed(m,100);
+
+        Intent intent = new Intent(this, FCMTokenService.class);
+        startService(intent);
+        FCMTokenService.Companion.updateCurrentToken();
     }
 
 

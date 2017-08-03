@@ -128,5 +128,8 @@
     <string name="leaderboard">leader\nboard</string>
     <string name="achievements">achieve\nments</string>
     <string name="scoreboard_long">scoreboard</string>
+    <string name="instant">instant</string>
+    <string name="nearby">nearby</string>
+    <string name="multiplayer_full">Multiplayer</string>
 
 </resources>

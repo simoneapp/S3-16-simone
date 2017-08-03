@@ -9,19 +9,6 @@
     android:layout_marginRight="8dp"
     tools:context="app.simone.multiplayer.view.FacebookLoginActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:text="Simone + Friends = Fun!"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:text="Login with Facebook and unlock Multiplayer in Simone!" />
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"

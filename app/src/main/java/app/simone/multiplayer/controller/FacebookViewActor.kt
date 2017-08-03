@@ -1,10 +1,13 @@
 package app.simone.multiplayer.controller
 
+import android.util.Log
 import app.simone.multiplayer.messages.*
 import app.simone.shared.application.App
 import app.simone.shared.messages.IMessage
 import app.simone.singleplayer.messages.MessageType
+import com.facebook.CallbackManager
 import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
 import com.facebook.share.widget.GameRequestDialog
 
 /**
@@ -13,12 +16,11 @@ import com.facebook.share.widget.GameRequestDialog
 
 class FacebookViewActor : akka.actor.UntypedActor() {
 
-    var activity : app.simone.multiplayer.view.FacebookLoginActivity? = null
+    //var activity : FacebookLoginActivity? = null
 
-    var loginButton : com.facebook.login.widget.LoginButton? = null
-    var requestDialog : com.facebook.share.widget.GameRequestDialog? = null
-    var callbackManager : com.facebook.CallbackManager? = null
-    var currentUser : app.simone.multiplayer.model.FacebookUser? = null
+    var loginButton : LoginButton? = null
+    var requestDialog : GameRequestDialog? = null
+    var callbackManager : CallbackManager? = null
 
     val FB_LOGIN_CANCELLED_MSG = "Facebook Login action cancelled from the user!"
     val FB_LOGIN_ERROR_MSG = "Facebook Login Error: "
@@ -34,14 +36,13 @@ class FacebookViewActor : akka.actor.UntypedActor() {
             MessageType.FB_VIEW_SETUP_MSG -> {
 
                 val msg = message as FbViewSetupMsg
-                this.activity = msg.activity
 
-                this.registerLoginButton()
+                this.registerLoginButton(msg)
 
                 if(FacebookManagerActor.Companion.isLoggedIn()) {
-                    actor.tell(FbRequestFriendsMsg(), self)
-                    activity?.setUser()
-                    activity?.updateRequests()
+                    actor.tell(FbRequestFriendsMsg(msg.activity), self)
+                    msg.activity?.setUser()
+                    msg.activity?.updateRequests()
                 }
             }
 
@@ -49,7 +50,8 @@ class FacebookViewActor : akka.actor.UntypedActor() {
 
             MessageType.FB_ITEM_CLICK_MSG -> {
                 val msg = message as FbItemClickMsg
-                actor.tell(FbRequestGetUserScoreMsg(msg.friend), self)
+                //actor.tell(FbRequestGetUserScoreMsg(msg.friend), self)
+
             }
 
             MessageType.FB_GAME_REQUEST_MSG -> {
@@ -65,7 +67,8 @@ class FacebookViewActor : akka.actor.UntypedActor() {
 
             MessageType.FB_GET_FRIENDS_RESPONSE_MSG -> {
                 val msg = message as FbResponseFriendsMsg
-                activity?.updateList(msg)
+                msg.activity?.updateList(msg)
+                Log.d("List", "### Activity")
             }
 
             MessageType.FB_GET_SCORE_RESPONSE_MSG -> {
@@ -89,31 +92,30 @@ class FacebookViewActor : akka.actor.UntypedActor() {
         requestDialog?.show(content)
     }
 
-    fun registerLoginButton() {
+    fun registerLoginButton(msg: FbViewSetupMsg) {
 
         val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR + app.simone.shared.utils.Constants.FACEBOOK_ACTOR_NAME, App.getInstance().getActorSystem())
 
         callbackManager = com.facebook.CallbackManager.Factory.create()
 
-        loginButton = activity?.findViewById(app.simone.R.id.login_button) as com.facebook.login.widget.LoginButton
-
+        loginButton = msg.activity?.view?.findViewById(app.simone.R.id.login_button) as com.facebook.login.widget.LoginButton
         loginButton?.setReadPermissions(FB_READ_PERMISSIONS)
-
         loginButton?.registerCallback(callbackManager, object : com.facebook.FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: com.facebook.login.LoginResult) {
-                actor.tell(FbRequestFriendsMsg(), self)
+                actor.tell(FbRequestFriendsMsg(msg.activity), self)
+                FCMTokenService.updateCurrentToken()
             }
 
             override fun onCancel() {
-                activity?.displayToast(FB_LOGIN_CANCELLED_MSG)
+                msg.activity?.displayToast(FB_LOGIN_CANCELLED_MSG)
             }
 
             override fun onError(exception: com.facebook.FacebookException) {
-                activity?.displayToast(FB_LOGIN_ERROR_MSG + exception.localizedMessage)
+                msg.activity?.displayToast(FB_LOGIN_ERROR_MSG + exception.localizedMessage)
             }
         })
 
-        requestDialog = com.facebook.share.widget.GameRequestDialog(activity)
+        requestDialog = GameRequestDialog(msg.activity)
 
         requestDialog?.registerCallback(callbackManager, object: com.facebook.FacebookCallback<GameRequestDialog.Result> {
             override fun onSuccess(result: com.facebook.share.widget.GameRequestDialog.Result?) {
@@ -121,11 +123,11 @@ class FacebookViewActor : akka.actor.UntypedActor() {
             }
 
             override fun onCancel() {
-                activity?.displayToast("Facebook Game Request canceled.")
+                msg.activity?.displayToast("Facebook Game Request canceled.")
             }
 
             override fun onError(error: com.facebook.FacebookException?) {
-                activity?.displayToast(error?.localizedMessage.toString())
+                msg.activity?.displayToast(error?.localizedMessage.toString())
             }
         })
     }

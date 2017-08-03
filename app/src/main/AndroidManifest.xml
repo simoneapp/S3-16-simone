@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-    package="app.simone">
-
+    package="app.simone"
+    android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- To auto-complete the email text field in the login form with the user's emails -->
@@ -10,10 +9,11 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".shared.application.App"
@@ -56,33 +56,38 @@
         <activity android:name=".multiplayer.view.FacebookLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".singleplayer.view.GameActivity"
-            android:label="Game"
             android:configChanges="orientation|screenSize"
+            android:label="Game"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".settings.view.SettingsActivity"></activity>
+        <activity android:name=".settings.view.SettingsActivity" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="578b2c1882d727176d06b548a797e4c9373b27ca" />
-
-        <meta-data android:name="com.google.android.gms.games.APP_ID"
+        <meta-data
+            android:name="com.google.android.gms.games.APP_ID"
             android:value="@string/app_id" />
-        <meta-data android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
-
+        <activity android:name=".multiplayer.view.WaitingRoomActivity" />
+        <activity
+            android:name=".multiplayer.view.MultiplayerTypeActivity"
+            android:label="Multiplayer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".multiplayer.view.pager.MultiplayerPagerActivity"
+            android:theme="@style/AppTheme.ViewPagerTheme" />
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
-
-
 
 </manifest>

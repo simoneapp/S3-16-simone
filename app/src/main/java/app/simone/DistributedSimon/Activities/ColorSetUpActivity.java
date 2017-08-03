@@ -16,8 +16,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.FutureTask;
 
 import app.simone.R;
 
@@ -30,14 +28,35 @@ public class ColorSetUpActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private final String CHILD_PLAYERS = "players";
 
-    private Button button;
+    private Button buttonColor,buttonInstantPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_set_up);
         databaseReference = FirebaseDatabase.getInstance().getReference("matchesTry");
-        button = (Button) findViewById(R.id.colorButtonDistributed);
+        buttonColor = (Button) findViewById(R.id.colorButtonDistributed);
+        buttonInstantPlay=(Button)findViewById(R.id.buttonStartGameDistributed);
+        buttonInstantPlay.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                databaseReference.child(CHILD_PLAYERS).child(playerID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        databaseReference.child(CHILD_PLAYERS).child(playerID).child("start").setValue("true");
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                return false;
+            }
+        });
+
         setColor();
 
     }
@@ -53,7 +72,7 @@ public class ColorSetUpActivity extends AppCompatActivity {
         databaseReference.child(CHILD_PLAYERS).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (final DataSnapshot singleDataSnapshot : dataSnapshot.getChildren()) {
+                for (DataSnapshot singleDataSnapshot : dataSnapshot.getChildren()) {
                     HashMap<String, String> player_info = (HashMap<String, String>) singleDataSnapshot.getValue();
                     Log.d("PROVA", player_info.toString());
                     playerID = singleDataSnapshot.getKey();
@@ -63,8 +82,8 @@ public class ColorSetUpActivity extends AppCompatActivity {
                         color = player_info.get("color");
 
                         databaseReference.child(CHILD_PLAYERS).child(playerID).child("taken").setValue("true");
-                        button.setText(playerID+" "+color);
- 
+                        buttonColor.setText(playerID+" "+color);
+
 
                         Log.d("CHILDSNAPSHOT", "changing value");
                         break;
@@ -80,6 +99,15 @@ public class ColorSetUpActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void startGame(View view){
+
+        if(view.isPressed()){
+
+        }
+    }
+
+
 
 
 }

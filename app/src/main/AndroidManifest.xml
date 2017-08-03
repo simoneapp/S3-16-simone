@@ -88,6 +88,20 @@
         <activity
             android:name=".multiplayer.view.pager.MultiplayerPagerActivity"
             android:theme="@style/AppTheme.ViewPagerTheme" />
+
+        <service
+            android:name=".multiplayer.controller.FCMTokenService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service android:name=".multiplayer.controller.FCMNotificationService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

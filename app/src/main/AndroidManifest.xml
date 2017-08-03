@@ -88,6 +88,7 @@
         <activity
             android:name=".multiplayer.view.pager.MultiplayerPagerActivity"
             android:theme="@style/AppTheme.ViewPagerTheme" />
+        <activity android:name=".DistributedSimon.Activities.ColorSetUpActivity"></activity>
 
         <service
             android:name=".multiplayer.controller.FCMTokenService"

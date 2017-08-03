@@ -1,8 +1,6 @@
 package app.simone.DistributedSimon.Activities;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,48 +15,57 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
-import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.FutureTask;
 
 import app.simone.R;
 
 public class ColorSetUpActivity extends AppCompatActivity {
 
 
-    private String playerID;
-    private String color;
-    private final String FAKE_PLAYERID = "fake player id";
-    private final String NAME_KEY = "id";
+    private String playerID="";
+    private String color="";
+
     private DatabaseReference databaseReference;
     private final String CHILD_PLAYERS = "players";
+
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_set_up);
         databaseReference = FirebaseDatabase.getInstance().getReference("matchesTry");
+        button = (Button) findViewById(R.id.colorButtonDistributed);
+        setColor();
 
-        getFirebaseID();
+    }
 
-        //  Log.d("SHAREDPREFERENCES", sharedPreferences.getString(NAME_KEY, "").toString());
+    public void sendColor(View view) throws ExecutionException, InterruptedException {
 
 
     }
 
-    public void setPlayerID(View view) {
-        ((Button) view).setText(playerID+" "+color);
-    }
 
-
-    private void getFirebaseID() {
+    private void setColor() {
+        Log.d("PROVA", "executing query");
         databaseReference.child(CHILD_PLAYERS).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot singleDataSnapshot : dataSnapshot.getChildren()) {
+                for (final DataSnapshot singleDataSnapshot : dataSnapshot.getChildren()) {
                     HashMap<String, String> player_info = (HashMap<String, String>) singleDataSnapshot.getValue();
-                    playerID = singleDataSnapshot.getKey().toString();
+                    Log.d("PROVA", player_info.toString());
+                    playerID = singleDataSnapshot.getKey();
+
+
                     if (!Boolean.parseBoolean(player_info.get("taken"))) {
-                        color=player_info.get("color");
+                        color = player_info.get("color");
+
                         databaseReference.child(CHILD_PLAYERS).child(playerID).child("taken").setValue("true");
+                        button.setText(playerID+" "+color);
+ 
+
                         Log.d("CHILDSNAPSHOT", "changing value");
                         break;
                     }
@@ -72,10 +79,6 @@ public class ColorSetUpActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void resetLocalPreferences() {
-
     }
 
 

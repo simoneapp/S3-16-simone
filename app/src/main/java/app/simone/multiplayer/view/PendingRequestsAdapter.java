@@ -9,16 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.facebook.Profile;
 import java.util.ArrayList;
 
-import app.simone.multiplayer.controller.DataManager;
 import app.simone.multiplayer.model.OnlineMatch;
 import app.simone.singleplayer.view.GameActivity;
 import app.simone.R;
 import app.simone.multiplayer.model.FacebookUser;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -26,15 +25,13 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * Created by Giacomo on 03/07/2017.
  */
 
-public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnClickListener {
+public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements View.OnClickListener {
 
     private ArrayList<OnlineMatch> data;
     private Context mContext;
-    private FacebookUser sender;
-    private FacebookUser recipient;
     private OnlineMatch dataModel;
 
-    public PubnubAdapter(ArrayList<OnlineMatch> data, Context context) {
+    public PendingRequestsAdapter(ArrayList<OnlineMatch> data, Context context) {
         super(context, R.layout.row_item, data);
         this.data=data;
         this.mContext=context;
@@ -62,22 +59,12 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
 
             case R.id.item_info:
 
-                Profile profile = Profile.getCurrentProfile();
-
                 Intent intent = new Intent(mContext,GameActivity.class);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("multiplayerMode", "multiplayerMode");
-                intent.putExtra("id", profile.getId());
-                intent.putExtra("name", profile.getName());
+                intent.putExtra("key",dataModel.getKey());
+                intent.putExtra("whichPlayer","secondplayer");
 
-                recipient = new FacebookUser(profile.getId(), profile.getName());
-                sender = dataModel.getFirstPlayer();
-                sender.setScore(dataModel.getFirstPlayer().getScore());
-
-                intent.putExtra("sender", sender.getId());
-                intent.putExtra("recipient", recipient.getId());
-                intent.putExtra("temporaryScore",sender.getScore());
-                Log.d("SCORE",sender.getScore());
                 mContext.startActivity(intent);
                 break;
         }
@@ -116,7 +103,11 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
         lastPosition = position;
         updateCellText(viewHolder,position);
 
-       /*if(disablePlayButton(dataModel,viewHolder)){
+
+        boolean myBool = disablePlayButton(dataModel);
+        //Toast.makeText(getContext(), ""+myBool, Toast.LENGTH_LONG).show();
+
+       /*if(disablePlayButton(dataModel)){
             viewHolder.playButton.setEnabled(false);
         }*/
 
@@ -125,8 +116,8 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
 
     private void updateCellText(ViewHolder viewHolder,int position){
 
-        FacebookUser first = dataModel.getFirstPlayer();
-        FacebookUser second = dataModel.getSecondPlayer();
+        FacebookUser first = dataModel.getFirstplayer();
+        FacebookUser second = dataModel.getSecondplayer();
         viewHolder.textPlayer1.setText(first.getName());
         viewHolder.textPlayer2.setText(second.getName());
         viewHolder.scoreP1.setText(first.getScore());
@@ -136,20 +127,20 @@ public class PubnubAdapter extends ArrayAdapter<OnlineMatch> implements View.OnC
 
     }
 
-    private boolean disablePlayButton(OnlineMatch dataModel,ViewHolder viewHolder) {
+    private boolean disablePlayButton(OnlineMatch dataModel) {
 
         String playerID = Profile.getCurrentProfile().getId();
-
-        FacebookUser first = dataModel.getFirstPlayer();
-        FacebookUser second = dataModel.getSecondPlayer();
-        Log.d("TESTA",viewHolder.scoreP1.getText().toString());
-
-        if(playerID.equals(first.getId()) && viewHolder.scoreP1.getText()!="")
+        if((dataModel.getFirstplayer().getScore()!=null) && (dataModel.getFirstplayer().getId()==playerID)) {
+            Log.d("PB", "First condition");
             return true;
-        else if(viewHolder.scoreP1.getText()!="" && viewHolder.scoreP2.getText()!="")
+        }
+        else if((dataModel.getFirstplayer().getScore()!=null) && (dataModel.getSecondplayer().getScore()!=null)) {
+            Log.d("PB", "Second condition");
             return true;
-        else
+        }else{
+            Log.d("PB", "No condition");
             return false;
+        }
 
     }
 }

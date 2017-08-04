@@ -56,6 +56,12 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
@@ -68,8 +74,15 @@ dependencies {
     compile 'org.slf4j:slf4j-log4j12:1.7.5'
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
     compile 'com.beust:klaxon:0.30'
+    compile 'com.google.android.gms:play-services:11.0.2'
     compile 'com.google.android.gms:play-services-games:11.0.2'
     compile 'com.google.android.gms:play-services-identity:11.0.2'
+    compile 'com.google.firebase:firebase-database:10.0.1'
+    testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support:support-annotations:25.3.1'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
     compile 'com.google.firebase:firebase-messaging:11.0.2'
 
     testCompile 'junit:junit:4.12'

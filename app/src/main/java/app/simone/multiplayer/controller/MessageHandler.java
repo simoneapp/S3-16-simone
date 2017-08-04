@@ -30,12 +30,7 @@ public class MessageHandler {
         }
     }
 
-    public void setMessageFields(OnlineMatch match){
-        if(ScoreHandler.getUserScore(""+match.getMatchId())!=""){
-            match.getSecondPlayer().setScore(ScoreHandler.getUserScore(""+match.getMatchId()));
-            match.setKindOfMsg("update");
-        }
-    }
+
 
     public OnlineMatch createMatch(Request rec) {
         return new OnlineMatch(rec.getSender(), rec.getRecipient());

@@ -1,20 +1,8 @@
 package app.simone.multiplayer.controller
 
-import app.simone.multiplayer.model.PushNotification
 import android.content.Context
-import android.util.Log
-import app.simone.multiplayer.model.FacebookUser
 import app.simone.multiplayer.model.OnlineMatch
-import com.facebook.Profile
-import com.google.gson.JsonObject
-import io.realm.exceptions.RealmPrimaryKeyConstraintException
-import app.simone.shared.utils.filterNotifications
-import com.facebook.AccessToken
-import com.facebook.login.LoginResult
-import io.realm.*
-import io.realm.SyncCredentials
-
-
+import com.google.firebase.database.FirebaseDatabase
 
 
 
@@ -25,9 +13,8 @@ import io.realm.SyncCredentials
 
 class DataManager private constructor() {
 
-    var realm: Realm? = null
     var context: Context? = null
-    var opponentTemporaryScore = ""
+    var database = FirebaseDatabase.getInstance().getReference("multiplayer")
 
     private object Holder {
         val INSTANCE = DataManager()
@@ -37,112 +24,25 @@ class DataManager private constructor() {
         val instance: DataManager by lazy { Holder.INSTANCE }
     }
 
-    fun setup(context: Context) {
 
-        this.context = context
-
-        Realm.init(context)
-        val config = RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
-                        .schemaVersion(3)
-                        .name("default.realm")
-                .build()
-        Realm.setDefaultConfiguration(config)
-        realm = Realm.getDefaultInstance()
-
+    fun createMatch(match: OnlineMatch):String {
+        val matchList = database.push()
+        matchList.setValue(match)
+        return matchList.key
     }
 
+    fun filterRequests(matches: MutableList<OnlineMatch>,id: String):MutableList<OnlineMatch>{
 
-    fun saveRequest(obj: JsonObject) {
+        var filteredArray: MutableList<OnlineMatch> = arrayListOf()
 
-        var pr = OnlineMatch.with(obj)
-        try{
-            opponentTemporaryScore=pr.secondPlayer.score
-        }catch (e: Exception){
-            System.out.println("score not available yet (P2)")
-        }
-
-        //pr.matchId=getNextId()
-        printValues(pr)
-
-        if(opponentTemporaryScore != ""){
-            pr.secondPlayer.score = opponentTemporaryScore
-            opponentTemporaryScore = ""
-        }
-
-        try {
-            realm?.executeTransaction { realm ->
-                if(pr.kindOfMsg=="insert") {
-                    //new record on the DB
-                    pr.matchId=getNextId()
-                    realm.copyToRealm(pr)
-                }else{
-                    //updating an existing record
-                    println("RECORD UPDATED ON THE DB")
-                   // pr.matchId=findCorrectID() TO DO
-                    printValues(pr)
-                    //checking matching between IDs
-                    realm.copyToRealmOrUpdate(pr)
-                }
+        repeat(matches.size){ i->
+            if ((matches[i].firstplayer.id==id) ||(matches[i].secondplayer.id==id)){
+                //keep it
+                filteredArray.add(matches[i])
             }
-            if(obj.filterNotifications(Profile.getCurrentProfile().id.toString())) {
-                PushNotification(this.context, pr.firstPlayer.name).init()
-            }
-        } catch (e: RealmPrimaryKeyConstraintException) {
-            Log.d("DB", "The value is already in the database!")
+
         }
-    }
-
-    fun saveRequestLocally(pr: OnlineMatch) {
-
-
-        if(opponentTemporaryScore != ""){
-            pr.secondPlayer.score = opponentTemporaryScore
-            opponentTemporaryScore = ""
-        }
-
-
-        try {
-            realm?.executeTransaction { realm ->
-                if(pr.kindOfMsg=="insert") {
-                    //new record on the DB
-                    pr.matchId=getNextId()
-                    printValues(pr)
-                    realm.copyToRealm(pr)
-                }else{
-                    //updating an existing record
-                    realm.copyToRealmOrUpdate(pr)
-                }
-            }
-        } catch (e: RealmPrimaryKeyConstraintException) {
-            Log.d("DB", "The value is already in the database!")
-        }
-    }
-
-    fun printValues(pr: OnlineMatch){
-        Log.d("PLAYERONE1",pr.firstPlayer.name+" "+pr.firstPlayer.score)
-        Log.d("PLAYERONE2",pr.secondPlayer.name+" "+pr.secondPlayer.score)
-        Log.d("PLAYERONE_MATCH",""+pr.matchId)
-    }
-
-
-    fun getNextId():Int{
-        var id = realm!!.where(OnlineMatch::class.java).max("matchId")
-        if(id==null){
-            return 0
-        }else{
-            id=id.toInt()
-            return id+1
-        }
-    }
-
-    fun getPendingRequests(): RealmResults<OnlineMatch> {
-        return realm!!.where(OnlineMatch::class.java).findAll()
-    }
-
-
-    fun resetOpponentScore() {
-        opponentTemporaryScore = ""
+        return filteredArray
     }
 
 }

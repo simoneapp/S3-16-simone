@@ -10,7 +10,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
-
 import app.simone.DistributedSimon.Activities.ColorSetUpActivity;
 import app.simone.R;
 import app.simone.scores.view.LoginActivity;
@@ -42,8 +41,6 @@ public class MainActivity extends FullscreenBaseGameActivity {
 
         Fabric.with(this, new Crashlytics());
 
-        DataManager.Companion.getInstance().setup(this);
-
 
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
         connectionButton = (Button)findViewById(R.id.button4);
@@ -58,13 +55,13 @@ public class MainActivity extends FullscreenBaseGameActivity {
             }
         });
 
-//        btnMultiplayer.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                openActivity(FacebookLoginActivity.class, R.anim.left_in, R.anim.right_out);
-//            }
-//        });
+        btnMultiplayer.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                openActivity(FacebookLoginActivity.class, R.anim.left_in, R.anim.right_out);
+            }
+        });
 
         connectionButton.setOnClickListener(new View.OnClickListener() {
 
@@ -81,12 +78,12 @@ public class MainActivity extends FullscreenBaseGameActivity {
 
 
         multiplayerButton = (Button) findViewById(R.id.main_button_multiplayer);
-//        multiplayerButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openActivity(FacebookLoginActivity.class, R.anim.left_in, R.anim.right_out);
-//            }
-//        });
+        multiplayerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openActivity(FacebookLoginActivity.class, R.anim.left_in, R.anim.right_out);
+            }
+        });
 
         FloatingActionButton mainFab = (FloatingActionButton) findViewById(R.id.main_fab);
         TextView simoneTextView = (TextView) findViewById(R.id.main_simone_textview);

@@ -29,6 +29,10 @@ class NearbyGameController {
         return matchName
     }
 
+    fun checkForNewPlayers(match: String) {
+
+    }
+
     fun acceptInvite(user: String, match: String) {
         db.getReference(MATCHES_REF).child(match).child(USERS_REF).child(user).setValue(true)
     }

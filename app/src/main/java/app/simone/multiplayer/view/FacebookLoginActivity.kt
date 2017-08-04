@@ -21,7 +21,6 @@ import app.simone.multiplayer.model.FacebookUser
 import app.simone.multiplayer.model.OnlineMatch
 import app.simone.shared.application.App
 import app.simone.shared.utils.Utilities
-import app.simone.singleplayer.view.GameActivity
 import com.facebook.Profile
 import java.util.*
 
@@ -78,7 +77,7 @@ class FacebookLoginActivity : Fragment() {
         btnPlay = rootView?.findViewById(app.simone.R.id.playButton) as android.widget.Button
         btnPlay?.setOnClickListener({
             if(selectedUsers.count() > 0) {
-                val activityIntent = Intent(context, GameActivity::class.java)
+                /*val activityIntent = Intent(context, GameActivity::class.java)
                 activityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 println("ME: "+ com.facebook.Profile.getCurrentProfile().firstName.toString()+" "+ com.facebook.Profile.getCurrentProfile().lastName.toString())
                 setUser()
@@ -92,7 +91,16 @@ class FacebookLoginActivity : Fragment() {
                 //sending data to the GameActivity
                 activityIntent.putExtra("sender", currentUser?.id)
                 activityIntent.putExtra("recipient", user.id)
-                context.startActivity(activityIntent)
+                context.startActivity(activityIntent)*/
+
+                var parceled = ArrayList<Map<String,String>>()
+                for (selectedUser in selectedUsers) {
+                    parceled.add(selectedUser.toDictionary())
+                }
+
+                val intent = Intent(context, WaitingRoomActivity::class.java)
+                intent.putExtra("users", parceled)
+                this.startActivity(intent)
             }
         })
 

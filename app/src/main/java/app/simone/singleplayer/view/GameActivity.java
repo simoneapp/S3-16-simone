@@ -7,19 +7,22 @@ import android.os.*;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.*;
 import app.simone.multiplayer.controller.*;
-import app.simone.multiplayer.model.*;
 import akka.actor.ActorRef;
+import app.simone.multiplayer.model.OnlineMatch;
 import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.R;
 import app.simone.singleplayer.model.SColor;
 import app.simone.shared.styleable.SimoneTextView;
-import app.simone.multiplayer.model.FacebookUser;
 import app.simone.shared.application.App;
 import app.simone.singleplayer.messages.*;
 import app.simone.shared.utils.*;
@@ -33,7 +36,6 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     private boolean tapToBegin = true;
 
     private FloatingActionButton gameFab;
-    private MessageHandler msgHandler;
     private boolean isMultiplayerMode = false;
     private SimoneTextView simoneTextView;
 
@@ -46,14 +48,12 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
     private FrameLayout[] layouts = new FrameLayout[4];
 
-    private FacebookUser sender;
-    private FacebookUser recipient;
     private boolean isGameEnded = false;
-    private String whichPlayer = "";
 
     private int currentScore;
     private int finalScore;
-    private int opponentScore = -1;
+    private String key;
+    private String whichPlayer;
 
     private Handler handler = new Handler() {
         @Override
@@ -94,8 +94,31 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     simoneTextView.setText(Constants.PLAY_AGAIN);
                     simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
                     gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#990000")));
-                    sendMsgToOtherPlayer();
+                    saveScore();
                     simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
+                    break;
+                case Constants.MULTIPLAYER_READY:
+                    gameFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            AudioManager.Companion.getInstance().stopSimoneMusic();
+
+                            if (tapToBegin) {
+                                tapToBegin = false;
+                                finalScore = 0;
+                                playerBlinking = false;
+                                simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
+                                simoneTextView.setText(Constants.STRING_EMPTY);
+                                simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
+                                gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
+
+                                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                                        .tell(new StartGameVsCPUMsg(), ActorRef.noSender());
+
+                            }
+                        }
+                    });
                     break;
             }
 
@@ -136,47 +159,41 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DataManager.Companion.getInstance().setup(this);
 
-        String senderID = (String) getIntent().getExtras().getSerializable("sender");
-        String recipientID = (String) getIntent().getExtras().getSerializable("recipient");
+        final IGameActivity context = this;
+        if(getIntent().hasExtra("multiplayerMode")){
+            this.isMultiplayerMode=true;
+            this.key=getIntent().getExtras().getString("key");
+            this.whichPlayer=getIntent().getExtras().getString("whichPlayer");
 
-        try {
-            checkingExistingData(senderID, recipientID);
-        } catch (Exception e) {
-            System.out.println("error while retrieving data from DB");
-        }
-
-        //Giaki
-        if (sender != null && !getIntent().hasExtra("multiplayerMode")) {
-            whichPlayer = "p1";
-            isMultiplayerMode = true;
-            msgHandler = new MessageHandler(new PubnubController("multiplayer"));
-            Request request = new Request(sender, recipient);
-            try {
-                OnlineMatch newMatch = msgHandler.createMatch(request);
-                newMatch.setKindOfMsg("insert");
-                newMatch.getFirstPlayer().setScore("");
-                msgHandler.publishMessage(newMatch);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.d("GameActivity", "Error while publishing the message on the channel");
+            if(whichPlayer.equals("firstplayer")){
+                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                        .tell(new ComputeFullMultiplayerSequenceMsg(context,key, 4,false), ActorRef.noSender());
             }
 
+            if(whichPlayer.equals("secondplayer")) {
 
-        } else if (getIntent().hasExtra("multiplayerMode")) {
-            // This code is executed by P2
-            checkingExistingData(senderID, recipientID);
-            whichPlayer = "p2";
-            isMultiplayerMode = true;
-            msgHandler = new MessageHandler(new PubnubController("multiplayer"));
-            try {
-                opponentScore = Integer.parseInt(getIntent().getExtras().getString("temporaryScore"));
-                Log.d("OPPONENT SCORE",""+opponentScore);
-            }catch (Exception e){
-                System.out.println("Opponent score not available yet");
+                DataManager.Companion.getInstance().getDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        OnlineMatch match = dataSnapshot.child(key).getValue(OnlineMatch.class);
+                        List<SColor> sequenceToPlay =  match.getSequence();
+
+                        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                                .tell(new ReceivedSequenceMsg(sequenceToPlay, context), ActorRef.noSender());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
             }
         }
+
+
 
         chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
 
@@ -192,27 +209,30 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         layouts[2] = (FrameLayout) findViewById(R.id.game_bottom_left_frame);
         layouts[3] = (FrameLayout) findViewById(R.id.game_bottom_right_frame);
 
-        gameFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if(!getIntent().hasExtra("multiplayerMode")){
+            gameFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                AudioManager.Companion.getInstance().stopSimoneMusic();
+                    AudioManager.Companion.getInstance().stopSimoneMusic();
 
-                if (tapToBegin) {
-                    tapToBegin = false;
-                    finalScore = 0;
-                    playerBlinking = false;
-                    simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                    simoneTextView.setText(Constants.STRING_EMPTY);
-                    simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
-                    gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
+                    if (tapToBegin) {
+                        tapToBegin = false;
+                        finalScore = 0;
+                        playerBlinking = false;
+                        simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
+                        simoneTextView.setText(Constants.STRING_EMPTY);
+                        simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
+                        gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
 
-                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                            .tell(new StartGameVsCPUMsg(), ActorRef.noSender());
+                        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                                .tell(new StartGameVsCPUMsg(true), ActorRef.noSender());
 
+                    }
                 }
-            }
-        });
+            });
+        }
+
 
 
         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
@@ -302,7 +322,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         return button;
     }
 
-    private void sendMsgToOtherPlayer() {
+    private void saveScore() {
         if (isMultiplayerMode) {
             isGameEnded = true;
             simoneTextView.setText(Constants.BACK_TO_MENU);
@@ -312,7 +332,11 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     finish();
                 }
             });
-            if (whichPlayer == "p1") {
+
+            DataManager.Companion.getInstance().getDatabase().child(key).child(whichPlayer).child("score").setValue(""+finalScore);
+
+
+           /* if (whichPlayer == "p1") {
                 sender.setScore("" + finalScore);
                 Request request = new Request(sender, recipient);
                 OnlineMatch newMatch = msgHandler.createMatch(request);
@@ -326,16 +350,11 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                 newMatch.setKindOfMsg("update");
                 msgHandler.publishMessage(newMatch);
 
-            }
+            }*/
 
         }
     }
 
-    private void updateOpponentScore(){
-        if(opponentScore!=-1) {
-            sender.setScore("" + opponentScore);
-        }
-    }
 
 
     @Override
@@ -349,7 +368,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             if (isMultiplayerMode) {
-                                sendMsgToOtherPlayer();
+                                saveScore();
                             }
                             finish();
                             ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
@@ -369,11 +388,5 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         }
     }
 
-    private void checkingExistingData(String senderID, String recipientID) {
-
-        sender = ScoreHandler.checkingExistingUser(senderID);
-        recipient = ScoreHandler.checkingExistingUser(recipientID);
-
-    }
 
 }

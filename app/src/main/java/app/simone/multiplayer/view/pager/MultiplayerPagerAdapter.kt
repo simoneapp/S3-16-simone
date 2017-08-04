@@ -2,7 +2,8 @@ package app.simone.multiplayer.view.pager
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
-import app.simone.multiplayer.view.FacebookLoginActivity
+import app.simone.multiplayer.view.invites.InvitesFragment
+import app.simone.multiplayer.view.newmatch.FriendsListFragment
 
 
 /**
@@ -12,19 +13,22 @@ class MultiplayerPagerAdapter(fm: android.support.v4.app.FragmentManager) : Frag
 
     override fun getItem(position: Int): Fragment {
 
-        val fragment = FacebookLoginActivity()
-        //val args = Bundle()
-        // Our object is just an integer :-P
-        //args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1)
-        //fragment.setArguments(args)
-        return fragment
+        when(position) {
+            0 -> { return FriendsListFragment() }
+            1 -> { return InvitesFragment() }
+        }
+        return Fragment()
     }
 
     override fun getCount(): Int {
-        return 1
+        return 2
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return "Pagina " + position
+        when(position) {
+            0 -> return "New match"
+            1 -> return "Pending invites"
+        }
+        return ""
     }
 }

@@ -1,6 +1,6 @@
 package app.simone.multiplayer.messages;
 
-import app.simone.multiplayer.view.FacebookLoginActivity;
+import app.simone.multiplayer.view.newmatch.FriendsListFragment;
 import app.simone.singleplayer.messages.MessageType;
 import app.simone.shared.messages.IMessage;
 
@@ -10,9 +10,9 @@ import app.simone.shared.messages.IMessage;
 
 public class FbViewSetupMsg implements IMessage {
 
-    private FacebookLoginActivity activity;
+    private FriendsListFragment activity;
 
-    public FbViewSetupMsg(FacebookLoginActivity activity) {
+    public FbViewSetupMsg(FriendsListFragment activity) {
         this.activity = activity;
     }
 
@@ -21,7 +21,7 @@ public class FbViewSetupMsg implements IMessage {
         return MessageType.FB_VIEW_SETUP_MSG;
     }
 
-    public FacebookLoginActivity getActivity() {
+    public FriendsListFragment getActivity() {
         return activity;
     }
 

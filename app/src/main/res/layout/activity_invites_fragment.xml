@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="app.simone.multiplayer.view.newmatch.FriendsListFragment">
+    tools:context="app.simone.multiplayer.view.invites.InvitesFragment">
 
     <RelativeLayout
         android:id="@+id/test"
@@ -14,22 +14,23 @@
         <ListView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:fab="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/list_friends"
+            android:id="@+id/list_invites"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="match_parent"
+        android:id="@+id/btn_invite"
+        android:layout_width="368dp"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:layout_margin="16dp"
-        app:layout_anchorGravity="bottom|right|end"
+        android:clickable="true"
         app:elevation="6dp"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_media_play_dark"
-        app:layout_anchor="@id/list_friends"/>
-
+        app:layout_anchor="@id/list_invites"
+        app:layout_anchorGravity="bottom|right|end"
+        app:srcCompat="@android:drawable/ic_menu_send"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="0dp" />
 
 </android.support.design.widget.CoordinatorLayout>

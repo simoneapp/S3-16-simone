@@ -14,12 +14,10 @@ import com.crashlytics.android.Crashlytics;
 
 import app.simone.DistributedSimon.Activities.ColorSetUpActivity;
 import app.simone.R;
-import app.simone.multiplayer.controller.DataManager;
 import app.simone.multiplayer.controller.FCMTokenService;
-import app.simone.multiplayer.view.FacebookLoginActivity;
+import app.simone.multiplayer.view.newmatch.FriendsListFragment;
 import app.simone.multiplayer.view.MultiplayerTypeActivity;
 import app.simone.scores.google.GoogleGamesActivity;
-import app.simone.scores.view.LoginActivity;
 import app.simone.scores.view.ScoreboardActivity;
 import app.simone.settings.view.SettingsActivity;
 import app.simone.shared.utils.AudioManager;
@@ -43,8 +41,6 @@ public class MainActivity extends FullscreenBaseGameActivity {
 
         Fabric.with(this, new Crashlytics());
 
-        DataManager.Companion.getInstance().setup(this);
-
 
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
         connectionButton = (Button)findViewById(R.id.button4);
@@ -59,13 +55,13 @@ public class MainActivity extends FullscreenBaseGameActivity {
             }
         });
 
-//        btnMultiplayer.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                openActivity(FacebookLoginActivity.class, R.anim.left_in, R.anim.right_out);
-//            }
-//        });
+        btnMultiplayer.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                openActivity(FriendsListFragment.class, R.anim.left_in, R.anim.right_out);
+            }
+        });
 
         connectionButton.setOnClickListener(new View.OnClickListener() {
 

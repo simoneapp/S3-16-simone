@@ -1,4 +1,4 @@
-package app.simone.multiplayer.view
+package app.simone.multiplayer.view.newmatch
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -19,11 +19,11 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
  * Created by nicola on 23/06/2017.
  */
 
-class FacebookFriendsAdapter : ArrayAdapter<FacebookUser> {
+class FriendsListAdapter : ArrayAdapter<FacebookUser> {
 
-    var activity : FacebookLoginActivity? = null
+    var activity : FriendsListFragment? = null
 
-    constructor(context: Context, data: List<FacebookUser>, activity : FacebookLoginActivity) : super(context, layout.cell_friends) {
+    constructor(context: Context, data: List<FacebookUser>, activity : FriendsListFragment) : super(context, layout.cell_friends) {
         this.activity = activity
         val config = ImageLoaderConfiguration.createDefault(getContext())
         ImageLoader.getInstance().init(config)

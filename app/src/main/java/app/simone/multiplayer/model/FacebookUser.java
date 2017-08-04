@@ -16,7 +16,7 @@ import io.realm.RealmObject;
  * Created by nicola on 11/07/2017.
  */
 
-public class FacebookUser extends RealmObject {
+public class FacebookUser {
 
     public static final String kNAME = "name";
     public static final String kPICTURE = "picture";
@@ -65,13 +65,6 @@ public class FacebookUser extends RealmObject {
         return objectFriends;
     }
 
-    public JsonObject toJson() {
-        JsonObject json = new JsonObject();
-        json.addProperty(FacebookUser.kID, id);
-        json.addProperty(FacebookUser.kNAME, name);
-        json.addProperty(FacebookUser.kSCORE, score);
-        return json;
-    }
 
     public Map<String,String> toDictionary() {
 
@@ -99,15 +92,8 @@ public class FacebookUser extends RealmObject {
         return score;
     }
 
-    public void setScore(final String sc) {
-
-        Realm.getDefaultInstance().executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                score = sc;
-            }
-        });
-
+    public void setScore(String score) {
+        this.score = score;
     }
 
     public void setId(String id) {

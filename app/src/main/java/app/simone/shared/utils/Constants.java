@@ -40,6 +40,6 @@ public class Constants {
     public static final String PREF_KEY = "PREF";
     public static final String NEED_TO_SYNC_CLASSIC= "NTSC";
     public static final String NEED_TO_SYNC_HARD= "NTSH";
-    public static final int FULL_SEQUENCE_MSG_4_MPLAY = 46;
+    public static final int MULTIPLAYER_READY = 46;
 
 }

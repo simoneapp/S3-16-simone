@@ -4,10 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import app.simone.R
-import app.simone.multiplayer.messages.FbOnActivityResultMsg
 import app.simone.multiplayer.model.MultiplayerType
 import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
-import app.simone.shared.application.App
 import app.simone.shared.main.FullscreenBaseGameActivity
 
 class MultiplayerTypeActivity : FullscreenBaseGameActivity() {
@@ -38,7 +36,7 @@ class MultiplayerTypeActivity : FullscreenBaseGameActivity() {
 
     fun call(type : MultiplayerType) {
         val intent = Intent(applicationContext, MultiplayerPagerActivity::class.java)
-        intent.putExtra("source", type)
+        intent.putExtra("source", type.name)
         startActivity(intent)
     }
 

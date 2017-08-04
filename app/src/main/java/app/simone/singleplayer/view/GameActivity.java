@@ -11,11 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
-import com.facebook.Profile;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.*;
 import app.simone.multiplayer.controller.*;
 import akka.actor.ActorRef;
+import app.simone.multiplayer.model.OnlineMatch;
 import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.R;
 import app.simone.singleplayer.model.SColor;
@@ -94,6 +97,29 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     saveScore();
                     simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
                     break;
+                case Constants.MULTIPLAYER_READY:
+                    gameFab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            AudioManager.Companion.getInstance().stopSimoneMusic();
+
+                            if (tapToBegin) {
+                                tapToBegin = false;
+                                finalScore = 0;
+                                playerBlinking = false;
+                                simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
+                                simoneTextView.setText(Constants.STRING_EMPTY);
+                                simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
+                                gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
+
+                                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                                        .tell(new StartGameVsCPUMsg(), ActorRef.noSender());
+
+                            }
+                        }
+                    });
+                    break;
             }
 
         }
@@ -134,11 +160,40 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final IGameActivity context = this;
         if(getIntent().hasExtra("multiplayerMode")){
             this.isMultiplayerMode=true;
-            this.key=getIntent().getExtras().get("key").toString();
-            this.whichPlayer=getIntent().getExtras().get("whichPlayer").toString();
+            this.key=getIntent().getExtras().getString("key");
+            this.whichPlayer=getIntent().getExtras().getString("whichPlayer");
+
+            if(whichPlayer.equals("firstplayer")){
+                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                        .tell(new ComputeFullMultiplayerSequenceMsg(context,key, 4,false), ActorRef.noSender());
+            }
+
+            if(whichPlayer.equals("secondplayer")) {
+
+                DataManager.Companion.getInstance().getDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        OnlineMatch match = dataSnapshot.child(key).getValue(OnlineMatch.class);
+                        List<SColor> sequenceToPlay =  match.getSequence();
+
+                        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                                .tell(new ReceivedSequenceMsg(sequenceToPlay, context), ActorRef.noSender());
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
+            }
         }
+
+
 
         chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
 
@@ -154,27 +209,30 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         layouts[2] = (FrameLayout) findViewById(R.id.game_bottom_left_frame);
         layouts[3] = (FrameLayout) findViewById(R.id.game_bottom_right_frame);
 
-        gameFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if(!getIntent().hasExtra("multiplayerMode")){
+            gameFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                AudioManager.Companion.getInstance().stopSimoneMusic();
+                    AudioManager.Companion.getInstance().stopSimoneMusic();
 
-                if (tapToBegin) {
-                    tapToBegin = false;
-                    finalScore = 0;
-                    playerBlinking = false;
-                    simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                    simoneTextView.setText(Constants.STRING_EMPTY);
-                    simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
-                    gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
+                    if (tapToBegin) {
+                        tapToBegin = false;
+                        finalScore = 0;
+                        playerBlinking = false;
+                        simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
+                        simoneTextView.setText(Constants.STRING_EMPTY);
+                        simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
+                        gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
 
-                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                            .tell(new StartGameVsCPUMsg(), ActorRef.noSender());
+                        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                                .tell(new StartGameVsCPUMsg(true), ActorRef.noSender());
 
+                    }
                 }
-            }
-        });
+            });
+        }
+
 
 
         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
@@ -276,6 +334,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
             });
 
             DataManager.Companion.getInstance().getDatabase().child(key).child(whichPlayer).child("score").setValue(""+finalScore);
+
 
            /* if (whichPlayer == "p1") {
                 sender.setScore("" + finalScore);

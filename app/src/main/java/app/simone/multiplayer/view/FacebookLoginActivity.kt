@@ -97,10 +97,11 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
                             }
                         }
 
-                        //Updating GUI
-                        updateRequests()
+
                     }
 
+                    //Updating GUI
+                    updateRequests()
 
                 }
 
@@ -112,6 +113,7 @@ class FacebookLoginActivity : android.support.v7.app.AppCompatActivity() {
                 }
             }
             DataManager.instance.database.addValueEventListener(postListener)
+
     }
 
 

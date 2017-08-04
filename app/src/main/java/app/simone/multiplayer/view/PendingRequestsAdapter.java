@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.facebook.Profile;
 import java.util.ArrayList;
 
@@ -101,7 +103,11 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
         lastPosition = position;
         updateCellText(viewHolder,position);
 
-       /*if(disablePlayButton(dataModel)==true){
+
+        boolean myBool = disablePlayButton(dataModel);
+        //Toast.makeText(getContext(), ""+myBool, Toast.LENGTH_LONG).show();
+
+       /*if(disablePlayButton(dataModel)){
             viewHolder.playButton.setEnabled(false);
         }*/
 
@@ -124,11 +130,17 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
     private boolean disablePlayButton(OnlineMatch dataModel) {
 
         String playerID = Profile.getCurrentProfile().getId();
-
-        if((dataModel.getFirstplayer().getScore()!=null) && (dataModel.getSecondplayer().getScore()!=null))
+        if((dataModel.getFirstplayer().getScore()!=null) && (dataModel.getFirstplayer().getId()==playerID)) {
+            Log.d("PB", "First condition");
             return true;
-       else
-           return false;
+        }
+        else if((dataModel.getFirstplayer().getScore()!=null) && (dataModel.getSecondplayer().getScore()!=null)) {
+            Log.d("PB", "Second condition");
+            return true;
+        }else{
+            Log.d("PB", "No condition");
+            return false;
+        }
 
     }
 }

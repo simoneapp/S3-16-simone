@@ -1,6 +1,9 @@
 package app.simone.multiplayer.model;
 
 
+import java.util.List;
+
+import app.simone.singleplayer.model.SColor;
 
 /**
  * Created by Giacomo on 05/07/2017.
@@ -11,6 +14,7 @@ public class OnlineMatch{
     private FacebookUser firstplayer;
     private FacebookUser secondplayer;
     private String key;
+    private List<SColor> sequence;
 
 
     public OnlineMatch(){
@@ -45,5 +49,13 @@ public class OnlineMatch{
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public List<SColor> getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(List<SColor> sequence) {
+        this.sequence = sequence;
     }
 }

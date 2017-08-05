@@ -31,9 +31,9 @@ class DataManager private constructor() {
         return matchList.key
     }
 
-    fun filterRequests(matches: MutableList<OnlineMatch>,id: String):MutableList<OnlineMatch>{
+    fun filterRequests(matches: ArrayList<OnlineMatch>,id: String):ArrayList<OnlineMatch>{
 
-        var filteredArray: MutableList<OnlineMatch> = arrayListOf()
+        var filteredArray: ArrayList<OnlineMatch> = arrayListOf()
 
         repeat(matches.size){ i->
             if ((matches[i].firstplayer.id==id) ||(matches[i].secondplayer.id==id)){

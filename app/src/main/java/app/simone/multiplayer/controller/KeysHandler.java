@@ -1,7 +1,6 @@
 package app.simone.multiplayer.controller;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Giacomo on 02/08/2017.
@@ -30,7 +29,5 @@ public class KeysHandler {
     public ArrayList<String> getList(){
         return this.list;
     }
-
-
 
 }

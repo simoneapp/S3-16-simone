@@ -44,6 +44,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/myRed"
+                    android:onClick="multiplayerSetUp"
                     android:textColor="@color/myMainTextColor" />
             </LinearLayout>
 
@@ -62,7 +63,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/myYellow"
-                    android:onClick="playVsCpu"
                     android:textColor="@color/myMainTextColor" />
 
                 <Button
@@ -118,7 +118,7 @@
         android:id="@+id/main_textview_multiplayer"
         android:layout_width="wrap_content"
         android:textSize="32sp"
-        android:text="@string/multiplayer"
+        android:text="@string/multiplayer_full"
         android:textAlignment="textEnd"
         android:layout_marginEnd="20sp"
         android:layout_marginTop="30sp"

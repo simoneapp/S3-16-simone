@@ -4,19 +4,18 @@ import akka.actor.UntypedActor
 import android.os.Bundle
 import android.util.Log
 import app.simone.multiplayer.messages.*
-
 import app.simone.multiplayer.model.FacebookUser
-import app.simone.shared.messages.IMessage
-import app.simone.singleplayer.messages.MessageType
 import app.simone.shared.application.App
+import app.simone.shared.messages.IMessage
+import app.simone.shared.utils.Constants
+import app.simone.shared.utils.Utilities
+import app.simone.singleplayer.messages.MessageType
 import com.facebook.AccessToken
 import com.facebook.GraphRequest
 import com.facebook.HttpMethod
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import org.json.JSONObject
-import app.simone.shared.utils.Constants
-import app.simone.shared.utils.Utilities
 
 /**
  * Created by nicola on 01/07/2017.
@@ -35,7 +34,7 @@ class FacebookManagerActor : UntypedActor() {
 
         when ((message as IMessage).type) {
             MessageType.FB_REQUEST_FRIENDS_MSG -> {
-                this.getFacebookFriends()
+                this.getFacebookFriends(message as FbRequestFriendsMsg)
             }
 
             MessageType.FB_GET_FRIEND_SCORE_MSG -> {
@@ -48,7 +47,7 @@ class FacebookManagerActor : UntypedActor() {
         }
     }
 
-    fun getFacebookFriends() {
+    fun getFacebookFriends(message: FbRequestFriendsMsg) {
 
         val parameters = Bundle()
         parameters.putInt("limit",FRIENDS_LIMIT)
@@ -70,7 +69,7 @@ class FacebookManagerActor : UntypedActor() {
                                 .asJsonObject.get("data").asJsonArray
 
                         val list = FacebookUser.listFromJson(jsonFriends)
-                        actor.tell(FbResponseFriendsMsg(list), self)
+                        actor.tell(FbResponseFriendsMsg(list, message.activity), self)
                     } else {
                         actor.tell(FbResponseFriendsMsg(response.error.errorUserMessage), self)
                     }

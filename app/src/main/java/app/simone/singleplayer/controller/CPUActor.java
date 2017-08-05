@@ -45,7 +45,7 @@ public class CPUActor extends UntypedActor {
                 this.nColors = ((StartGameVsCPUMsg) message).getnColors();
                 this.currentSequence.clear();
                 if(((StartGameVsCPUMsg) message).isSinglePlay()){
-                    this.multiplayerFullSequence = null;
+                    this.multiplayerFullSequence.clear();
                 }
                 Log.d("##CPU ACTOR", "Received StartGameVsCpuMSG, " + this.nColors + " colors.");
                 this.generateAndSendColor(Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem()));
@@ -76,7 +76,7 @@ public class CPUActor extends UntypedActor {
 
 
     private void generateAndSendColor(ActorRef viewActor) {
-        if(multiplayerFullSequence==null){
+        if(multiplayerFullSequence == null || multiplayerFullSequence.isEmpty()){
             this.currentSequence.add(SColor.values()[new Random().nextInt(nColors)]);
         } else {
             this.currentSequence.add(this.multiplayerFullSequence.get(currentSequence.size()));

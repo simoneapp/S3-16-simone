@@ -53,7 +53,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".multiplayer.view.FacebookLoginActivity">
+        <activity android:name=".multiplayer.view.newmatch.FriendsListFragment">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -80,21 +80,30 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".DistributedSimon.Activities.ColorSetUpActivity"></activity>
+        <activity android:name=".multiplayer.view.WaitingRoomActivity" />
+        <activity
+            android:name=".multiplayer.view.MultiplayerTypeActivity"
+            android:label="Multiplayer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".multiplayer.view.pager.MultiplayerPagerActivity"
+            android:theme="@style/AppTheme.ViewPagerTheme" />
+        <activity android:name=".DistributedSimon.Activities.ColorSetUpActivity" />
+
         <service
-            android:name=".MyFirebaseMessagingService">
+            android:name=".shared.firebase.FCMTokenService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-        <service
-            android:name=".MyFirebaseInstanceIDService">
+        <service android:name=".shared.firebase.FCMNotificationService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-
+        <activity android:name=".multiplayer.view.invites.InvitesFragment"></activity>
     </application>
 
 </manifest>

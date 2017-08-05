@@ -1,15 +1,13 @@
 package app.simone.multiplayer.model;
 
-import android.os.Parcel;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -19,7 +17,6 @@ import io.realm.RealmObject;
  */
 
 public class FacebookUser {
-
 
     public static final String kNAME = "name";
     public static final String kPICTURE = "picture";
@@ -66,6 +63,16 @@ public class FacebookUser {
         }
 
         return objectFriends;
+    }
+
+
+    public Map<String,String> toDictionary() {
+
+        Map<String,String> dict = new HashMap<>();
+        dict.put(FacebookUser.kID, id);
+        dict.put(FacebookUser.kNAME, name);
+        dict.put(FacebookUser.kSCORE, score);
+        return dict;
     }
 
 

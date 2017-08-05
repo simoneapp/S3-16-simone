@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import app.simone.R
 import app.simone.multiplayer.messages.FbOnActivityResultMsg
 import app.simone.multiplayer.model.MultiplayerType
@@ -37,14 +39,12 @@ class MultiplayerPagerActivity : AppCompatActivity() {
         val tabLayout = findViewById(R.id.sliding_tabs) as TabLayout
         tabLayout.setupWithViewPager(viewPager)
 
+        val toolbar = findViewById(R.id.multiplayer_toolbar) as Toolbar
+        setSupportActionBar(toolbar)
+
         type = MultiplayerType.valueOf(intent.getStringExtra("source"))
 
         setFacebookViewVisible(Profile.getCurrentProfile() == null)
-
-        val btnUser = findViewById(R.id.user_button) as Button
-        btnUser.setOnClickListener({
-            setFacebookViewVisible(true)
-        })
     }
 
     fun setFacebookViewVisible(visible : Boolean) {
@@ -70,5 +70,20 @@ class MultiplayerPagerActivity : AppCompatActivity() {
                 App.getInstance().actorSystem)
         actor.tell(FbOnActivityResultMsg(requestCode, resultCode, data), akka.actor.ActorRef.noSender())
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_multiplayer_pager, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item?.itemId == R.id.action_user){
+            setFacebookViewVisible(true)
+            return true
+        } else {
+            return super.onOptionsItemSelected(item)
+        }
+    }
+
 
 }

@@ -29,7 +29,7 @@
         app:fabSize="normal"
         app:layout_anchor="@id/list_invites"
         app:layout_anchorGravity="bottom|right|end"
-        app:srcCompat="@android:drawable/ic_menu_send"
+        app:srcCompat="@drawable/ic_mail_white_24dp"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="0dp" />
 

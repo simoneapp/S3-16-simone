@@ -3,6 +3,7 @@ package app.simone.multiplayer.controller
 import android.util.Log
 import app.simone.multiplayer.messages.*
 import app.simone.shared.application.App
+import app.simone.shared.firebase.FCMTokenService
 import app.simone.shared.messages.IMessage
 import app.simone.shared.utils.Utilities
 import app.simone.singleplayer.messages.MessageType

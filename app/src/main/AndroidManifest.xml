@@ -91,13 +91,13 @@
         <activity android:name=".DistributedSimon.Activities.ColorSetUpActivity" />
 
         <service
-            android:name=".multiplayer.controller.FCMTokenService"
+            android:name=".shared.firebase.FCMTokenService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-        <service android:name=".multiplayer.controller.FCMNotificationService">
+        <service android:name=".shared.firebase.FCMNotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

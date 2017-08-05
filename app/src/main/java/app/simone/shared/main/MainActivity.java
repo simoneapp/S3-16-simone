@@ -14,7 +14,7 @@ import com.crashlytics.android.Crashlytics;
 
 import app.simone.DistributedSimon.Activities.ColorSetUpActivity;
 import app.simone.R;
-import app.simone.multiplayer.controller.FCMTokenService;
+import app.simone.shared.firebase.FCMTokenService;
 import app.simone.multiplayer.view.newmatch.FriendsListFragment;
 import app.simone.multiplayer.view.MultiplayerTypeActivity;
 import app.simone.scores.google.GoogleGamesActivity;

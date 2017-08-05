@@ -1,4 +1,4 @@
-package app.simone.multiplayer.controller
+package app.simone.shared.firebase
 
 import android.app.NotificationManager
 import android.app.PendingIntent

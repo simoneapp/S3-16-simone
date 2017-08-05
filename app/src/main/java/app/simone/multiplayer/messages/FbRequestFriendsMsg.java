@@ -1,6 +1,6 @@
 package app.simone.multiplayer.messages;
 
-import app.simone.multiplayer.view.newmatch.FriendsListFragment;
+import app.simone.multiplayer.view.pager.MultiplayerPagerActivity;
 import app.simone.shared.messages.IMessage;
 import app.simone.singleplayer.messages.MessageType;
 
@@ -10,13 +10,13 @@ import app.simone.singleplayer.messages.MessageType;
 
 public class FbRequestFriendsMsg implements IMessage {
 
-    private FriendsListFragment activity;
+    private MultiplayerPagerActivity activity;
 
-    public FbRequestFriendsMsg(FriendsListFragment activity) {
+    public FbRequestFriendsMsg(MultiplayerPagerActivity activity) {
         this.activity = activity;
     }
 
-    public FriendsListFragment getActivity() {
+    public MultiplayerPagerActivity getActivity() {
         return activity;
     }
 

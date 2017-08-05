@@ -22,7 +22,18 @@
             android:background="?attr/colorPrimary"
             app:title="@string/multiplayer_full"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User"
+                android:layout_gravity="end"
+                android:id="@+id/user_button"
+                />
+
+
+        </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/sliding_tabs"
@@ -67,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
-            android:text="To try Multiplayer, you need to sell your soul and your data to Mark Zuckerberg.\nJust kidding, you only need to sell your data."
+            android:text="To try Multiplayer, you need to sell your soul and your data to Mark Zuckerberg.\nJust kidding, you'll just sell your soul."
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 

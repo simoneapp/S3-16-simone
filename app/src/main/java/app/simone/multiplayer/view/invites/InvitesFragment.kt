@@ -10,6 +10,7 @@ import android.widget.ListView
 import app.simone.multiplayer.controller.DataManager
 import app.simone.multiplayer.controller.FacebookManagerActor
 import app.simone.multiplayer.controller.KeysHandler
+import com.facebook.Profile
 
 class InvitesFragment : Fragment() {
 
@@ -62,7 +63,7 @@ class InvitesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if(app.simone.multiplayer.controller.FacebookManagerActor.Companion.isLoggedIn()) {
+        if(FacebookManagerActor.Companion.isLoggedIn() && Profile.getCurrentProfile() != null) {
             updateRequests()
         }
     }

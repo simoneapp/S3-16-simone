@@ -4,6 +4,8 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import app.simone.multiplayer.model.FacebookUser
 import app.simone.multiplayer.view.WaitingRoomActivity
+import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
+import app.simone.shared.utils.Utilities
 import app.simone.singleplayer.view.GameActivity
 
 class FriendsListFragment : Fragment() {
@@ -29,7 +31,7 @@ class FriendsListFragment : Fragment() {
                 + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
                 app.simone.shared.application.App.getInstance().actorSystem)
 
-        actor.tell(app.simone.multiplayer.messages.FbViewSetupMsg(this), akka.actor.ActorRef.noSender())
+        actor.tell(app.simone.multiplayer.messages.FbViewSetupMsg(activity as MultiplayerPagerActivity), akka.actor.ActorRef.noSender())
 
         btnPlay = rootView?.findViewById(app.simone.R.id.floatingActionButton) as FloatingActionButton
         btnPlay?.setOnClickListener({
@@ -82,12 +84,6 @@ class FriendsListFragment : Fragment() {
         btnPlay?.isEnabled = false
     }
 
-    fun displayToast(text: String) {
-        this.activity.runOnUiThread {
-            android.widget.Toast.makeText(context, text, android.widget.Toast.LENGTH_LONG).show()
-        }
-    }
-
     fun updateList (response : app.simone.multiplayer.messages.FbResponseFriendsMsg) {
         this.activity.runOnUiThread {
             adapter?.clear()
@@ -95,7 +91,7 @@ class FriendsListFragment : Fragment() {
                 friends = response.data as ArrayList<app.simone.multiplayer.model.FacebookUser>
                 adapter?.addAll(friends)
             } else {
-                displayToast(response.errorMessage)
+                Utilities.displayToast(response.errorMessage, activity)
             }
         }
     }

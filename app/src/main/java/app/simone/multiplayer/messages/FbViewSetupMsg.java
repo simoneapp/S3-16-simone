@@ -1,8 +1,8 @@
 package app.simone.multiplayer.messages;
 
-import app.simone.multiplayer.view.newmatch.FriendsListFragment;
-import app.simone.singleplayer.messages.MessageType;
+import app.simone.multiplayer.view.pager.MultiplayerPagerActivity;
 import app.simone.shared.messages.IMessage;
+import app.simone.singleplayer.messages.MessageType;
 
 /**
  * Created by nicola on 06/07/2017.
@@ -10,9 +10,9 @@ import app.simone.shared.messages.IMessage;
 
 public class FbViewSetupMsg implements IMessage {
 
-    private FriendsListFragment activity;
+    private MultiplayerPagerActivity activity;
 
-    public FbViewSetupMsg(FriendsListFragment activity) {
+    public FbViewSetupMsg(MultiplayerPagerActivity activity) {
         this.activity = activity;
     }
 
@@ -21,7 +21,7 @@ public class FbViewSetupMsg implements IMessage {
         return MessageType.FB_VIEW_SETUP_MSG;
     }
 
-    public FriendsListFragment getActivity() {
+    public MultiplayerPagerActivity getActivity() {
         return activity;
     }
 

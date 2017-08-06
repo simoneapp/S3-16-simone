@@ -9,27 +9,24 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import app.simone.DistributedSimon.IColorGenerator;
 import app.simone.R;
-import app.simone.singleplayer.model.SColor;
 
 public class ColorSetUpActivity extends AppCompatActivity implements IColorGenerator {
 
 
     private String playerID = "";
-    private String color = "";
+    private String playerOwnColor = "";
 
     private DatabaseReference databaseReference;
     private final String CHILD_PLAYERS = "players";
@@ -72,34 +69,64 @@ public class ColorSetUpActivity extends AppCompatActivity implements IColorGener
     }
 
     public void sendColor(View view) throws ExecutionException, InterruptedException {
+        databaseReference.child("PlayersSequence").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long count = dataSnapshot.getChildrenCount();
+                dataSnapshot.getRef().child(String.valueOf(count + 1)).setValue(playerOwnColor);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        //if it is the last color, add one to CPUSequence
+        databaseReference.child("CPUSequence").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    long index = Long.parseLong(child.getKey());
+                    long sequenceColorSize = dataSnapshot.getChildrenCount();
+                    if (index == sequenceColorSize) {
+                        String newColorIndex = String.valueOf(sequenceColorSize + 1);
+
+                        Log.d("ADDEDCOLOR", "color added");
+                        databaseReference.child("CPUSequence").child(String.valueOf(newColorIndex)).setValue(getNextColor());
+                    }
+                }
 
 
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
+        });
     }
 
     public void onResume() {
         super.onResume();
-        databaseReference.child("Sequence").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("CPUSequence").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d("I'm here in cpu","ciao");
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     Log.d("CHILDLOOP", child.getValue().toString() + " " + child.getKey());
-                    //get color and blink
+                    //get playerOwnColor and blink
                     String colorSequence = child.getValue().toString();
-                    if (color.equals(colorSequence)) {
-                        buttonColor.setText(color + " BLINK!");
-                        //check if this is last color of sequence
-                        long index = Long.parseLong(child.getKey());
-                        long sequenceColorSize = dataSnapshot.getChildrenCount();
-                        if (index == sequenceColorSize) {
-                            String newColorIndex = String.valueOf(sequenceColorSize + 1);
-                            blinkCount++;
-                            Log.d("BLINKCOUNT", String.valueOf(blinkCount));
-                            Log.d("ADDEDCOLOR", "color added");
-                            databaseReference.child("Sequence").child(String.valueOf(newColorIndex)).setValue(getNextColor());
-                        }
+                    if (playerOwnColor.equals(colorSequence)) {
+                        buttonColor.setText(playerOwnColor + " BLINK! now it is your turn");
+                        //check if this is last playerOwnColor of sequence
+                        blinkCount++;
+                        Log.d("BLINKCOUNT", String.valueOf(blinkCount));
+
 
                     } else {
-                        buttonColor.setText(color);
+                        buttonColor.setText(playerOwnColor);
 
                     }
                 }
@@ -118,7 +145,7 @@ public class ColorSetUpActivity extends AppCompatActivity implements IColorGener
 //                Log.d("CHILDADDED",dataSnapshot.getKey());
 //                final String index = dataSnapshot.getKey();
 //                final String colorSequence = dataSnapshot.getValue(String.class);
-//                if (color.equals(colorSequence)) {
+//                if (playerOwnColor.equals(colorSequence)) {
 //                    databaseReference.child("Sequence").addListenerForSingleValueEvent(new ValueEventListener() {
 //                        @Override
 //                        public void onDataChange(DataSnapshot dataSnapshot) {
@@ -134,7 +161,7 @@ public class ColorSetUpActivity extends AppCompatActivity implements IColorGener
 //                        }
 //                    });
 //                } else {
-//                    buttonColor.setText(color);
+//                    buttonColor.setText(playerOwnColor);
 //                }
 //
 //            }
@@ -177,10 +204,10 @@ public class ColorSetUpActivity extends AppCompatActivity implements IColorGener
                     Log.d("PLAYERID", playerID);
 
                     if (!Boolean.parseBoolean(player_info.get("taken"))) {
-                        color = player_info.get("color");
+                        playerOwnColor = player_info.get("color");
 
                         databaseReference.child(CHILD_PLAYERS).child(playerID).child("taken").setValue("true");
-                        buttonColor.setText(playerID + " " + color);
+                        buttonColor.setText(playerID + " " + playerOwnColor);
 
 
                         Log.d("CHILDSNAPSHOT", "changing value");

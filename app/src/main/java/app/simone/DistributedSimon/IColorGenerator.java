@@ -8,5 +8,5 @@ import app.simone.singleplayer.model.SColor;
 
 public interface IColorGenerator {
 
-    SColor getNextColor();
+    String getNextColor();
 }

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -16,13 +15,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
-import app.simone.DistributedSimon.IColorGenerator;
 import app.simone.R;
 
-public class ColorSetUpActivity extends AppCompatActivity implements IColorGenerator {
+public class ColorSetUpActivity extends AppCompatActivity {
 
 
     private String playerID = "";
@@ -30,6 +27,9 @@ public class ColorSetUpActivity extends AppCompatActivity implements IColorGener
 
     private DatabaseReference databaseReference;
     private final String CHILD_PLAYERS = "players";
+    private final String NODE_REF_ROOT="matchesTry";
+    private final String CHILD_PLAYERSSEQUENCE="PlayersSequence";
+    private final String CHILD_CPUSEQUENCE="CPUSequence";
 
 
     private Button buttonColor, buttonInstantPlay;
@@ -68,7 +68,7 @@ public class ColorSetUpActivity extends AppCompatActivity implements IColorGener
     }
 
     public void sendColor(View view) throws ExecutionException, InterruptedException {
-        databaseReference.child("PlayersSequence").addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(CHILD_PLAYERSSEQUENCE).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long count = dataSnapshot.getChildrenCount();
@@ -80,12 +80,12 @@ public class ColorSetUpActivity extends AppCompatActivity implements IColorGener
 
             }
         });
-   
+
     }
 
     public void onResume() {
         super.onResume();
-        databaseReference.child("CPUSequence").addValueEventListener(new ValueEventListener() {
+        databaseReference.child(CHILD_CPUSEQUENCE).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("I'm here in cpu", "ciao");
@@ -151,15 +151,4 @@ public class ColorSetUpActivity extends AppCompatActivity implements IColorGener
         });
     }
 
-
-
-    @Override
-    public String getNextColor() {
-        String[] colors = new String[4];
-        colors[0] = "RED";
-        colors[1] = "YELLOW";
-        colors[2] = "BLUE";
-        colors[3] = "GREEN";
-        return colors[new Random().nextInt(4)];
-    }
 }

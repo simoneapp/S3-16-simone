@@ -10,11 +10,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.*;
 import app.simone.multiplayer.controller.*;
 import akka.actor.ActorRef;
@@ -193,8 +191,6 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
             }
         }
 
-
-
         chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
 
         buttons = new ArrayList<>();
@@ -332,26 +328,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     finish();
                 }
             });
-
             DataManager.Companion.getInstance().getDatabase().child(key).child(whichPlayer).child("score").setValue(""+finalScore);
-
-
-           /* if (whichPlayer == "p1") {
-                sender.setScore("" + finalScore);
-                Request request = new Request(sender, recipient);
-                OnlineMatch newMatch = msgHandler.createMatch(request);
-                msgHandler.setMessageFields(newMatch);
-                msgHandler.publishMessage(newMatch);
-            } else if (whichPlayer == "p2") {
-                updateOpponentScore();
-                recipient.setScore("" + finalScore);
-                Request request = new Request(sender, recipient);
-                OnlineMatch newMatch = msgHandler.createMatch(request);
-                newMatch.setKindOfMsg("update");
-                msgHandler.publishMessage(newMatch);
-
-            }*/
-
         }
     }
 
@@ -387,6 +364,4 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
             super.onBackPressed();
         }
     }
-
-
 }

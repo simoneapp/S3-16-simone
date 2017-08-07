@@ -18,7 +18,6 @@ import com.pubnub.api.models.consumer.PNStatus;
 import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 
-import app.simone.multiplayer.controller.PubnubController;
 import app.simone.R;
 import app.simone.shared.utils.AudioManager;
 
@@ -30,7 +29,6 @@ public class SettingsActivity extends AppCompatActivity {
     private Button saveButton;
     private Switch swcMusic;
     private TextView msgView;
-    private PubnubController myPub;
     private EditText editText;
     private String username;
 
@@ -47,7 +45,6 @@ public class SettingsActivity extends AppCompatActivity {
         saveButton = (Button) findViewById(R.id.saveButton);
         swcMusic = (Switch) findViewById(R.id.swcMusic);
 
-        myPub = new PubnubController("myChannel");
 
         final SharedPreferences pref = this.getSharedPreferences("PREF", Context.MODE_PRIVATE);
         boolean value = pref.getBoolean("MUSIC", true);
@@ -64,70 +61,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        subscribeButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                System.out.println("subscribe");
-                Toast.makeText(getApplicationContext(), "subscribed to channel", Toast.LENGTH_SHORT).show();
-                myPub.subscribeToChannel();
-
-                myPub.getPubnub().addListener(new SubscribeCallback() {
-                    @Override
-                    public void status(PubNub pubnub, PNStatus status) {
-
-                    }
-
-                    @Override
-                    public void message(PubNub pubnub, PNMessageResult message) {
-                        if (message.getChannel() != null){
-                            final String msg = message.getMessage().getAsString();
 
 
-                            runOnUiThread(new Runnable() {
-                                public void run() {
-                                    msgView.setText(msg);
-                                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void presence(PubNub pubnub, PNPresenceEventResult presence) {
-
-                    }
-                });
-            }
-        });
-
-        publishButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                System.out.println("publish");
-                Toast.makeText(getApplicationContext(), "Msg 'ciao' published on channel", Toast.LENGTH_SHORT).show();
-                //myPub.publishToChannel("ciao Sapi");
-            }
-        });
-
-        unscribeButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                System.out.println("unscribed from channel");
-                myPub.unscribe();
-            }
-        });
-
-        saveButton.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view) {
-                System.out.println("editText saved");
-                username=String.valueOf(editText.getText());
-            }
-        });
     }
 
 }

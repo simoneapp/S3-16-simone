@@ -43,26 +43,7 @@ public class ColorSetUpActivity extends AppCompatActivity {
         buttonColor = (Button) findViewById(R.id.colorButtonDistributed);
         setColor();
 
-        buttonInstantPlay = (Button) findViewById(R.id.buttonStartGameDistributed);
-        buttonInstantPlay.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                databaseReference.child(CHILD_PLAYERS).child(playerID).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        databaseReference.child(CHILD_PLAYERS).child(playerID).child("start").setValue("true");
 
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-                return false;
-            }
-        });
 
 
     }

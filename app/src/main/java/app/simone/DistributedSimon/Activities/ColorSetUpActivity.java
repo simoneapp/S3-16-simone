@@ -80,31 +80,7 @@ public class ColorSetUpActivity extends AppCompatActivity implements IColorGener
 
             }
         });
-        //if it is the last color, add one to CPUSequence
-//        databaseReference.child("CPUSequence").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot child : dataSnapshot.getChildren()) {
-//                    long index = Long.parseLong(child.getKey());
-//                    long sequenceColorSize = dataSnapshot.getChildrenCount();
-//                    if (index == sequenceColorSize) {
-//                        String newColorIndex = String.valueOf(sequenceColorSize + 1);
-//
-//                        Log.d("ADDEDCOLOR", "color added");
-//                        databaseReference.child("CPUSequence").child(String.valueOf(newColorIndex)).setValue(getNextColor());
-//                    }
-//                }
-//
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//
-//
-//        });
+   
     }
 
     public void onResume() {

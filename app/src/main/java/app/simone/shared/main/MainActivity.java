@@ -9,12 +9,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.crashlytics.android.Crashlytics;
 
 import app.simone.DistributedSimon.Activities.ColorSetUpActivity;
 import app.simone.R;
+import app.simone.shared.firebase.FCMTokenService;
+import app.simone.multiplayer.view.newmatch.FriendsListFragment;
+import app.simone.multiplayer.view.MultiplayerTypeActivity;
+import app.simone.scores.google.GoogleGamesActivity;
 import app.simone.scores.view.ScoreboardActivity;
 import app.simone.settings.view.SettingsActivity;
+import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.VSCpuActivity;
 import app.simone.shared.utils.AudioManager;
@@ -36,11 +42,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         Fabric.with(this, new Crashlytics());
-
-        DataManager.Companion.getInstance().setup(this);
 
 
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
@@ -56,13 +58,13 @@ public class MainActivity extends FullscreenBaseGameActivity {
             }
         });
 
-//        btnMultiplayer.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                openActivity(FacebookLoginActivity.class, R.anim.left_in, R.anim.right_out);
-//            }
-//        });
+        btnMultiplayer.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                openActivity(FriendsListFragment.class, R.anim.left_in, R.anim.right_out);
+            }
+        });
 
         connectionButton.setOnClickListener(new View.OnClickListener() {
 
@@ -79,12 +81,13 @@ public class MainActivity extends FullscreenBaseGameActivity {
 
 
         multiplayerButton = (Button) findViewById(R.id.main_button_multiplayer);
-//        multiplayerButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openActivity(FacebookLoginActivity.class, R.anim.left_in, R.anim.right_out);
-//            }
-//        });
+
+        multiplayerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openActivity(MultiplayerTypeActivity.class, R.anim.slide_down, R.anim.slide_down_existing);
+            }
+        });
 
         FloatingActionButton mainFab = (FloatingActionButton) findViewById(R.id.main_fab);
         TextView simoneTextView = (TextView) findViewById(R.id.main_simone_textview);
@@ -127,6 +130,10 @@ public class MainActivity extends FullscreenBaseGameActivity {
         m.what = Constants.CONNECT;
         m.obj = this;
         googleHandler.sendMessageDelayed(m,100);
+
+        Intent intent = new Intent(this, FCMTokenService.class);
+        startService(intent);
+        FCMTokenService.Companion.updateCurrentToken();
     }
 
 

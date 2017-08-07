@@ -12,8 +12,14 @@ import app.simone.singleplayer.model.SColor;
  */
 public class StartGameVsCPUMsg implements IMessage {
 	private int radiobtnIndex = 0;
+	private boolean isSinglePlay;
 
-	public StartGameVsCPUMsg(){}
+	public StartGameVsCPUMsg(){
+	}
+
+	public StartGameVsCPUMsg(boolean isSinglePlay){
+		this.isSinglePlay = isSinglePlay;
+	}
 
 	public StartGameVsCPUMsg(int radiobtnIndex){
 		this.radiobtnIndex = radiobtnIndex;
@@ -26,6 +32,10 @@ public class StartGameVsCPUMsg implements IMessage {
 
 	public int getnColors(){
 		return radiobtnIndex == 0? Constants.CLASSIC_MODE : Constants.HARD_MODE;
+	}
+
+	public boolean isSinglePlay(){
+		return this.isSinglePlay;
 	}
 
 }

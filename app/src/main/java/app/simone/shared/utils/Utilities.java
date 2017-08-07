@@ -1,5 +1,7 @@
 package app.simone.shared.utils;
 
+import android.app.Activity;
+
 import java.util.concurrent.TimeUnit;
 
 import akka.actor.ActorIdentity;
@@ -30,5 +32,15 @@ public class Utilities {
             e.printStackTrace();
         }
         return ident.getRef();
+    }
+
+
+    public static void displayToast(final String text, final Activity activity) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                android.widget.Toast.makeText(activity, text, android.widget.Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

@@ -10,7 +10,7 @@ import android.provider.Settings;
 import android.support.v7.app.NotificationCompat;
 
 import app.simone.R;
-import app.simone.multiplayer.view.FacebookLoginActivity;
+import app.simone.multiplayer.view.newmatch.FriendsListFragment;
 
 /**
  * Created by Giacomo on 06/07/2017.
@@ -35,7 +35,7 @@ public class PushNotification {
                         .setColor(Color.GREEN)
                         .setContentText(this.name +" vuole giocare con te!");
         // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(myContext, FacebookLoginActivity.class);
+        Intent resultIntent = new Intent(myContext, FriendsListFragment.class);
 
 // The stack builder object will contain an artificial back stack for the
 // started Activity.
@@ -43,7 +43,7 @@ public class PushNotification {
 // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(myContext);
 // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(FacebookLoginActivity.class);
+        stackBuilder.addParentStack(FriendsListFragment.class);
 // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =

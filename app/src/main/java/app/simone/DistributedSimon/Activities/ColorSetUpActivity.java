@@ -26,20 +26,21 @@ public class ColorSetUpActivity extends AppCompatActivity {
     private String playerOwnColor = "";
 
     private DatabaseReference databaseReference;
-    private final String CHILD_PLAYERS = "players";
+    private final String CHILD_PLAYERS = "users";
     private final String NODE_REF_ROOT="matchesTry";
     private final String CHILD_PLAYERSSEQUENCE="PlayersSequence";
     private final String CHILD_CPUSEQUENCE="CPUSequence";
+    private final String CHILD_MATCHID="MATCHID";
 
 
-    private Button buttonColor, buttonInstantPlay;
+    private Button buttonColor;
     private int blinkCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_set_up);
-        databaseReference = FirebaseDatabase.getInstance().getReference("matchesTry");
+        databaseReference = FirebaseDatabase.getInstance().getReference(NODE_REF_ROOT);
         buttonColor = (Button) findViewById(R.id.colorButtonDistributed);
         setColor();
 
@@ -49,7 +50,7 @@ public class ColorSetUpActivity extends AppCompatActivity {
     }
 
     public void sendColor(View view) throws ExecutionException, InterruptedException {
-        databaseReference.child(CHILD_PLAYERSSEQUENCE).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(CHILD_MATCHID).child(CHILD_PLAYERSSEQUENCE).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long count = dataSnapshot.getChildrenCount();
@@ -66,7 +67,7 @@ public class ColorSetUpActivity extends AppCompatActivity {
 
     public void onResume() {
         super.onResume();
-        databaseReference.child(CHILD_CPUSEQUENCE).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(CHILD_MATCHID).child(CHILD_CPUSEQUENCE).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("I'm here in cpu", "ciao");
@@ -100,7 +101,7 @@ public class ColorSetUpActivity extends AppCompatActivity {
 
     private void setColor() {
         Log.d("PROVA", "executing query");
-        databaseReference.child(CHILD_PLAYERS).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child(CHILD_MATCHID).child(CHILD_PLAYERS).addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -113,7 +114,7 @@ public class ColorSetUpActivity extends AppCompatActivity {
                     if (!Boolean.parseBoolean(player_info.get("taken"))) {
                         playerOwnColor = player_info.get("color");
 
-                        databaseReference.child(CHILD_PLAYERS).child(playerID).child("taken").setValue("true");
+                        databaseReference.child(CHILD_MATCHID).child(CHILD_PLAYERS).child(playerID).child("taken").setValue("true");
                         buttonColor.setText(playerID + " " + playerOwnColor);
 
 

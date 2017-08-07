@@ -13,14 +13,12 @@ import com.crashlytics.android.Crashlytics;
 
 import app.simone.DistributedSimon.Activities.ColorSetUpActivity;
 import app.simone.R;
-import app.simone.scores.view.LoginActivity;
 import app.simone.scores.view.ScoreboardActivity;
 import app.simone.settings.view.SettingsActivity;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.VSCpuActivity;
 import app.simone.shared.utils.AudioManager;
 import app.simone.multiplayer.controller.DataManager;
-import app.simone.multiplayer.view.FacebookLoginActivity;
 import app.simone.scores.google.GoogleGamesActivity;
 import io.fabric.sdk.android.Fabric;
 

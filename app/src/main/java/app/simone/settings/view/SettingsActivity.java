@@ -49,24 +49,6 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
             }
         });
 
-
-       /* final SharedPreferences pref = this.getSharedPreferences("PREF", Context.MODE_PRIVATE);
-        boolean value = pref.getBoolean("MUSIC", true);
-        swcMusic.setChecked(value);
-        swcMusic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                pref.edit().putBoolean("MUSIC", b).apply();
-                if(b) {
-                    AudioManager.Companion.getInstance().playSimoneMusic();
-                } else {
-                    AudioManager.Companion.getInstance().stopSimoneMusic();
-                }
-            }
-        });
-
-    */
-
     }
 
     @Override
@@ -81,14 +63,16 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
     }
 
     private void musicOnOff(){
+        TextView musicTxt = (TextView)findViewById(R.id.music_text);
         musicOn=!musicOn;
-
         if(musicOn){
             AudioManager.Companion.getInstance().playSimoneMusic();
+            musicTxt.setText("on");
         }else {
             AudioManager.Companion.getInstance().stopSimoneMusic();
+            musicTxt.setText("off");
         }
-        // we still need to save this value into the sharedPreferences!
+        // we still have to save this value into the sharedPreferences!
     }
 
 }

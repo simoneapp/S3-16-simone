@@ -102,34 +102,34 @@
         app:layout_anchor="@id/settings_top_layout"
         app:layout_anchorGravity="left" />
 
-    <!-- <app.simone.shared.styleable.MainTextView
+     <app.simone.shared.styleable.MainTextView
 
-        android:id="@+id/game_textview_explain"
+        android:id="@+id/music_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20sp"
         android:layout_marginTop="30sp"
         android:alpha="0.8"
-        android:text="@string/classic_explanation"
+        android:text="@string/music_on"
         android:textColor="#FFF"
         android:textSize="32sp"
         app:layout_anchor="@id/settings_bottom_left_layout"
-        app:layout_anchorGravity="center" /> -->
+        app:layout_anchorGravity="center" />
 
-    <!-- <app.simone.shared.styleable.MainTextView
+     <app.simone.shared.styleable.MainTextView
 
-        android:id="@+id/settings_notification_description"
+        android:id="@+id/notification_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20sp"
         android:layout_marginTop="30sp"
         android:alpha="0.8"
         android:textAlignment="center"
-        android:text="@string/hard_explanation"
+        android:text="@string/notification_on"
         android:textColor="#FFF"
         android:textSize="32sp"
         app:layout_anchor="@id/settings_bottom_right_layout"
-        app:layout_anchorGravity="center" /> -->
+        app:layout_anchorGravity="center" />
 
     <app.simone.shared.styleable.SimoneTextView
         android:id="@+id/settings_music_textview"

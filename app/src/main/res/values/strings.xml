@@ -134,5 +134,7 @@
     <!-- Strings related to settings activity -->
     <string name="music">Music</string>
     <string name="notification">Notification</string>
+    <string name="music_on">On</string>
+    <string name="notification_on">On</string>
 
 </resources>

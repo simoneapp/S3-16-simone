@@ -41,6 +41,10 @@
             android:label="VS CPU"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".settings.view.SettingsActivity"
+            android:label="Settings"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".scores.view.ScoreboardActivity"
             android:label="Scoreboard"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -68,7 +72,6 @@
             android:configChanges="orientation|screenSize"
             android:label="Game"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".settings.view.SettingsActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

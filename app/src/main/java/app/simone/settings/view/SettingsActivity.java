@@ -3,7 +3,9 @@ package app.simone.settings.view;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -19,34 +21,36 @@ import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
 import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
 
 import app.simone.R;
+import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.shared.utils.AudioManager;
+import app.simone.shared.utils.Constants;
+import app.simone.singleplayer.view.GameActivity;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends FullscreenBaseGameActivity {
 
-    private Button subscribeButton;
-    private Button publishButton;
-    private Button unscribeButton;
-    private Button saveButton;
-    private Switch swcMusic;
-    private TextView msgView;
-    private EditText editText;
-    private String username;
+    private boolean musicOn=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-
-        subscribeButton = (Button)findViewById(R.id.sButton);
-        publishButton = (Button)findViewById(R.id.pButton);
-        unscribeButton = (Button)findViewById(R.id.unButton);
-        msgView = (TextView) findViewById(R.id.label);
-        editText = (EditText)findViewById(R.id.username);
-        saveButton = (Button) findViewById(R.id.saveButton);
-        swcMusic = (Switch) findViewById(R.id.swcMusic);
 
 
-        final SharedPreferences pref = this.getSharedPreferences("PREF", Context.MODE_PRIVATE);
+        FloatingActionButton musicButton = (FloatingActionButton) this.findViewById(R.id.settings_music);
+        musicButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+               musicOnOff();
+            }
+        });
+
+        FloatingActionButton notificationButton = (FloatingActionButton) this.findViewById(R.id.settings_notification);
+        notificationButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.d("BUTTON","push");
+            }
+        });
+
+
+       /* final SharedPreferences pref = this.getSharedPreferences("PREF", Context.MODE_PRIVATE);
         boolean value = pref.getBoolean("MUSIC", true);
         swcMusic.setChecked(value);
         swcMusic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -61,8 +65,30 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+    */
 
+    }
 
+    @Override
+    protected void setSubclassContentView() {
+        setContentView(R.layout.activity_settings);
+        mContentView = findViewById(R.id.settings_fullscreen_content);
+    }
+
+    @Override
+    protected void backTransition() {
+
+    }
+
+    private void musicOnOff(){
+        musicOn=!musicOn;
+
+        if(musicOn){
+            AudioManager.Companion.getInstance().playSimoneMusic();
+        }else {
+            AudioManager.Companion.getInstance().stopSimoneMusic();
+        }
+        // we still need to save this value into the sharedPreferences!
     }
 
 }

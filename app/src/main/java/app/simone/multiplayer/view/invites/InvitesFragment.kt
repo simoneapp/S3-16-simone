@@ -81,8 +81,8 @@ class InvitesFragment : Fragment() {
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
-                requestsUsers?.clear()
-                requestsUsers?.addAll(myStrategy.getRequestsUsers(dataSnapshot))
+                requestsUsers.clear()
+                requestsUsers.addAll(myStrategy.getRequestsUsers(dataSnapshot))
                 //Updating GUI
                 updateRequests()
             }

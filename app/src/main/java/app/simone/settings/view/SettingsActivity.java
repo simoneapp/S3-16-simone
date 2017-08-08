@@ -59,7 +59,7 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
 
     @Override
     protected void backTransition() {
-
+        overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
     private void musicOnOff(){

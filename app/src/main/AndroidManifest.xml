@@ -80,6 +80,12 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity
+            android:name=".DistributedSimon.Activities.ColorSetUpActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".multiplayer.view.WaitingRoomActivity" />
         <activity
             android:name=".multiplayer.view.MultiplayerTypeActivity"
@@ -88,7 +94,6 @@
         <activity
             android:name=".multiplayer.view.pager.MultiplayerPagerActivity"
             android:theme="@style/AppTheme.ViewPagerTheme" />
-        <activity android:name=".DistributedSimon.Activities.ColorSetUpActivity" />
 
         <service
             android:name=".shared.firebase.FCMTokenService"

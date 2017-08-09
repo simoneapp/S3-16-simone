@@ -3,7 +3,7 @@ package app.simone.multiplayer.view.newmatch
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import app.simone.multiplayer.model.FacebookUser
-import app.simone.multiplayer.view.WaitingRoomActivity
+import app.simone.multiplayer.view.nearby.WaitingRoomActivity
 import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
 import app.simone.shared.utils.Utilities
 import app.simone.singleplayer.view.GameActivity

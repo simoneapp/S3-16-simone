@@ -9,7 +9,7 @@ import android.media.RingtoneManager
 import android.support.v7.app.NotificationCompat
 import android.util.Log
 import app.simone.R
-import app.simone.multiplayer.view.WaitingRoomActivity
+import app.simone.multiplayer.view.nearby.WaitingRoomActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 

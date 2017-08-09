@@ -140,7 +140,6 @@ public class ColorSetUpActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String childrenCount = String.valueOf(dataSnapshot.getChildrenCount());
-                        int newIndex = 0;
                         for (DataSnapshot child : dataSnapshot.getChildren()) {
                             String colorSequence = child.getValue(String.class);
                             String index = child.getKey();
@@ -154,7 +153,7 @@ public class ColorSetUpActivity extends AppCompatActivity {
                                     buttonColor.setText(playerOwnColor + " " + blinkCount + " your turn!");
 
                                 } else {
-                                    newIndex = Integer.parseInt(index) + 1;
+                                    int newIndex = Integer.parseInt(index) + 1;
                                     buttonColor.setText(playerOwnColor + " " + blinkCount);
                                     databaseReference.child(CHILD_MATCHID).child(CHILD_INDEX).setValue(String.valueOf(newIndex));
 

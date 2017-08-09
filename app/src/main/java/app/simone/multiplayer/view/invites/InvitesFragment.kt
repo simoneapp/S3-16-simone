@@ -52,7 +52,7 @@ class InvitesFragment : Fragment() {
     }
 
     fun updateRequests() {
-        this.activity.runOnUiThread {
+        this.activity?.runOnUiThread {
             if (requestsUsers.isNotEmpty() && FacebookManagerActor.Companion.isLoggedIn()) {
                 requestsUsers = app.simone.multiplayer.controller.DataManager.Companion.instance.filterRequests(requestsUsers, com.facebook.Profile.getCurrentProfile().id)
                 requestsAdapter?.clear()

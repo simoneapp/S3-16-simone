@@ -4,21 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.pubnub.api.PubNub;
-import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-
-import app.simone.multiplayer.controller.PubnubController;
 import app.simone.R;
 import app.simone.shared.utils.AudioManager;
 
@@ -30,7 +21,6 @@ public class SettingsActivity extends AppCompatActivity {
     private Button saveButton;
     private Switch swcMusic;
     private TextView msgView;
-    private PubnubController myPub;
     private EditText editText;
     private String username;
 
@@ -46,9 +36,9 @@ public class SettingsActivity extends AppCompatActivity {
         editText = (EditText)findViewById(R.id.username);
         saveButton = (Button) findViewById(R.id.saveButton);
         swcMusic = (Switch) findViewById(R.id.swcMusic);
-
+/*
         myPub = new PubnubController("myChannel");
-
+*/
         final SharedPreferences pref = this.getSharedPreferences("PREF", Context.MODE_PRIVATE);
         boolean value = pref.getBoolean("MUSIC", true);
         swcMusic.setChecked(value);
@@ -63,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
-
+/*
         subscribeButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -127,7 +117,7 @@ public class SettingsActivity extends AppCompatActivity {
                 System.out.println("editText saved");
                 username=String.valueOf(editText.getText());
             }
-        });
+        });*/
     }
 
 }

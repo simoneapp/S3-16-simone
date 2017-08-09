@@ -28,12 +28,18 @@ import app.simone.singleplayer.view.GameActivity;
 
 public class SettingsActivity extends FullscreenBaseGameActivity {
 
-    private boolean musicOn=true;
+    private boolean musicOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+       try{
+          musicOn=loadPreferences();
+       }catch (Exception e){
+           musicOn=true;
+       }
+        setText(musicOn);
 
         FloatingActionButton musicButton = (FloatingActionButton) this.findViewById(R.id.settings_music);
         musicButton.setOnClickListener(new View.OnClickListener() {
@@ -63,16 +69,35 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
     }
 
     private void musicOnOff(){
-        TextView musicTxt = (TextView)findViewById(R.id.music_text);
+
         musicOn=!musicOn;
         if(musicOn){
             AudioManager.Companion.getInstance().playSimoneMusic();
-            musicTxt.setText("on");
         }else {
             AudioManager.Companion.getInstance().stopSimoneMusic();
+        }
+        setText(musicOn);
+        savePreferences();
+    }
+
+    private void savePreferences(){
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putBoolean("music", musicOn);
+        editor.apply();
+    }
+
+    private boolean loadPreferences(){
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        return prefs.getBoolean("music",true);
+    }
+
+    private void setText(boolean onOff){
+        TextView musicTxt = (TextView)findViewById(R.id.music_text);
+        if(onOff){
+            musicTxt.setText("on");
+        }else {
             musicTxt.setText("off");
         }
-        // we still have to save this value into the sharedPreferences!
     }
 
 }

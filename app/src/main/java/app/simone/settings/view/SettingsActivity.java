@@ -1,30 +1,15 @@
 package app.simone.settings.view;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.pubnub.api.PubNub;
-import com.pubnub.api.callbacks.SubscribeCallback;
-import com.pubnub.api.models.consumer.PNStatus;
-import com.pubnub.api.models.consumer.pubsub.PNMessageResult;
-import com.pubnub.api.models.consumer.pubsub.PNPresenceEventResult;
-
 import app.simone.R;
 import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.shared.utils.AudioManager;
-import app.simone.shared.utils.Constants;
-import app.simone.singleplayer.view.GameActivity;
+
 
 public class SettingsActivity extends FullscreenBaseGameActivity {
 

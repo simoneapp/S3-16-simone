@@ -3,6 +3,7 @@ package app.simone.multiplayer.view
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import app.simone.DistributedSimon.Activities.ColorSetUpActivity
 import app.simone.R
 import app.simone.multiplayer.model.MultiplayerType
 import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
@@ -25,6 +26,7 @@ class MultiplayerTypeActivity : FullscreenBaseGameActivity() {
         val btnInstant = findViewById(R.id.multiplayer_fab_instant) as FloatingActionButton
 
         btnInstant.setOnClickListener({
+
             this.call(MultiplayerType.INSTANT)
         })
 

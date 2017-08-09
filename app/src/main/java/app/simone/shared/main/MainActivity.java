@@ -23,6 +23,9 @@ import app.simone.settings.view.SettingsActivity;
 import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.VSCpuActivity;
+import app.simone.shared.utils.AudioManager;
+import app.simone.multiplayer.controller.DataManager;
+import app.simone.scores.google.GoogleGamesActivity;
 import io.fabric.sdk.android.Fabric;
 
 /**

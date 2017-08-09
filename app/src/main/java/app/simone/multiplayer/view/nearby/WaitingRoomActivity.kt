@@ -1,18 +1,24 @@
-package app.simone.multiplayer.view
+package app.simone.multiplayer.view.nearby
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ListView
 import android.widget.TextView
+import app.simone.DistributedSimon.Activities.ColorSetUpActivity
 import app.simone.R
 import app.simone.multiplayer.controller.NearbyGameController
+import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
 
 class WaitingRoomActivity : AppCompatActivity() {
 
-    private var listView : ListView? = null
     private var txvMatchID : TextView? = null
     private val nearbyController = NearbyGameController()
     private var currentMatchID = ""
+
+    var listView : ListView? = null
+    var users : List<Map<String,String>>? = null
+    private val controller = NearbyGameController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,14 +28,14 @@ class WaitingRoomActivity : AppCompatActivity() {
         txvMatchID = findViewById(R.id.text_match_id) as TextView
 
         if(intent.hasExtra("users")) {
-            var players = intent.getSerializableExtra("users") as List<Map<String,String>>?
+            users = intent.getSerializableExtra("users") as List<Map<String,String>>
 
-            if(players != null) {
+            if(users != null) {
 
                 val playerIDs = ArrayList<String>()
 
-                for(player in players) {
-                    val id = player.get("id")
+                users?.forEach { player ->
+                    val id = player["id"]
                     if(id != null){
                         playerIDs.add(id)
                     }
@@ -44,6 +50,11 @@ class WaitingRoomActivity : AppCompatActivity() {
 
         txvMatchID?.text = currentMatchID
 
+        controller.getAndListenForNewPlayers(currentMatchID, this, users)
+
+        val intent = Intent(applicationContext, ColorSetUpActivity::class.java)
+        startActivity(intent)
     }
+
 
 }

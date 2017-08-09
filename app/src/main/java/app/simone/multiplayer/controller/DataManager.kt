@@ -14,7 +14,7 @@ import com.google.firebase.database.FirebaseDatabase
 class DataManager private constructor() {
 
     var context: Context? = null
-    var database = FirebaseDatabase.getInstance().getReference("multiplayer")
+    val database = FirebaseDatabase.getInstance().getReference("multiplayer")!!
 
     private object Holder {
         val INSTANCE = DataManager()
@@ -32,7 +32,6 @@ class DataManager private constructor() {
     }
 
     fun filterRequests(matches: ArrayList<OnlineMatch>,id: String):ArrayList<OnlineMatch>{
-
         var filteredArray: ArrayList<OnlineMatch> = arrayListOf()
 
         repeat(matches.size){ i->

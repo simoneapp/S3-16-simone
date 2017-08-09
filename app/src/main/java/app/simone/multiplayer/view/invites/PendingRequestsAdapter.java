@@ -70,18 +70,12 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
         }
     }
 
-    private int lastPosition = -1;
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
+
         this.dataModel = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
-        final View result;
-
-        if (convertView == null) {
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -92,24 +86,13 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
             viewHolder.scoreP2 = (TextView) convertView.findViewById(R.id.scoreP2);
             viewHolder.playButton = (Button) convertView.findViewById(R.id.item_info);
 
-            result=convertView;
-
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-            result=convertView;
-        }
-
-        lastPosition = position;
         updateCellText(viewHolder,position);
 
+        boolean myBool = disablePlayButton(dataModel, viewHolder);
 
-        boolean myBool = disablePlayButton(dataModel);
-        //Toast.makeText(getContext(), ""+myBool, Toast.LENGTH_LONG).show();
-
-       /*if(disablePlayButton(dataModel)){
+       if(myBool){
             viewHolder.playButton.setEnabled(false);
-        }*/
+        }
 
         return convertView;
     }
@@ -127,20 +110,19 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
 
     }
 
-    private boolean disablePlayButton(OnlineMatch dataModel) {
+    private boolean disablePlayButton(OnlineMatch dataModel,ViewHolder viewHolder) {
+
 
         String playerID = Profile.getCurrentProfile().getId();
-        if((dataModel.getFirstplayer().getScore()!=null) && (dataModel.getFirstplayer().getId()==playerID)) {
-            Log.d("PB", "First condition");
-            return true;
-        }
-        else if((dataModel.getFirstplayer().getScore()!=null) && (dataModel.getSecondplayer().getScore()!=null)) {
-            Log.d("PB", "Second condition");
-            return true;
-        }else{
-            Log.d("PB", "No condition");
-            return false;
-        }
 
+       if(dataModel.getFirstplayer().getId().equals(playerID)){
+           if(viewHolder.scoreP1.getText().equals(""))
+               return false;
+       }
+       if(dataModel.getSecondplayer().getId().equals(playerID)) {
+           if (viewHolder.scoreP2.getText().equals(""))
+               return false;
+       }
+       return true;
     }
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:repeatMode="reverse"
+    android:duration="300"
+    android:fromDegrees="-90"
+    android:interpolator="@android:anim/decelerate_interpolator"
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:repeatCount="0"
+    android:toDegrees="360" />

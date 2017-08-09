@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:launchMode="singleTask"
+    tools:context="app.simone.singleplayer.view.GameActivity">
+
+
+    <FrameLayout
+        android:id="@+id/gps_popup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/game_fullscreen_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:id="@+id/game_top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:baselineAligned="false"
+                android:weightSum="2">
+
+                <FrameLayout
+                    android:id="@+id/game_top_left_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/GREEN"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+                        android:background="@color/myGreen"
+                        android:textColor="@color/myMainTextColor" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/game_top_right_frame">
+
+                    <Button
+                        android:id="@+id/RED"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/myRed"
+                        android:textColor="@color/myMainTextColor" />
+                </FrameLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/game_bottom_left_frame">
+
+                    <Button
+                        android:id="@+id/YELLOW"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/myYellow"
+                        android:textColor="@color/myMainTextColor" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/game_bottom_right_frame">
+
+                    <Button
+                        android:id="@+id/BLUE"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/myBlue"
+                        android:textColor="@color/myMainTextColor" />
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/game_fab"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginEnd="20dp"
+        app:backgroundTint="@color/myLightGray"
+        app:layout_anchor="@id/game_top_layout"
+        app:layout_anchorGravity="bottom|center" />
+
+    <app.simone.shared.styleable.SimoneTextView
+        android:id="@+id/game_simone_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:text="@string/tap_to_begin"
+        android:textAlignment="center"
+        android:textColor="@color/myDarkGray"
+        android:textSize="64sp"
+        app:layout_anchor="@id/game_top_layout"
+        app:layout_anchorGravity="bottom|center" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/game_score_fab"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="20dp"
+        app:backgroundTint="@color/myDarkGray"
+        app:layout_anchor="@id/game_fab"
+        android:visibility="gone"
+        app:layout_anchorGravity="top|left"
+        android:layout_margin="20sp"/>
+
+    <app.simone.shared.styleable.SimoneTextView
+        android:id="@+id/game_score_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:text="88"
+        android:textAlignment="center"
+        android:textColor="@color/myLightGray"
+        android:textSize="40sp"
+        android:visibility="gone"
+        app:layout_anchor="@id/game_score_fab"
+        app:layout_anchorGravity="center" />
+</android.support.design.widget.CoordinatorLayout>

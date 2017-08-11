@@ -25,11 +25,8 @@ class WaitingRoomActivity : AppCompatActivity() {
         listView = findViewById(R.id.list_waiting_room) as ListView
         txvMatchID = findViewById(R.id.text_match_id) as TextView
 
-
         if(intent.hasExtra("users")) {
-            users = intent.getSerializableExtra("users") as List<Map<String,String>>
-
-            if(users != null) {
+            val users = intent.getSerializableExtra("users") as List<Map<String,String>>
 
                 val profile = Profile.getCurrentProfile()
                 val pid = profile.id
@@ -43,16 +40,16 @@ class WaitingRoomActivity : AppCompatActivity() {
                     }
                 }
 
-                currentMatchID = nearbyController.createMatch(playerIDs, pid)
-            }
-        } else if (intent.hasExtra("matchID")) {
+            currentMatchID = nearbyController.createMatch(playerIDs, pid)
 
+        } else if (intent.hasExtra("matchID")) {
             currentMatchID = intent.getStringExtra("matchID")
+            nearbyController.acceptInvite(Profile.getCurrentProfile().id, currentMatchID)
         }
 
         txvMatchID?.text = currentMatchID
 
-        controller.getAndListenForNewPlayers(currentMatchID, this, users)
+        controller.getAndListenForNewPlayers(currentMatchID, this)
     }
 
 

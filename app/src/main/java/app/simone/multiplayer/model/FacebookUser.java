@@ -64,7 +64,6 @@ public class FacebookUser {
 
 
     public Map<String,String> toDictionary() {
-
         Map<String,String> dict = new HashMap<>();
         dict.put(FacebookUser.kID, id);
         dict.put(FacebookUser.kNAME, name);

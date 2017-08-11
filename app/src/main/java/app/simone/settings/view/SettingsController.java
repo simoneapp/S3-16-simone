@@ -9,12 +9,12 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Giacomo on 11/08/2017.
  */
 
-public class SettingsController {
+class SettingsController {
 
     private boolean musicOn;
     private Context context;
 
-    public SettingsController(Context context) {
+    SettingsController(Context context) {
 
         this.context=context;
 
@@ -25,15 +25,15 @@ public class SettingsController {
         }
     }
 
-    public boolean isMusicOn() {
+    boolean isMusicOn() {
         return musicOn;
     }
 
-    public void setMusicOn(boolean musicOn) {
+    private void setMusicOn(boolean musicOn) {
         this.musicOn = musicOn;
     }
 
-    public void musicOnOff(){
+    void musicOnOff(){
 
         musicOn=!musicOn;
         if(musicOn){
@@ -44,13 +44,13 @@ public class SettingsController {
         savePreferences();
     }
 
-    public void savePreferences(){
+    private void savePreferences(){
         SharedPreferences.Editor editor = context.getSharedPreferences("Settings", MODE_PRIVATE).edit();
         editor.putBoolean("music", musicOn);
         editor.apply();
     }
 
-    public boolean loadPreferences(){
+    private boolean loadPreferences(){
         SharedPreferences prefs = context.getSharedPreferences("Settings", MODE_PRIVATE);
         return prefs.getBoolean("music",true);
     }

@@ -74,8 +74,7 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
     public View getView(int position, View convertView, ViewGroup parent) {
 
         this.dataModel = getItem(position);
-        ViewHolder viewHolder; // view lookup cache stored in tag
-
+        ViewHolder viewHolder;
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -111,7 +110,6 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
     }
 
     private boolean disablePlayButton(OnlineMatch dataModel,ViewHolder viewHolder) {
-
 
         String playerID = Profile.getCurrentProfile().getId();
 

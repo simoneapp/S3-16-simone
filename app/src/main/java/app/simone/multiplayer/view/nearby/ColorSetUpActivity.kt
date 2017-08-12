@@ -8,15 +8,14 @@ import android.view.View
 import android.widget.Button
 import app.simone.R
 import app.simone.singleplayer.model.SColor
+import com.facebook.Profile
 import com.google.firebase.database.*
-import java.util.*
 import java.util.concurrent.ExecutionException
 
 class ColorSetUpActivity : AppCompatActivity() {
 
-
     private var playerID = ""
-    private val matchID = ""
+    private var matchID = ""
     private var playerOwnColor: SColor? = null
     private val sequenceIndex = ""
     private var db: DatabaseReference? = null
@@ -25,7 +24,6 @@ class ColorSetUpActivity : AppCompatActivity() {
     private val CHILD_PLAYERSSEQUENCE = "playersSequence"
     private val CHILD_CPUSEQUENCE = "cpuSequence"
     private val CHILD_INDEX = "index"
-
 
     private var buttonColor: Button? = null
     private var blinkCount = 0
@@ -36,21 +34,21 @@ class ColorSetUpActivity : AppCompatActivity() {
         db = FirebaseDatabase.getInstance().getReference(NODE_REF_ROOT)
         buttonColor = findViewById(R.id.beautifulButton) as Button
 
-        playerID = intent.getStringExtra("match")
+        matchID = intent.getStringExtra("match")
+        playerID = Profile.getCurrentProfile().id
+
         setColor()
     }
 
     @Throws(ExecutionException::class, InterruptedException::class)
     fun sendColor(view: View) {
-        db!!.child(matchID).child(CHILD_PLAYERSSEQUENCE).addListenerForSingleValueEvent(object : ValueEventListener {
+        db?.child(matchID)?.child(CHILD_PLAYERSSEQUENCE)?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val count = dataSnapshot.childrenCount
                 dataSnapshot.ref.child((count + 1).toString()).setValue(playerOwnColor)
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-
-            }
+            override fun onCancelled(databaseError: DatabaseError) { }
         })
 
     }
@@ -58,32 +56,39 @@ class ColorSetUpActivity : AppCompatActivity() {
     public override fun onResume() {
         super.onResume()
         blink()
-
     }
-
 
     private fun setColor() {
         Log.d("PROVA", "executing query")
-        db!!.child(matchID).child(CHILD_PLAYERS)?.addListenerForSingleValueEvent(object : ValueEventListener {
+        db?.child(matchID)?.child(CHILD_PLAYERS)?.child(playerID)?.addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                val child = dataSnapshot.child("color")
+
+                if(child.value != null) {
+                    val color = child.value.toString()
+                    val sColor = SColor.valueOf(color)
+                    Log.d("COLORE", color + " " + sColor.toString())
+                    buttonColor?.background = resources?.getDrawable(sColor.colorId)
+                }
+
+                /*
                 for (child in dataSnapshot.children) {
                     val playerInfo = child.value as HashMap<String, Any>?
                     Log.d("PROVA", playerInfo?.toString())
-                    playerID = child.key
+                    //playerID = child.key
                     Log.d("PLAYERID", playerID)
 
                     if (playerInfo != null && !(playerInfo["taken"] as Boolean)) {
                         playerOwnColor = SColor.valueOf(playerInfo["color"] as String)
                         render()
-                        db!!.child(matchID).child(CHILD_PLAYERS).child(playerID).child("taken").setValue(true)
-                        buttonColor!!.text = playerID + " " + playerOwnColor
+                        db?.child(matchID)?.child(CHILD_PLAYERS)?.child(playerID)?.child("taken")?.setValue(true)
+                        buttonColor?.text = playerID + " " + playerOwnColor
                         Log.d("CHILDSNAPSHOT", "changing value")
                         break
                     }
-
-
-                }
+                }*/
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -93,16 +98,16 @@ class ColorSetUpActivity : AppCompatActivity() {
     }
 
     private fun render() {
-        buttonColor!!.setBackgroundColor(playerOwnColor!!.colorId)
+        buttonColor?.setBackgroundColor(playerOwnColor!!.colorId)
     }
 
     private fun blink() {
-        val cpuSequenceRef = db!!.child(matchID).child(CHILD_CPUSEQUENCE).ref
-        db!!.child(matchID).child(CHILD_INDEX).addValueEventListener(object : ValueEventListener {
+        val cpuSequenceRef = db?.child(matchID)?.child(CHILD_CPUSEQUENCE)?.ref
+        db?.child(matchID)?.child(CHILD_INDEX)?.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 //Log.d("PROVAINDEX_BLINK", dataSnapshot.getValue(String.class));
                 val cpuSequenceIndex = dataSnapshot.getValue(String::class.java)
-                cpuSequenceRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                cpuSequenceRef?.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val childrenCount = dataSnapshot.childrenCount.toString()
                         for (child in dataSnapshot.children) {
@@ -114,35 +119,23 @@ class ColorSetUpActivity : AppCompatActivity() {
                                 ++blinkCount
                                 //Log.d("BLINKING", String.valueOf(blinkCount));
                                 if (index == childrenCount) {
-
-                                    buttonColor!!.text = playerOwnColor.toString() + " " + blinkCount + " your turn!"
-
+                                    buttonColor?.text = playerOwnColor.toString() + " " + blinkCount + " your turn!"
                                 } else {
                                     val newIndex = Integer.parseInt(index) + 1
-                                    buttonColor!!.text = playerOwnColor.toString() + " " + blinkCount
-                                    db!!.child(matchID).child(CHILD_INDEX).setValue(newIndex.toString())
-
+                                    buttonColor?.text = playerOwnColor.toString() + " " + blinkCount
+                                    db?.child(matchID)?.child(CHILD_INDEX)?.setValue(newIndex.toString())
                                 }
-
-
                             } else {
-                                buttonColor!!.text = playerOwnColor.toString() + " " + blinkCount
-
+                                buttonColor?.text = playerOwnColor.toString() + " " + blinkCount
                             }
-
                         }
-
                     }
 
-                    override fun onCancelled(databaseError: DatabaseError) {
-
-                    }
+                    override fun onCancelled(databaseError: DatabaseError) { }
                 })
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-
-            }
+            override fun onCancelled(databaseError: DatabaseError) { }
         })
 
     }

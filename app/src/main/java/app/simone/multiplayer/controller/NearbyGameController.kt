@@ -63,9 +63,10 @@ class NearbyGameController {
 
     fun getAndListenForNewPlayers(match: String, activity: WaitingRoomActivity) {
 
-        val ref = db.getReference(MATCHES_REF).child(match).child(USERS_REF)
+        val ref = db.getReference(MATCHES_REF).child(match)
 
-        val adapter = object : FirebaseListAdapter<MatchUserInfo>(activity, MatchUserInfo::class.java, R.layout.cell_friends, ref) {
+        val adapter = object : FirebaseListAdapter<MatchUserInfo>(activity, MatchUserInfo::class.java,
+                R.layout.cell_friends, ref.child(USERS_REF)) {
             override fun populateView(v: View?, model: MatchUserInfo?, position: Int) {
                 val itemRef = getRef(position)
                 val key = itemRef.key
@@ -87,11 +88,21 @@ class NearbyGameController {
             }
         }
 
+        var activityStarted = false
+
         ref.addValueEventListener(object: ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) { }
 
             override fun onDataChange(p0: DataSnapshot?) {
-                checkMatch(p0, activity, match)
+                val started = p0?.child("started")
+                val users = p0?.child(USERS_REF)
+                if(users?.children?.filter { it.child("taken").value == false }?.count() == 0
+                        && !activityStarted){
+                    val intent = Intent(activity, ColorSetUpActivity::class.java)
+                    intent.putExtra("match", match)
+                    activity.startActivity(intent)
+                    activityStarted = true
+                }
             }
 
         })
@@ -100,13 +111,9 @@ class NearbyGameController {
         activity.listView?.adapter = adapter
     }
 
-    fun checkMatch(p0: DataSnapshot?, activity: WaitingRoomActivity, match: String) {
-        if(p0?.children?.filter { it.child("taken").value == false }?.count() == 0){
-            val intent = Intent(activity, ColorSetUpActivity::class.java)
-            intent.putExtra("match", match)
-            activity.startActivity(intent)
-        }
-    }
+    /*fun checkMatch(p0: DataSnapshot?, activity: WaitingRoomActivity, match: String) {
+
+    }*/
 
 
     fun setSelected(convertView: View?, isSelected: Boolean, activity: Activity) {

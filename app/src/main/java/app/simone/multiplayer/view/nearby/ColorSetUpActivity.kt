@@ -16,7 +16,7 @@ class ColorSetUpActivity : AppCompatActivity() {
 
     private var playerID = ""
     private var matchID = ""
-    private var playerOwnColor: SColor? = null
+    private var playerColor: SColor? = null
     private val sequenceIndex = ""
     private var db: DatabaseReference? = null
     private val CHILD_PLAYERS = "users"
@@ -45,7 +45,7 @@ class ColorSetUpActivity : AppCompatActivity() {
         db?.child(matchID)?.child(CHILD_PLAYERSSEQUENCE)?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val count = dataSnapshot.childrenCount
-                dataSnapshot.ref.child((count + 1).toString()).setValue(playerOwnColor)
+                dataSnapshot.ref.child((count + 1).toString()).setValue(playerColor)
             }
 
             override fun onCancelled(databaseError: DatabaseError) { }
@@ -68,9 +68,8 @@ class ColorSetUpActivity : AppCompatActivity() {
 
                 if(child.value != null) {
                     val color = child.value.toString()
-                    val sColor = SColor.valueOf(color)
-                    Log.d("COLORE", color + " " + sColor.toString())
-                    buttonColor?.background = resources?.getDrawable(sColor.colorId)
+                    playerColor = SColor.valueOf(color)
+                    render()
                 }
 
                 /*
@@ -98,7 +97,9 @@ class ColorSetUpActivity : AppCompatActivity() {
     }
 
     private fun render() {
-        buttonColor?.setBackgroundColor(playerOwnColor!!.colorId)
+        if(playerColor != null) {
+            buttonColor?.background = resources?.getDrawable(playerColor!!.colorId)
+        }
     }
 
     private fun blink() {
@@ -115,18 +116,18 @@ class ColorSetUpActivity : AppCompatActivity() {
                             val index = child.key
                             //Log.d("CHILDLOOP", colorSequence + " " + index);
 
-                            if (colorSequence != null && playerOwnColor == SColor.valueOf(colorSequence) && cpuSequenceIndex == index) {
+                            if (colorSequence != null && playerColor == SColor.valueOf(colorSequence) && cpuSequenceIndex == index) {
                                 ++blinkCount
                                 //Log.d("BLINKING", String.valueOf(blinkCount));
                                 if (index == childrenCount) {
-                                    buttonColor?.text = playerOwnColor.toString() + " " + blinkCount + " your turn!"
+                                    buttonColor?.text = playerColor.toString() + " " + blinkCount + " your turn!"
                                 } else {
                                     val newIndex = Integer.parseInt(index) + 1
-                                    buttonColor?.text = playerOwnColor.toString() + " " + blinkCount
+                                    buttonColor?.text = playerColor.toString() + " " + blinkCount
                                     db?.child(matchID)?.child(CHILD_INDEX)?.setValue(newIndex.toString())
                                 }
                             } else {
-                                buttonColor?.text = playerOwnColor.toString() + " " + blinkCount
+                                buttonColor?.text = playerColor.toString() + " " + blinkCount
                             }
                         }
                     }

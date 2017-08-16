@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.realm.Realm;
-import io.realm.RealmObject;
-
 /**
  * Created by nicola on 11/07/2017.
  */
@@ -67,11 +64,11 @@ public class FacebookUser {
 
 
     public Map<String,String> toDictionary() {
-
         Map<String,String> dict = new HashMap<>();
         dict.put(FacebookUser.kID, id);
         dict.put(FacebookUser.kNAME, name);
         dict.put(FacebookUser.kSCORE, score);
+        dict.put(FacebookUser.kPICTURE, picture.getUrl());
         return dict;
     }
 

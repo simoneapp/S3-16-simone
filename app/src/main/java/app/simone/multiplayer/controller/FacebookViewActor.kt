@@ -2,6 +2,7 @@ package app.simone.multiplayer.controller
 
 import android.util.Log
 import app.simone.multiplayer.messages.*
+import app.simone.multiplayer.model.FacebookUser
 import app.simone.shared.application.App
 import app.simone.shared.firebase.FCMTokenService
 import app.simone.shared.messages.IMessage
@@ -107,6 +108,7 @@ class FacebookViewActor : akka.actor.UntypedActor() {
             override fun onSuccess(loginResult: com.facebook.login.LoginResult) {
                 actor.tell(FbRequestFriendsMsg(msg.activity), self)
                 msg.activity.setFacebookViewVisible(false)
+                NearbyGameController().updateUserData()
                 FCMTokenService.updateCurrentToken()
             }
 

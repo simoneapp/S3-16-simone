@@ -34,7 +34,7 @@ class FCMNotificationService : FirebaseMessagingService() {
         val notification = remoteMessage.notification
         val intent = Intent(this, WaitingRoomActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.putExtra("match", remoteMessage.data["match"])
+        intent.putExtra("matchID", remoteMessage.data["match"])
         intent.putExtra("recipient", remoteMessage.data["recipient"])
         val pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT)

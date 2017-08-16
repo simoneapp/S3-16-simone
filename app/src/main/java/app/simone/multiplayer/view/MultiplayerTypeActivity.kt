@@ -37,8 +37,7 @@ class MultiplayerTypeActivity : FullscreenBaseGameActivity() {
     }
 
     fun call(type : MultiplayerType) {
-        val intent = Intent(applicationContext, ColorSetUpActivity
-        ::class.java)
+        val intent = Intent(applicationContext, MultiplayerPagerActivity::class.java)
         intent.putExtra("source", type.name)
         startActivity(intent)
     }

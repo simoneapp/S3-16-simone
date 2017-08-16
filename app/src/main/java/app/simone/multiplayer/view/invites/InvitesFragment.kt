@@ -10,7 +10,11 @@ import android.widget.ListView
 import app.simone.multiplayer.controller.DataManager
 import app.simone.multiplayer.controller.FacebookManagerActor
 import app.simone.multiplayer.controller.KeysHandler
+import app.simone.multiplayer.model.OnlineMatch
 import com.facebook.Profile
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
 class InvitesFragment : Fragment() {
 
@@ -18,7 +22,8 @@ class InvitesFragment : Fragment() {
 
     var listViewRequests : ListView? = null
     var requestsAdapter : PendingRequestsAdapter? = null
-    var requestsUsers = ArrayList<app.simone.multiplayer.model.OnlineMatch>()
+    var requestsUsers = ArrayList<OnlineMatch>()
+    var myStrategy = StrategyImpl()
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -52,13 +57,15 @@ class InvitesFragment : Fragment() {
     }
 
     fun updateRequests() {
-        this.activity?.runOnUiThread {
+        if (this.activity != null) {
+        this.activity.runOnUiThread {
             if (requestsUsers.isNotEmpty() && FacebookManagerActor.Companion.isLoggedIn()) {
                 requestsUsers = app.simone.multiplayer.controller.DataManager.Companion.instance.filterRequests(requestsUsers, com.facebook.Profile.getCurrentProfile().id)
                 requestsAdapter?.clear()
                 requestsAdapter?.addAll(requestsUsers)
             }
         }
+    }
     }
 
     override fun onResume() {
@@ -71,33 +78,15 @@ class InvitesFragment : Fragment() {
 
     fun listenForChanges() {
 
-        val postListener = object : com.google.firebase.database.ValueEventListener {
-            override fun onDataChange(dataSnapshot: com.google.firebase.database.DataSnapshot) {
+        val postListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
                 // Get Post object and use the values to update the UI
-                requestsUsers?.clear()
-                val match = dataSnapshot.children
-                val keysArray = KeysHandler()
-                if (match != null) {
-
-                    for (data in match) {
-                        keysArray.addToList(data.key)
-                    }
-                    if (keysArray.list.size > 0) {
-                        repeat(keysArray.list.size) { i ->
-                            val onlineMatch = dataSnapshot.child(keysArray.getElement(i)).getValue(app.simone.multiplayer.model.OnlineMatch::class.java)!!
-                            onlineMatch.key = keysArray.list[i]
-                            requestsUsers.add(onlineMatch)
-                        }
-                    }
-                }
-
+                requestsUsers.clear()
+                requestsUsers.addAll(myStrategy.getRequestsUsers(dataSnapshot))
                 //Updating GUI
                 updateRequests()
-
             }
-
-
-            override fun onCancelled(databaseError: com.google.firebase.database.DatabaseError) {
+            override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
                 //displayToast("Error while retrieving data from DB")
                 // ...

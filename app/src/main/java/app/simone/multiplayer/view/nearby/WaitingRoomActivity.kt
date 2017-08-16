@@ -1,11 +1,14 @@
 package app.simone.multiplayer.view.nearby
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ListView
 import android.widget.TextView
+import app.simone.DistributedSimon.Activities.ColorSetUpActivity
 import app.simone.R
 import app.simone.multiplayer.controller.NearbyGameController
+import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
 
 class WaitingRoomActivity : AppCompatActivity() {
 
@@ -48,6 +51,9 @@ class WaitingRoomActivity : AppCompatActivity() {
         txvMatchID?.text = currentMatchID
 
         controller.getAndListenForNewPlayers(currentMatchID, this, users)
+
+        val intent = Intent(applicationContext, ColorSetUpActivity::class.java)
+        startActivity(intent)
     }
 
 

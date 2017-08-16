@@ -1,14 +1,12 @@
 package app.simone.multiplayer.view.nearby
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ListView
 import android.widget.TextView
-import app.simone.DistributedSimon.Activities.ColorSetUpActivity
 import app.simone.R
 import app.simone.multiplayer.controller.NearbyGameController
-import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
+import com.facebook.Profile
 
 class WaitingRoomActivity : AppCompatActivity() {
 
@@ -28,9 +26,10 @@ class WaitingRoomActivity : AppCompatActivity() {
         txvMatchID = findViewById(R.id.text_match_id) as TextView
 
         if(intent.hasExtra("users")) {
-            users = intent.getSerializableExtra("users") as List<Map<String,String>>
+            val users = intent.getSerializableExtra("users") as List<Map<String,String>>
 
-            if(users != null) {
+                val profile = Profile.getCurrentProfile()
+                val pid = profile.id
 
                 val playerIDs = ArrayList<String>()
 
@@ -41,19 +40,16 @@ class WaitingRoomActivity : AppCompatActivity() {
                     }
                 }
 
-                currentMatchID = nearbyController.createMatch(playerIDs)
-            }
-        } else if (intent.hasExtra("matchID")) {
+            currentMatchID = nearbyController.createMatch(playerIDs, pid)
 
+        } else if (intent.hasExtra("matchID")) {
             currentMatchID = intent.getStringExtra("matchID")
+            nearbyController.acceptInvite(Profile.getCurrentProfile().id, currentMatchID)
         }
 
         txvMatchID?.text = currentMatchID
 
-        controller.getAndListenForNewPlayers(currentMatchID, this, users)
-
-        val intent = Intent(applicationContext, ColorSetUpActivity::class.java)
-        startActivity(intent)
+        controller.getAndListenForNewPlayers(currentMatchID, this)
     }
 
 

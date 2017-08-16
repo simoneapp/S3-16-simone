@@ -9,7 +9,7 @@ import android.widget.TextView
 import app.simone.R
 import app.simone.multiplayer.model.FacebookUser
 import app.simone.multiplayer.model.MatchUserInfo
-import app.simone.multiplayer.view.nearby.ColorSetUpActivity
+import app.simone.multiplayer.view.nearby.NearbyGameActivity
 import app.simone.multiplayer.view.nearby.WaitingRoomActivity
 import com.facebook.Profile
 import com.firebase.ui.database.FirebaseListAdapter
@@ -98,8 +98,9 @@ class NearbyGameController {
                 val users = p0?.child(USERS_REF)
                 if(users?.children?.filter { it.child("taken").value == false }?.count() == 0
                         && !activityStarted){
-                    val intent = Intent(activity, ColorSetUpActivity::class.java)
+                    val intent = Intent(activity, NearbyGameActivity::class.java)
                     intent.putExtra("match", match)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     activity.startActivity(intent)
                     activityStarted = true
                 }

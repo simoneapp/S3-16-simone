@@ -83,8 +83,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".multiplayer.view.nearby.WaitingRoomActivity" />
-        <activity android:name=".multiplayer.view.nearby.ColorSetUpActivity"
+        <activity android:name=".multiplayer.view.nearby.WaitingRoomActivity"
+            android:noHistory="true" />
+        
+        <activity android:name=".multiplayer.view.nearby.NearbyGameActivity"
             android:theme="@style/AppTheme.NoActionBar"  />
         <activity
             android:name=".multiplayer.view.MultiplayerTypeActivity"

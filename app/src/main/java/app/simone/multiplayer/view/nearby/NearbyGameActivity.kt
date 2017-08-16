@@ -14,7 +14,7 @@ import com.facebook.Profile
 import com.google.firebase.database.*
 import java.util.concurrent.ExecutionException
 
-class ColorSetUpActivity : AppCompatActivity() {
+class NearbyGameActivity : AppCompatActivity() {
 
     private var playerID = ""
     private var matchID = ""

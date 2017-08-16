@@ -14,7 +14,7 @@ import com.crashlytics.android.Crashlytics;
 
 import app.simone.R;
 import app.simone.multiplayer.view.MultiplayerTypeActivity;
-import app.simone.multiplayer.view.nearby.ColorSetUpActivity;
+import app.simone.multiplayer.view.nearby.NearbyGameActivity;
 import app.simone.multiplayer.view.newmatch.FriendsListFragment;
 import app.simone.scores.google.GoogleGamesActivity;
 import app.simone.scores.view.ScoreboardActivity;
@@ -147,7 +147,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
     }
 
     public void multiplayerSetUp(View view) {
-        Intent intent = new Intent(this, ColorSetUpActivity.class);
+        Intent intent = new Intent(this, NearbyGameActivity.class);
         startActivity(intent);
     }
 

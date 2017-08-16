@@ -137,5 +137,6 @@
     <string name="notification">Notification</string>
     <string name="music_on">On</string>
     <string name="notification_on">On</string>
+    <string name="waiting_for_your_color">waiting for your color</string>
 
 </resources>

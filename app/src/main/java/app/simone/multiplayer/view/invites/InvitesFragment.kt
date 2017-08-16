@@ -19,7 +19,6 @@ import com.google.firebase.database.ValueEventListener
 class InvitesFragment : Fragment() {
 
     var rootView : View? = null
-
     var listViewRequests : ListView? = null
     var requestsAdapter : PendingRequestsAdapter? = null
     var requestsUsers = ArrayList<OnlineMatch>()

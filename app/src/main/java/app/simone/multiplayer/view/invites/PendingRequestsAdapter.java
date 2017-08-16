@@ -64,7 +64,6 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
                 intent.putExtra("multiplayerMode", "multiplayerMode");
                 intent.putExtra("key",dataModel.getKey());
                 intent.putExtra("whichPlayer","secondplayer");
-
                 mContext.startActivity(intent);
                 break;
         }

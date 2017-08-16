@@ -57,6 +57,9 @@ dependencies {
         transitive = true;
     }
 
+    compile 'com.google.dagger:dagger:2.4'
+    annotationProcessor "com.google.dagger:dagger-compiler:2.4"
+
 
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.android.support:multidex:1.0.0'
@@ -84,6 +87,7 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
+
 }
 
 repositories {

@@ -18,10 +18,6 @@ public class KeysHandler {
         this.list.add(s);
     }
 
-    public void clearList(){
-        this.list.clear();
-    }
-
     public String getElement(int index){
         return list.get(index);
     }

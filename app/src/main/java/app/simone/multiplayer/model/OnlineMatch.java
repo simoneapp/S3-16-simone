@@ -2,7 +2,6 @@ package app.simone.multiplayer.model;
 
 
 import java.util.List;
-
 import app.simone.singleplayer.model.SColor;
 
 /**
@@ -31,16 +30,8 @@ public class OnlineMatch{
         return firstplayer;
     }
 
-    public void setFirstplayer(FacebookUser firstplayer) {
-        this.firstplayer = firstplayer;
-    }
-
     public FacebookUser getSecondplayer() {
         return secondplayer;
-    }
-
-    public void setSecondplayer(FacebookUser secondplayer) {
-        this.secondplayer = secondplayer;
     }
 
     public String getKey() {
@@ -55,7 +46,4 @@ public class OnlineMatch{
         return sequence;
     }
 
-    public void setSequence(List<SColor> sequence) {
-        this.sequence = sequence;
-    }
 }

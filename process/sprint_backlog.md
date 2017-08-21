@@ -4,7 +4,7 @@
 
 | Details |
 |---|
-| At the end of the first sprint, a prototype Simone app was developed. SinglePlayer mode was almost completed, meaning that a user would be able to play in single mode following a sequence colors chosen by the computer. Highscore, Achivements, Multiplayer are still missing. | 
+| At the end of the first sprint, a prototype Simone app was developed. SinglePlayer mode was almost completed, meaning that a user would be able to play in single mode following a sequence of colors chosen by the computer. Highscore, Achivements, Multiplayer are still missing. | 
 ## 2st sprint backlog
 
 | Details |

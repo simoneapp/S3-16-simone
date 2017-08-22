@@ -48,7 +48,7 @@ class InvitesFragment : Fragment() {
             requestsAdapter = PendingRequestsAdapter(requestsUsers, activity)
             listViewRequests?.adapter = requestsAdapter
             listViewRequests?.onItemClickListener = android.widget.AdapterView.OnItemClickListener { parent, view, position, id ->
-                val model = requestsUsers[position]
+                requestsUsers[position]
                 println("ARRAY: " + position)
             }
             updateRequests()
@@ -79,16 +79,13 @@ class InvitesFragment : Fragment() {
 
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
                 requestsUsers.clear()
                 requestsUsers.addAll(myStrategy.getRequestsUsers(dataSnapshot))
-                //Updating GUI
                 updateRequests()
             }
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
                 //displayToast("Error while retrieving data from DB")
-                // ...
             }
         }
 

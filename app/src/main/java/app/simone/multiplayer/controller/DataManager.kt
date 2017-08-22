@@ -32,7 +32,7 @@ class DataManager private constructor() {
     }
 
     fun filterRequests(matches: ArrayList<OnlineMatch>,id: String):ArrayList<OnlineMatch>{
-        var filteredArray: ArrayList<OnlineMatch> = arrayListOf()
+        val filteredArray: ArrayList<OnlineMatch> = arrayListOf()
 
         repeat(matches.size){ i->
             if ((matches[i].firstplayer.id==id) ||(matches[i].secondplayer.id==id)){

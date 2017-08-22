@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import app.simone.R;
 import app.simone.multiplayer.model.FacebookUser;
 import app.simone.multiplayer.model.OnlineMatch;
+import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.GameActivity;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
@@ -61,9 +62,9 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
 
                 Intent intent = new Intent(mContext,GameActivity.class);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("multiplayerMode", "multiplayerMode");
-                intent.putExtra("key",dataModel.getKey());
-                intent.putExtra("whichPlayer","secondplayer");
+                intent.putExtra(Constants.MULTIPLAYER_MODE, "multiplayerMode");
+                intent.putExtra(Constants.MATCH_KEY,dataModel.getKey());
+                intent.putExtra(Constants.WHICH_PLAYER,"secondplayer");
                 mContext.startActivity(intent);
                 break;
         }

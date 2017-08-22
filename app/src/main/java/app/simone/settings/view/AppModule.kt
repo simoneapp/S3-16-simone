@@ -16,9 +16,3 @@ class AppModule {
         return app.getSharedPreferences("Settings", Context.MODE_PRIVATE)
     }
 }
-
-
-/*@Component(modules = arrayOf(AppModule::class))
-interface AppComponent {
-    // ...
-}*/

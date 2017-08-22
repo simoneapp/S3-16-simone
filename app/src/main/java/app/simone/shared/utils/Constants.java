@@ -1,5 +1,7 @@
 package app.simone.shared.utils;
 
+import scala.util.parsing.combinator.testing.Str;
+
 /**
  * Created by sapi9 on 21/06/2017.
  */
@@ -42,4 +44,10 @@ public class Constants {
     public static final String NEED_TO_SYNC_HARD= "NTSH";
     public static final int MULTIPLAYER_READY = 46;
     public static final int MAX_FRIENDS_PER_MATCH = 3;
+    public static final String MULTIPLAYER_MODE = "multiplayerMode";
+    public static final String MATCH_KEY = "key";
+    public static final String WHICH_PLAYER = "whichPlayer";
+    public static final String ENDING_GAME_TITLE = "Are you letting Simone win?";
+    public static final String ENDING_GAME_MSG = "Your final score will be considered ";
+
 }

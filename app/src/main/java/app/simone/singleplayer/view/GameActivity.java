@@ -30,6 +30,10 @@ import app.simone.scores.google.ScoreHelper;
  * @author Michele Sapignoli
  */
 public class GameActivity extends FullscreenBaseGameActivity implements IGameActivity {
+
+    private static final String FIRST_PLAYER = "firstplayer";
+    private static final String SECOND_PLAYER = "secondplayer";
+
     private boolean playerBlinking;
     private boolean tapToBegin = true;
 
@@ -159,17 +163,17 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         super.onCreate(savedInstanceState);
 
         final IGameActivity context = this;
-        if(getIntent().hasExtra("multiplayerMode")){
+        if(getIntent().hasExtra(Constants.MULTIPLAYER_MODE)){
             this.isMultiplayerMode=true;
-            this.key=getIntent().getExtras().getString("key");
-            this.whichPlayer=getIntent().getExtras().getString("whichPlayer");
+            this.key=getIntent().getExtras().getString(Constants.MATCH_KEY);
+            this.whichPlayer=getIntent().getExtras().getString(Constants.WHICH_PLAYER);
 
-            if(whichPlayer.equals("firstplayer")){
+            if(whichPlayer.equals(FIRST_PLAYER)){
                 Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
                         .tell(new ComputeFullMultiplayerSequenceMsg(context,key, 4,false), ActorRef.noSender());
             }
 
-            if(whichPlayer.equals("secondplayer")) {
+            if(whichPlayer.equals(SECOND_PLAYER)) {
 
                 DataManager.Companion.getInstance().getDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -205,7 +209,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         layouts[2] = (FrameLayout) findViewById(R.id.game_bottom_left_frame);
         layouts[3] = (FrameLayout) findViewById(R.id.game_bottom_right_frame);
 
-        if(!getIntent().hasExtra("multiplayerMode")){
+        if(!getIntent().hasExtra(Constants.MULTIPLAYER_MODE)){
             gameFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -339,8 +343,8 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
         if (!tapToBegin) {
             AlertDialog alertDialog = new AlertDialog.Builder(GameActivity.this).create();
-            alertDialog.setTitle("Are you letting Simone win?");
-            alertDialog.setMessage("Your final score will be considered " + finalScore);
+            alertDialog.setTitle(Constants.ENDING_GAME_TITLE);
+            alertDialog.setMessage(Constants.ENDING_GAME_MSG + finalScore);
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

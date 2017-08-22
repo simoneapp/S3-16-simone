@@ -13,8 +13,9 @@ import com.google.firebase.database.FirebaseDatabase
 
 class DataManager private constructor() {
 
+
     var context: Context? = null
-    val database = FirebaseDatabase.getInstance().getReference("multiplayer")!!
+    val database = FirebaseDatabase.getInstance().getReference(MULTIPLAYER)!!
 
     private object Holder {
         val INSTANCE = DataManager()
@@ -22,6 +23,7 @@ class DataManager private constructor() {
 
     companion object {
         val instance: DataManager by lazy { Holder.INSTANCE }
+        const val MULTIPLAYER = "multiplayer"
     }
 
 

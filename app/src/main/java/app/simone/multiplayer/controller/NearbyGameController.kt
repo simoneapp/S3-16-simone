@@ -112,10 +112,6 @@ class NearbyGameController {
         activity.listView?.adapter = adapter
     }
 
-    /*fun checkMatch(p0: DataSnapshot?, activity: WaitingRoomActivity, match: String) {
-
-    }*/
-
 
     fun setSelected(convertView: View?, isSelected: Boolean, activity: Activity) {
         if(isSelected){

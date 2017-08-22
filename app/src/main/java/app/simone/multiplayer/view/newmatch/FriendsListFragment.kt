@@ -57,13 +57,13 @@ class FriendsListFragment : Fragment() {
 
                     } else if(type == app.simone.multiplayer.model.MultiplayerType.NEARBY) {
 
-                        var parceled = ArrayList<Map<String, String>>()
+                        val parceled = ArrayList<Map<String, String>>()
 
                         val profile = Profile.getCurrentProfile()
                         val userMap = HashMap<String,String>()
                         userMap[FacebookUser.kNAME] = profile.name
                         userMap[FacebookUser.kID] = profile.id
-                        userMap[FacebookUser.kPICTURE] = profile.getProfilePictureUri(120,120).toString()
+                        userMap[FacebookUser.kPICTURE] = profile.getProfilePictureUri(Constants.FB_IMAGE_PICTURE_SIZE,Constants.FB_IMAGE_PICTURE_SIZE).toString()
 
                         selectedUsers.mapTo(parceled) { it.toDictionary() }
                         parceled.add(userMap)

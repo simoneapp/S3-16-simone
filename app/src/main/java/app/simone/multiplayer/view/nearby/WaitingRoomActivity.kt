@@ -1,5 +1,6 @@
 package app.simone.multiplayer.view.nearby
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ListView
@@ -15,7 +16,6 @@ class WaitingRoomActivity : AppCompatActivity() {
     private var currentMatchID = ""
 
     var listView : ListView? = null
-    var users : List<Map<String,String>>? = null
     private val controller = NearbyGameController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ class WaitingRoomActivity : AppCompatActivity() {
 
                 val playerIDs = ArrayList<String>()
 
-                users?.forEach { player ->
+                users.forEach { player ->
                     val id = player["id"]
                     if(id != null){
                         playerIDs.add(id)
@@ -50,6 +50,13 @@ class WaitingRoomActivity : AppCompatActivity() {
         txvMatchID?.text = currentMatchID
 
         controller.getAndListenForNewPlayers(currentMatchID, this)
+    }
+
+    fun startGameActivity(matchID: String){
+        val intent = Intent(this, NearbyGameActivity::class.java)
+        intent.putExtra("match", matchID)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        this.startActivity(intent)
     }
 
 

@@ -53,7 +53,7 @@ public class FacebookUser {
 
     public static List<FacebookUser> listFromJson(JsonArray json) {
 
-        List<FacebookUser> objectFriends = new ArrayList<FacebookUser>();
+        List<FacebookUser> objectFriends = new ArrayList<>();
 
         for(JsonElement item : json) {
             objectFriends.add(new FacebookUser(item));

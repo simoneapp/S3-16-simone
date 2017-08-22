@@ -1,6 +1,5 @@
 package app.simone.scores.google;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
@@ -26,8 +25,6 @@ public class GoogleApiHelper {
         return this.mGoogleApiClient;
     }
 
-
-
     public void disconnect() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
@@ -35,11 +32,7 @@ public class GoogleApiHelper {
     }
 
     public boolean isConnected() {
-        if (mGoogleApiClient != null) {
-            return mGoogleApiClient.isConnected();
-        } else {
-            return false;
-        }
+        return mGoogleApiClient != null && mGoogleApiClient.isConnected();
     }
 
     public void buildGoogleApiClient(FullscreenBaseGameActivity activity, View view) {

@@ -2,7 +2,6 @@ package app.simone.scores.view;
 
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;

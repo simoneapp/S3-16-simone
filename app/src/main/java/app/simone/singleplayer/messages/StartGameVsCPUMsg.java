@@ -1,11 +1,7 @@
 package app.simone.singleplayer.messages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import app.simone.shared.messages.IMessage;
 import app.simone.shared.utils.Constants;
-import app.simone.singleplayer.model.SColor;
 
 /**
  * Start Game Message.

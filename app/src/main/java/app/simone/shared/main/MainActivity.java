@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 
 import app.simone.R;
+import app.simone.multiplayer.controller.NearbyGameController;
 import app.simone.multiplayer.view.MultiplayerTypeActivity;
 import app.simone.multiplayer.view.nearby.NearbyGameActivity;
 import app.simone.multiplayer.view.newmatch.FriendsListFragment;
@@ -131,6 +132,8 @@ public class MainActivity extends FullscreenBaseGameActivity {
         Intent intent = new Intent(this, FCMTokenService.class);
         startService(intent);
         FCMTokenService.Companion.updateCurrentToken();
+        NearbyGameController controller = new NearbyGameController();
+        controller.updateUserData();
     }
 
 

@@ -1,19 +1,11 @@
 package app.simone.multiplayer.model;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.JsonObject;
-
-import java.io.Serializable;
-
-import io.realm.RealmObject;
 
 /**
  * Created by nicola on 11/07/2017.
  */
 
-public class FacebookPicture extends RealmObject {
+public class FacebookPicture {
 
     private String url;
     private boolean isSilhouette;

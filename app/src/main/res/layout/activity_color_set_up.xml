@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:onClick="sendColor"
             android:background="@color/myWhite"
-            android:text="waiting for your color..." />
+            android:text="@string/waiting_for_your_color" />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

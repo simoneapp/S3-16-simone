@@ -125,10 +125,8 @@ class NearbyGameActivity : AppCompatActivity() {
         player.play(this, playerColor!!.soundId)
 
         val handler = Handler()
-        handler.postDelayed(Runnable {
+        handler.postDelayed({
             buttonColor?.alpha = 1.0F
-
-            //db?.child(matchID)?.child("blink")?.child("status")?.setValue("replied")
 
             val nextIndex = sequenceIndex.toLong() + 1
 
@@ -140,7 +138,7 @@ class NearbyGameActivity : AppCompatActivity() {
 
                 override fun onDataChange(p0: DataSnapshot?) {
                     if(p0 != null && nextIndex <= p0.childrenCount) {
-                        val nextColor = p0?.child(nextIndex.toString()).value.toString()
+                        val nextColor = p0.child(nextIndex.toString()).value.toString()
 
                         val map = HashMap<String,String>()
                         map["color"] = nextColor
@@ -208,9 +206,5 @@ class NearbyGameActivity : AppCompatActivity() {
 
             override fun onCancelled(databaseError: DatabaseError) { }
         })
-    }
-
-    companion object {
-        private val handler: android.os.Handler? = null
     }
 }

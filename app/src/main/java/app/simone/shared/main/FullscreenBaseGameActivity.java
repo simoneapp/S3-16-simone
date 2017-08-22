@@ -23,12 +23,8 @@ import com.google.android.gms.games.Games;
 
 import app.simone.scores.google.ClassicLeaderboardCallback;
 import app.simone.scores.google.HardLeaderboardCallback;
-import app.simone.scores.google.LeaderboardCallback;
 import app.simone.shared.application.App;
 import app.simone.shared.utils.Constants;
-import app.simone.singleplayer.view.GameActivity;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * @author Michele Sapignoli

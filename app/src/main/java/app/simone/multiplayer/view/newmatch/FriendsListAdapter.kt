@@ -13,15 +13,11 @@ import app.simone.multiplayer.view.FriendsCellFiller
  * Created by nicola on 23/06/2017.
  */
 
-class FriendsListAdapter : ArrayAdapter<FacebookUser> {
+class FriendsListAdapter//val config = ImageLoaderConfiguration.createDefault(getContext())
+//ImageLoader.getInstance().init(config)
+(context: Context, data: List<FacebookUser>, fragment: FriendsListFragment) : ArrayAdapter<FacebookUser>(context, layout.cell_friends) {
 
-    var fragment : FriendsListFragment? = null
-
-    constructor(context: Context, data: List<FacebookUser>, fragment : FriendsListFragment) : super(context, layout.cell_friends) {
-        this.fragment = fragment
-        //val config = ImageLoaderConfiguration.createDefault(getContext())
-        //ImageLoader.getInstance().init(config)
-    }
+    var fragment : FriendsListFragment? = fragment
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
 

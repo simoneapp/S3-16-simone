@@ -32,7 +32,7 @@ class MultiplayerPagerActivity : AppCompatActivity() {
 
         type = MultiplayerType.valueOf(intent.getStringExtra("source"))
 
-        var fragment : Fragment?
+        val fragment : Fragment?
 
         if(type == MultiplayerType.NEARBY) {
             fragment = nearbyInvites
@@ -45,7 +45,7 @@ class MultiplayerPagerActivity : AppCompatActivity() {
         viewPager.adapter = MultiplayerPagerAdapter(supportFragmentManager,
                 arrayListOf(
                         FragmentContainer(friendsList, "New match"),
-                        FragmentContainer(fragment!!, "Invites")
+                        FragmentContainer(fragment, "Invites")
                 ))
 
         // Give the TabLayout the ViewPager

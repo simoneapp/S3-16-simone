@@ -16,7 +16,6 @@ class WaitingRoomActivity : AppCompatActivity() {
     private var currentMatchID = ""
 
     var listView : ListView? = null
-    var users : List<Map<String,String>>? = null
     private val controller = NearbyGameController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +33,7 @@ class WaitingRoomActivity : AppCompatActivity() {
 
                 val playerIDs = ArrayList<String>()
 
-                users?.forEach { player ->
+                users.forEach { player ->
                     val id = player["id"]
                     if(id != null){
                         playerIDs.add(id)

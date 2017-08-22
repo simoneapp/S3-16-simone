@@ -53,7 +53,7 @@ class FacebookManagerActor : UntypedActor() {
         parameters.putInt("limit",FRIENDS_LIMIT)
         parameters.putString("fields", FIELDS)
 
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().actorSystem)
 
         GraphRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -113,7 +113,7 @@ class FacebookManagerActor : UntypedActor() {
 
     private fun getUserScore(id: String) {
 
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().actorSystem)
 
         GraphRequest(
                 AccessToken.getCurrentAccessToken(),

@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="app.simone.DistributedSimon.Activities.ColorSetUpActivity"
-    tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="81dp">
+    tools:context="app.simone.multiplayer.view.nearby.NearbyGameActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:onClick="sendColor"
-            android:text="waiting for your color..." />
+            android:background="@color/myWhite"
+            android:text="@string/waiting_for_your_color" />
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

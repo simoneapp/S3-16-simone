@@ -2,6 +2,7 @@ package app.simone.multiplayer.view.pager
 
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -12,6 +13,7 @@ import app.simone.R
 import app.simone.multiplayer.messages.FbOnActivityResultMsg
 import app.simone.multiplayer.model.MultiplayerType
 import app.simone.multiplayer.view.invites.InvitesFragment
+import app.simone.multiplayer.view.invites.NearbyInvitesFragment
 import app.simone.multiplayer.view.newmatch.FriendsListFragment
 import app.simone.shared.application.App
 import com.facebook.Profile
@@ -22,17 +24,28 @@ class MultiplayerPagerActivity : AppCompatActivity() {
     var type : MultiplayerType? = null
     var friendsList = FriendsListFragment()
     var invites = InvitesFragment()
+    var nearbyInvites = NearbyInvitesFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_multiplayer_pager)
+
+        type = MultiplayerType.valueOf(intent.getStringExtra("source"))
+
+        val fragment : Fragment?
+
+        if(type == MultiplayerType.NEARBY) {
+            fragment = nearbyInvites
+        } else {
+            fragment = invites
+        }
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         val viewPager = findViewById(R.id.viewpager) as ViewPager
         viewPager.adapter = MultiplayerPagerAdapter(supportFragmentManager,
                 arrayListOf(
                         FragmentContainer(friendsList, "New match"),
-                        FragmentContainer(invites, "Invites")
+                        FragmentContainer(fragment, "Invites")
                 ))
 
         // Give the TabLayout the ViewPager
@@ -41,8 +54,6 @@ class MultiplayerPagerActivity : AppCompatActivity() {
 
         val toolbar = findViewById(R.id.multiplayer_toolbar) as Toolbar
         setSupportActionBar(toolbar)
-
-        type = MultiplayerType.valueOf(intent.getStringExtra("source"))
 
         setFacebookViewVisible(Profile.getCurrentProfile() == null)
     }

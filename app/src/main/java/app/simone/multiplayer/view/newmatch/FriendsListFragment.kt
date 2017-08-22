@@ -5,8 +5,10 @@ import android.support.v4.app.Fragment
 import app.simone.multiplayer.model.FacebookUser
 import app.simone.multiplayer.view.nearby.WaitingRoomActivity
 import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
+import app.simone.shared.utils.Constants
 import app.simone.shared.utils.Utilities
 import app.simone.singleplayer.view.GameActivity
+import com.facebook.Profile
 
 class FriendsListFragment : Fragment() {
 
@@ -55,10 +57,16 @@ class FriendsListFragment : Fragment() {
 
                     } else if(type == app.simone.multiplayer.model.MultiplayerType.NEARBY) {
 
-                        var parceled = ArrayList<Map<String, String>>()
-                        for (selectedUser in selectedUsers) {
-                            parceled.add(selectedUser.toDictionary())
-                        }
+                        val parceled = ArrayList<Map<String, String>>()
+
+                        val profile = Profile.getCurrentProfile()
+                        val userMap = HashMap<String,String>()
+                        userMap[FacebookUser.kNAME] = profile.name
+                        userMap[FacebookUser.kID] = profile.id
+                        userMap[FacebookUser.kPICTURE] = profile.getProfilePictureUri(Constants.FB_IMAGE_PICTURE_SIZE,Constants.FB_IMAGE_PICTURE_SIZE).toString()
+
+                        selectedUsers.mapTo(parceled) { it.toDictionary() }
+                        parceled.add(userMap)
 
                         val intent = android.content.Intent(context, WaitingRoomActivity::class.java)
                         intent.putExtra("users", parceled)
@@ -108,7 +116,7 @@ class FriendsListFragment : Fragment() {
                 selectedUsers.clear()
             }
 
-            if(isSelected)  {
+            if(isSelected && selectedUsers.count() < Constants.MAX_FRIENDS_PER_MATCH)  {
                 selectedUsers.add(friend)
             } else {
                 selectedUsers.remove(friend)

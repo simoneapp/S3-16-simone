@@ -5,6 +5,7 @@ import app.simone.multiplayer.messages.*
 import app.simone.shared.application.App
 import app.simone.shared.firebase.FCMTokenService
 import app.simone.shared.messages.IMessage
+import app.simone.shared.utils.Constants
 import app.simone.shared.utils.Utilities
 import app.simone.singleplayer.messages.MessageType
 import com.facebook.CallbackManager
@@ -30,7 +31,7 @@ class FacebookViewActor : akka.actor.UntypedActor() {
 
     override fun onReceive(message: Any?) {
 
-        val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR + app.simone.shared.utils.Constants.FACEBOOK_ACTOR_NAME, App.getInstance().getActorSystem())
+        val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR + app.simone.shared.utils.Constants.FACEBOOK_ACTOR_NAME, App.getInstance().actorSystem)
 
         when((message as IMessage).type) {
 
@@ -97,7 +98,7 @@ class FacebookViewActor : akka.actor.UntypedActor() {
     fun registerLoginButton(msg: FbViewSetupMsg) {
 
 
-        val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR + app.simone.shared.utils.Constants.FACEBOOK_ACTOR_NAME, App.getInstance().getActorSystem())
+        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FACEBOOK_ACTOR_NAME, App.getInstance().actorSystem)
 
         callbackManager = com.facebook.CallbackManager.Factory.create()
 
@@ -107,6 +108,7 @@ class FacebookViewActor : akka.actor.UntypedActor() {
             override fun onSuccess(loginResult: com.facebook.login.LoginResult) {
                 actor.tell(FbRequestFriendsMsg(msg.activity), self)
                 msg.activity.setFacebookViewVisible(false)
+                NearbyGameController().updateUserData()
                 FCMTokenService.updateCurrentToken()
             }
 

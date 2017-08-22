@@ -52,4 +52,6 @@ public class Constants {
     public static final int THOUSAND = 1000;
 
 
+    public static final int MAX_FRIENDS_PER_MATCH = 3;
+    public static final int FB_IMAGE_PICTURE_SIZE = 100;
 }

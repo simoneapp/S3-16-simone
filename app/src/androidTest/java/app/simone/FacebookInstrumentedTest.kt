@@ -8,7 +8,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.concurrent.CountDownLatch
 
 
 /**
@@ -25,8 +24,6 @@ class FacebookInstrumentedTest {
 
     @Rule @JvmField
     val mActivityRule = ActivityTestRule(MainActivity::class.java)
-
-    private val lock = CountDownLatch(1)
 
     @Test
     @Throws(Exception::class)

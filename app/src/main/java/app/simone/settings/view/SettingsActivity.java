@@ -66,22 +66,22 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
     }
 
     private void savePreferences(){
-        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
-        editor.putBoolean("music", musicOn);
+        SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.settings_uc), MODE_PRIVATE).edit();
+        editor.putBoolean(getString(R.string.music), musicOn);
         editor.apply();
     }
 
     private boolean loadPreferences(){
-        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
-        return prefs.getBoolean("music",true);
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.settings_uc), MODE_PRIVATE);
+        return prefs.getBoolean(getString(R.string.music), true);
     }
 
     private void setText(boolean onOff){
         TextView musicTxt = (TextView)findViewById(R.id.music_text);
         if(onOff){
-            musicTxt.setText("on");
+            musicTxt.setText(R.string.on);
         }else {
-            musicTxt.setText("off");
+            musicTxt.setText(R.string.off);
         }
     }
 

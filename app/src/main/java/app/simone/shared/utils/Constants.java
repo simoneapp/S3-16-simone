@@ -41,5 +41,15 @@ public class Constants {
     public static final String NEED_TO_SYNC_CLASSIC= "NTSC";
     public static final String NEED_TO_SYNC_HARD= "NTSH";
     public static final int MULTIPLAYER_READY = 46;
+    public static final String N_GAMES ="N_GAMES";
+    public static final int TEN = 10;
+    public static final int TWENTYFIVE = 25;
+    public static final int FIFTY = 50;
+    public static final int SEVENTYFIVE = 75;
+    public static final int HUNDRED = 100;
+    public static final int TWOHUNDREDFIFTY = 250;
+    public static final int FIVEHUNDRED = 500;
+    public static final int THOUSAND = 1000;
+
 
 }

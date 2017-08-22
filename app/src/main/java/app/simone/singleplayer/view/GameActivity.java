@@ -88,6 +88,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                 case Constants.WHATTASHAMEYOULOST_MSG:
                     finalScore = msg.arg1;
                     ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
+                    ScoreHelper.checkNGamesAchievement();
                     tapToBegin = true;
                     simoneTextView.setText(Constants.PLAY_AGAIN);
                     simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
@@ -159,6 +160,8 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         super.onCreate(savedInstanceState);
 
         final IGameActivity context = this;
+
+
         if(getIntent().hasExtra("multiplayerMode")){
             this.isMultiplayerMode=true;
             this.key=getIntent().getExtras().getString("key");

@@ -118,7 +118,7 @@
         android:id="@+id/main_textview_multiplayer"
         android:layout_width="wrap_content"
         android:textSize="32sp"
-        android:text="@string/multiplayer_full"
+        android:text="@string/multiplayer"
         android:textAlignment="textEnd"
         android:layout_marginEnd="20sp"
         android:layout_marginTop="30sp"

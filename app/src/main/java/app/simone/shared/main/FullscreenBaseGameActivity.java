@@ -151,6 +151,11 @@ public abstract class FullscreenBaseGameActivity extends AppCompatActivity imple
         // are available.
         //delayedHide(initialDelay);
 
+        if(App.getGoogleApiHelper()!= null && App.getGoogleApiHelper().getGoogleApiClient()!=null
+                && App.getGoogleApiHelper().getGoogleApiClient().isConnected()){
+            Games.setViewForPopups(App.getGoogleApiHelper().getGoogleApiClient(), this.mContentView);
+        }
+
 
     }
 

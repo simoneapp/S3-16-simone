@@ -42,4 +42,5 @@ public class Constants {
     public static final String NEED_TO_SYNC_HARD= "NTSH";
     public static final int MULTIPLAYER_READY = 46;
     public static final int MAX_FRIENDS_PER_MATCH = 3;
+    public static final int FB_IMAGE_PICTURE_SIZE = 100;
 }

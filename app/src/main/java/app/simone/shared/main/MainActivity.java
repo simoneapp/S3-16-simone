@@ -23,9 +23,6 @@ import app.simone.settings.view.SettingsActivity;
 import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.VSCpuActivity;
-import app.simone.shared.utils.AudioManager;
-import app.simone.multiplayer.controller.DataManager;
-import app.simone.scores.google.GoogleGamesActivity;
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -94,14 +91,6 @@ public class MainActivity extends FullscreenBaseGameActivity {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.pulse);
         mainFab.startAnimation(animation);
         simoneTextView.startAnimation(animation);
-
-        mainFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), GoogleGamesActivity.class);
-                startActivity(intent);
-            }
-        });
 
         AudioManager.Companion.getInstance().playSimoneMusic();
 

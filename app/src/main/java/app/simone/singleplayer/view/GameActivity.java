@@ -53,6 +53,9 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     private String key;
     private String whichPlayer;
 
+    private FloatingActionButton scoreButton;
+    private SimoneTextView scoreText;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(final Message msg) {
@@ -86,14 +89,18 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     }
                     break;
                 case Constants.WHATTASHAMEYOULOST_MSG:
+                    gameFab.setEnabled(true);
                     finalScore = msg.arg1;
                     ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
                     ScoreHelper.checkNGamesAchievement();
                     tapToBegin = true;
                     simoneTextView.setText(Constants.PLAY_AGAIN);
                     simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
+                    scoreText.setText(""+finalScore);
                     gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#990000")));
                     saveScore();
+                    scoreText.setVisibility(View.VISIBLE);
+                    scoreButton.setVisibility(View.VISIBLE);
                     simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
                     break;
                 case Constants.MULTIPLAYER_READY:
@@ -104,6 +111,9 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                             AudioManager.Companion.getInstance().stopSimoneMusic();
 
                             if (tapToBegin) {
+                                gameFab.setEnabled(false);
+                                scoreText.setVisibility(View.VISIBLE);
+                                scoreButton.setVisibility(View.VISIBLE);
                                 tapToBegin = false;
                                 finalScore = 0;
                                 playerBlinking = false;
@@ -201,6 +211,9 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         gameFab = (FloatingActionButton) findViewById(R.id.game_fab);
         simoneTextView = (SimoneTextView) findViewById(R.id.game_simone_textview);
 
+        scoreText =(SimoneTextView) findViewById(R.id.game_score_textview);
+        scoreButton = (FloatingActionButton) findViewById(R.id.game_score_fab);
+
         AnimationHandler.initAnimations(this, gameFab, simoneTextView);
 
         layouts[0] = (FrameLayout) findViewById(R.id.game_top_left_frame);
@@ -216,6 +229,9 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     AudioManager.Companion.getInstance().stopSimoneMusic();
 
                     if (tapToBegin) {
+                        scoreText.setVisibility(View.GONE);
+                        scoreButton.setVisibility(View.GONE);
+                        gameFab.setEnabled(false);
                         tapToBegin = false;
                         finalScore = 0;
                         playerBlinking = false;

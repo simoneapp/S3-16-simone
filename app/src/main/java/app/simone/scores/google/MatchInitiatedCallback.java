@@ -7,10 +7,6 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMatch;
 import com.google.android.gms.games.multiplayer.turnbased.TurnBasedMultiplayer;
 
-/**
- * Created by sapi9 on 03/07/2017.
- */
-
 public class MatchInitiatedCallback implements
         ResultCallback<TurnBasedMultiplayer.InitiateMatchResult> {
 

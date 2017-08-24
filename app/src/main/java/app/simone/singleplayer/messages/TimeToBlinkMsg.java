@@ -6,7 +6,9 @@ import app.simone.singleplayer.model.SColor;
 import app.simone.shared.messages.IMessage;
 
 /**
- * Created by sapi9 on 21/06/2017.
+ * TimeToBlinkMsg,
+ * used to trigger the blinking time of the CPUActor.
+ * @author Michele Sapignoli
  */
 
 public class TimeToBlinkMsg implements IMessage {

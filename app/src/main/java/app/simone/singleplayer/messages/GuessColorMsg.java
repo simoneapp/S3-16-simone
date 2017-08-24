@@ -4,9 +4,10 @@ import app.simone.singleplayer.model.SColor;
 import app.simone.shared.messages.IMessage;
 
 /**
- * Created by sapi9 on 23/06/2017.
+ * GuessColorMsg,
+ * containing the color guessed by the player.
+ * @author Michele Sapignoli
  */
-
 public class GuessColorMsg implements IMessage {
     private SColor guessColor;
 

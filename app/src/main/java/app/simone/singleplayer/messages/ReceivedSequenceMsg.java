@@ -7,9 +7,10 @@ import app.simone.singleplayer.model.SColor;
 import app.simone.singleplayer.view.IGameActivity;
 
 /**
- * Created by sapi9 on 27/06/2017.
+ * ReceivedSequenceMsg,
+ * containing the multiplayer sequence to play.
+ * @author Michele Sapignoli
  */
-
 public class ReceivedSequenceMsg implements IMessage {
     private List<SColor> sequence;
     private IGameActivity activity;
@@ -17,7 +18,7 @@ public class ReceivedSequenceMsg implements IMessage {
 
     public ReceivedSequenceMsg(List<SColor> listToPlay,IGameActivity activity){
         this.sequence = listToPlay;
-        this.activity =activity;
+        this.activity = activity;
     }
 
     @Override

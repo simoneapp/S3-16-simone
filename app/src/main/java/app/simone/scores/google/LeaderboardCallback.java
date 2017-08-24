@@ -6,7 +6,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.leaderboard.Leaderboards;
 
 /**
- * Created by sapi9 on 07/07/2017.
+ * Leaderboard Callback class.
+ * @author Michele Sapignoli
  */
 
 

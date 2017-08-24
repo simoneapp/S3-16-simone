@@ -7,7 +7,7 @@ import app.simone.multiplayer.view.nearby.WaitingRoomActivity
 import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
 import app.simone.shared.utils.Constants
 import app.simone.shared.utils.Utilities
-import app.simone.singleplayer.view.GameActivity
+import app.simone.singleplayer.view.MultiplayerGameActivity
 import com.facebook.Profile
 
 class FriendsListFragment : Fragment() {
@@ -44,7 +44,7 @@ class FriendsListFragment : Fragment() {
 
                     if(type == app.simone.multiplayer.model.MultiplayerType.INSTANT) {
 
-                        val intent = android.content.Intent(context, GameActivity::class.java)
+                        val intent = android.content.Intent(context, MultiplayerGameActivity::class.java)
                         intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
                         println("ME: " + com.facebook.Profile.getCurrentProfile().firstName.toString() + " " + com.facebook.Profile.getCurrentProfile().lastName.toString())
                         setUser()

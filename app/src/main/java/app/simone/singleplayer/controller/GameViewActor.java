@@ -22,9 +22,11 @@ import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
 
 /**
+ * GameViewActor.
+ * Handles the interaction between CPUActor and Player.
+ *
  * @author Michele Sapignoli
  */
-
 public class GameViewActor extends UntypedActor {
     private IGameActivity gameActivity;
     private List<SColor> cpuSequence;
@@ -32,7 +34,6 @@ public class GameViewActor extends UntypedActor {
     private int cpuColorIndex;
     private int playerColorIndex;
     private boolean playerTurn;
-
     private boolean paused = false;
 
     @Override
@@ -45,10 +46,16 @@ public class GameViewActor extends UntypedActor {
     public void onReceive(Object message) throws Exception {
         switch (((IMessage) message).getType()) {
             case ATTACH_VIEW_MSG:
+                /*
+                Received AttachViewMsg from IGameActivity
+                 */
                 this.gameActivity = ((AttachViewMsg) message).getIActivity();
                 Log.d("##VIEW ACTOR", "Current GameActivity registered + StartGameVSCPUMsg sent to CPUActor ACTOR");
                 break;
             case TIME_TO_BLINK_MSG:
+                /*
+                Time to blink the cpuSequence until it's over
+                 */
                 this.cpuColorIndex = 0;
                 paused = false;
                 playerTurn = false;
@@ -57,6 +64,9 @@ public class GameViewActor extends UntypedActor {
                 getSelf().tell(new NextColorMsg(), getSelf());
                 break;
             case NEXT_COLOR_MSG:
+                /*
+                Next color to blink, if the index is = size --> Player turn
+                 */
                 if (!paused) {
                     if (cpuColorIndex >= cpuSequence.size() /*Player turn if true*/) {
                         playerTurn = true;
@@ -69,15 +79,21 @@ public class GameViewActor extends UntypedActor {
                 }
                 break;
             case PLAYER_TURN_MSG:
+                /*
+                Player turn, msg to the public handler of IGameActivity
+                 */
                 Log.d("##VIEW ACTOR", "Player turn");
                 playerColorIndex = 0;
                 playerSequence.clear();
                 Message msg = new Message();
                 msg.what = Constants.PLAYER_TURN;
-                msg.arg2 = cpuSequence.size() -1;
+                msg.arg2 = cpuSequence.size() - 1;
                 gameActivity.getHandler().sendMessage(msg);
                 break;
             case GUESS_COLOR_MSG:
+                /*
+                Check of the color guessed by the player
+                 */
                 if (playerTurn) {
                     Log.d("##VIEW ACTOR", "Player inserted :" + ((GuessColorMsg) message).getGuessColor());
 
@@ -85,6 +101,10 @@ public class GameViewActor extends UntypedActor {
                         playerSequence.add(((GuessColorMsg) message).getGuessColor());
 
                         if (playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))) { /*1by1 check*/
+                        /*
+                        Correct -- If sequence is completed --> CPUActor has to compute another color
+                                    else --> player can continue tapping
+                         */
                             if (cpuSequence.size() - playerSequence.size() == 0) {
                                 Message m = new Message();
                                 m.what = Constants.CPU_TURN;
@@ -96,7 +116,9 @@ public class GameViewActor extends UntypedActor {
                             }
                             this.playerColorIndex++;
                         } else {
-                            //Player Loss
+                            /*
+                            Incorrect -- Player loss
+                             */
                             playerSequence.clear();
                             cpuColorIndex = 0;
                             Message m = new Message();

@@ -3,9 +3,10 @@ import app.simone.shared.messages.IMessage;
 import app.simone.singleplayer.view.IGameActivity;
 
 /**
- * Created by sapi9 on 27/06/2017.
+ * ComputeFullMultiplayerSequenceMsg,
+ * used to trigger the computing of the sequence played by the players in multiplayer mode.
+ * @author Michele Sapignoli
  */
-
 public class ComputeFullMultiplayerSequenceMsg implements IMessage {
     private IGameActivity activity;
     private String matchKey;

@@ -20,9 +20,10 @@ import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
 
 /**
+ * CPUActor.
+ * Generates a step-by-step sequence, communicates with the GameViewActor.
  * @author Michele Sapignoli
  */
-
 public class CPUActor extends UntypedActor {
     private int nColors = 0;
     private List<SColor> currentSequence;
@@ -51,22 +52,27 @@ public class CPUActor extends UntypedActor {
                 this.generateAndSendColor(Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem()));
                 break;
             case GIMME_NEW_COLOR_MSG:
+                 /*
+                 Computes a new color, adds to sequence and tells the GameViewActor the modified sequence
+                 */
                 this.generateAndSendColor(getSender());
                 break;
             case COMPUTE_FULL_MULTIPLAYER_SEQUENCE_MSG:
+                /*
+                 1st player in multiplayer classic mode - Computes a full sequence of 100 colors to play in multiplayer classic mode and communicates to the GameViewActor "let the game begin!"
+                 */
                 for (int i = 0; i <= 100; i++) {
                     this.multiplayerFullSequence.add(SColor.values()[new Random().nextInt(((ComputeFullMultiplayerSequenceMsg) message).getNColors())]);
                 }
-
-
-                //if second and first
-
                 final String key= ((ComputeFullMultiplayerSequenceMsg) message).getMatchKey();
                 DataManager.Companion.getInstance().getDatabase().child(key).child("sequence").setValue(this.multiplayerFullSequence);
 
                 ((ComputeFullMultiplayerSequenceMsg) message).getActivity().getHandler().sendEmptyMessage(Constants.MULTIPLAYER_READY);
                 break;
             case RECEIVED_SEQUENCE_MSG:
+                /*
+                 2nd player in multiplayer classic mode - Receives the sequence and communicates to the GameViewActor "let the game begin!"
+                 */
                 this.multiplayerFullSequence=((ReceivedSequenceMsg) message).getSequence();
                 ((ReceivedSequenceMsg) message).getActivity().getHandler().sendEmptyMessage(Constants.MULTIPLAYER_READY);
                 break;
@@ -74,8 +80,14 @@ public class CPUActor extends UntypedActor {
     }
 
 
-
+    /**
+     * Generate a color and send the updated sequeunce to the GameViewActor.
+     * @param viewActor
+     */
     private void generateAndSendColor(ActorRef viewActor) {
+        /*
+        Different behaviour depending on singleplayer or multiplayer
+         */
         if(multiplayerFullSequence == null || multiplayerFullSequence.isEmpty()){
             this.currentSequence.add(SColor.values()[new Random().nextInt(nColors)]);
         } else {

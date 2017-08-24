@@ -16,12 +16,17 @@ import app.simone.singleplayer.view.IGameActivity;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
- * Created by sapi9 on 09/07/2017.
+ * ScoreHelper class.
+ * @author Michele Sapignoli
  */
 
 public class ScoreHelper {
 
-
+    /**
+     * Checks if the given score is associated with a Google Games achievement.
+     * @param score
+     * @param mode
+     */
     public static void checkAchievement(int score, int mode) {
         String achievement = null;
 
@@ -69,6 +74,9 @@ public class ScoreHelper {
 
     }
 
+    /**
+     * Checks if number of matches played is associated with a Google Games achievement.
+     */
     public static void checkNGamesAchievement(){
         String achievement = null;
         final SharedPreferences pref = getApplicationContext().getSharedPreferences(Constants.PREF_KEY, Context.MODE_PRIVATE);
@@ -78,7 +86,7 @@ public class ScoreHelper {
         editor.putInt(Constants.N_GAMES, nGames);
         editor.apply();
         switch(nGames){
-            case Constants.TEN :
+            case Constants.FIVE :
                 achievement = getApplicationContext().getResources().getString(R.string.achievement_cimabue);
                 break;
             case Constants.TWENTYFIVE :
@@ -114,6 +122,11 @@ public class ScoreHelper {
 
     }
 
+    /**
+     * Method that sends the highscore to the corresponding leaderboard
+     * @param chosenMode
+     * @param finalScore
+     */
     public static void sendResultToLeaderboard(int chosenMode, int finalScore) {
         if (App.getGoogleApiHelper().isConnected()) {
             Games.Leaderboards.submitScoreImmediate(App.getGoogleApiHelper().getGoogleApiClient(),

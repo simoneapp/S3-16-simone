@@ -19,7 +19,9 @@ import app.simone.shared.styleable.SimoneTextView;
 import app.simone.singleplayer.model.SColor;
 
 /**
- * Created by sapi9 on 07/07/2017.
+ * AnimationHandler class.
+ * Used to animate the fabs and the textviews.
+ * @author Michele Sapignoli
  */
 
 public class AnimationHandler {

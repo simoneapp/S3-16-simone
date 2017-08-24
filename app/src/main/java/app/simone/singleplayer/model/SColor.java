@@ -1,9 +1,11 @@
 package app.simone.singleplayer.model;
-
 import app.simone.R;
 
 /**
- * Created by sapi9 on 27/06/2017.
+ * SColor, enum.
+ * Each value (GREEN, RED, BLUE, YELLOW) is associated with a button, a sound, and a color.
+ *
+ * @author Michele Sapignoli
  */
 
 public enum SColor {
@@ -22,12 +24,31 @@ public enum SColor {
         this.colorId = colorId;
     }
 
+    /**
+     * Gets the buttonId
+     * @return buttonId id of the button
+     */
     public int getButtonId() { return buttonId; }
+
+    /**
+     * Gets the soundId
+     * @return soundId id of the sound
+     */
     public int getSoundId() { return soundId; }
+
+    /**
+     * Gets the colorId
+     * @return colorId id of the color
+     */
     public int getColorId() {
         return colorId;
     }
 
+    /**
+     * Gets SColor from buttonId
+     * @param number buttonId
+     * @return color SColor
+     */
     public static SColor fromInt(int number){
         for (SColor type : SColor.values()) {
             if (type.getButtonId() == number) {
@@ -37,6 +58,11 @@ public enum SColor {
         return null;
     }
 
+    /**
+     * Gets colorId from buttonId
+     * @param buttonId buttonId
+     * @return colorId
+     */
     public static int getColorIdFromButtonId(int buttonId){
         for (SColor type : SColor.values()) {
             if (type.getButtonId() == buttonId) {

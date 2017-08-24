@@ -3,59 +3,67 @@ package app.simone.singleplayer.view;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-import java.util.*;
-import app.simone.multiplayer.controller.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import akka.actor.ActorRef;
-import app.simone.multiplayer.model.OnlineMatch;
-import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.R;
-import app.simone.singleplayer.model.SColor;
-import app.simone.shared.styleable.SimoneTextView;
-import app.simone.shared.application.App;
-import app.simone.singleplayer.messages.*;
-import app.simone.shared.utils.*;
 import app.simone.scores.google.ScoreHelper;
+import app.simone.shared.application.App;
+import app.simone.shared.main.FullscreenBaseGameActivity;
+import app.simone.shared.styleable.SimoneTextView;
+import app.simone.shared.utils.AnimationHandler;
+import app.simone.shared.utils.AudioManager;
+import app.simone.shared.utils.AudioPlayer;
+import app.simone.shared.utils.Constants;
+import app.simone.shared.utils.Utilities;
+import app.simone.singleplayer.messages.AttachViewMsg;
+import app.simone.singleplayer.messages.GuessColorMsg;
+import app.simone.singleplayer.messages.NextColorMsg;
+import app.simone.singleplayer.messages.PauseMsg;
+import app.simone.singleplayer.messages.StartGameVsCPUMsg;
+import app.simone.singleplayer.model.SColor;
 
 /**
+ * GameActivity class.
+ * Made abstract, so that the abstract methods are implemented in the subclasses as a template method.
+ * This class is the class that interacts with the GameviewActor (through an Handler) and the user.
  * @author Michele Sapignoli
- */
-public class GameActivity extends FullscreenBaseGameActivity implements IGameActivity {
-    private boolean playerBlinking;
-    private boolean tapToBegin = true;
+ **/
+public abstract class GameActivity extends FullscreenBaseGameActivity implements IGameActivity {
+    protected boolean playerBlinking;
+    protected boolean tapToBegin = true;
 
-    private FloatingActionButton gameFab;
-    private boolean isMultiplayerMode = false;
-    private SimoneTextView simoneTextView;
+    protected FloatingActionButton gameFab;
+    protected SimoneTextView simoneTextView;
+    protected FloatingActionButton scoreButton;
+    protected SimoneTextView scoreText;
 
     private boolean viewPaused;
-
     private int chosenMode = Constants.CLASSIC_MODE;
 
     private List<Button> buttons;
     private Integer[] shuffle = new Integer[]{0, 1, 2, 3};
-
     private FrameLayout[] layouts = new FrameLayout[4];
 
-    private boolean isGameEnded = false;
-
     private int currentScore;
-    private int finalScore;
-    private String key;
-    private String whichPlayer;
+    protected int finalScore;
+    protected String key;
+    protected String whichPlayer;
 
-    private FloatingActionButton scoreButton;
-    private SimoneTextView scoreText;
-
+    /**
+     * Handler used to communicate with the GameviewActor. It is the only interface that receives info from outside the class.
+     */
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(final Message msg) {
@@ -94,14 +102,13 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
                     ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
                     ScoreHelper.checkNGamesAchievement();
                     tapToBegin = true;
-                    simoneTextView.setText(Constants.PLAY_AGAIN);
-                    simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
+                    simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
                     scoreText.setText(""+finalScore);
                     gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#990000")));
                     saveScore();
                     scoreText.setVisibility(View.VISIBLE);
                     scoreButton.setVisibility(View.VISIBLE);
-                    simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
+
                     break;
                 case Constants.MULTIPLAYER_READY:
                     gameFab.setOnClickListener(new View.OnClickListener() {
@@ -112,8 +119,8 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
                             if (tapToBegin) {
                                 gameFab.setEnabled(false);
-                                scoreText.setVisibility(View.VISIBLE);
-                                scoreButton.setVisibility(View.VISIBLE);
+                                scoreText.setVisibility(View.GONE);
+                                scoreButton.setVisibility(View.GONE);
                                 tapToBegin = false;
                                 finalScore = 0;
                                 playerBlinking = false;
@@ -124,7 +131,6 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
                                 Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
                                         .tell(new StartGameVsCPUMsg(), ActorRef.noSender());
-
                             }
                         }
                     });
@@ -146,6 +152,9 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
     }
 
+    /**
+     * Private handler used to blink
+     */
     private Handler vHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -168,49 +177,10 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final IGameActivity context = this;
-
-
-        if(getIntent().hasExtra("multiplayerMode")){
-            this.isMultiplayerMode=true;
-            this.key=getIntent().getExtras().getString("key");
-            this.whichPlayer=getIntent().getExtras().getString("whichPlayer");
-
-            if(whichPlayer.equals("firstplayer")){
-                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                        .tell(new ComputeFullMultiplayerSequenceMsg(context,key, 4,false), ActorRef.noSender());
-            }
-
-            if(whichPlayer.equals("secondplayer")) {
-
-                DataManager.Companion.getInstance().getDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        OnlineMatch match = dataSnapshot.child(key).getValue(OnlineMatch.class);
-                        List<SColor> sequenceToPlay =  match.getSequence();
-
-                        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                                .tell(new ReceivedSequenceMsg(sequenceToPlay, context), ActorRef.noSender());
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-
-                });
-
-            }
-        }
-
         chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
-
         buttons = new ArrayList<>();
-
         gameFab = (FloatingActionButton) findViewById(R.id.game_fab);
         simoneTextView = (SimoneTextView) findViewById(R.id.game_simone_textview);
-
         scoreText =(SimoneTextView) findViewById(R.id.game_score_textview);
         scoreButton = (FloatingActionButton) findViewById(R.id.game_score_fab);
 
@@ -221,56 +191,45 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         layouts[2] = (FrameLayout) findViewById(R.id.game_bottom_left_frame);
         layouts[3] = (FrameLayout) findViewById(R.id.game_bottom_right_frame);
 
-        if(!getIntent().hasExtra("multiplayerMode")){
-            gameFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    AudioManager.Companion.getInstance().stopSimoneMusic();
-
-                    if (tapToBegin) {
-                        scoreText.setVisibility(View.GONE);
-                        scoreButton.setVisibility(View.GONE);
-                        gameFab.setEnabled(false);
-                        tapToBegin = false;
-                        finalScore = 0;
-                        playerBlinking = false;
-                        simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                        simoneTextView.setText(Constants.STRING_EMPTY);
-                        simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
-                        gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
-
-                        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                                .tell(new StartGameVsCPUMsg(true), ActorRef.noSender());
-
-                    }
-                }
-            });
-        }
-
-
-
         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
                 .tell(new AttachViewMsg(this), ActorRef.noSender());
+
+        this.setup();
     }
 
+    /**
+     * Abstract method implemented in the subclasses that sets up the settings of the SingleplayerGameActivity or the MultiplayerGameActivity
+     */
+    abstract void setup();
+
+    /**
+     * Abstract method implemented in the subclasses that handles the score
+     */
+    abstract void saveScore();
+
+    /**
+     * Implementation of the abstract method of FullscreenBaseGameActivity, used to set the contentView.
+     */
     @Override
     protected void setSubclassContentView() {
         setContentView(R.layout.activity_game);
         mContentView = findViewById(R.id.game_fullscreen_content);
     }
 
-
+    /**
+     * Method that returns the handler used to communicate with the GameviewActor
+     * @return handler
+     */
     public Handler getHandler() {
         return this.handler;
     }
 
+    /**
+     * Method that returns true if it's player's turn.
+     * @return playerBlinking
+     */
     public boolean isPlayerBlinking() {
         return this.playerBlinking;
-    }
-
-    public void setPlayerBlinking(boolean isPlayerTurn) {
-        this.playerBlinking = isPlayerTurn;
     }
 
     @Override
@@ -301,7 +260,6 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
 
     private void swapButtonPositions() {
         Collections.shuffle(Arrays.asList(shuffle));
-
         for (FrameLayout f : layouts) {
             f.removeAllViews();
         }
@@ -320,6 +278,11 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     }
 
 
+    /**
+     * Initialization of the buttons, with relative listener.
+     * @param color
+     * @return button
+     */
     private Button initColorButton(final SColor color) {
         final Button button = (Button) findViewById(color.getButtonId());
 
@@ -337,22 +300,6 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
         return button;
     }
 
-    private void saveScore() {
-        if (isMultiplayerMode) {
-            isGameEnded = true;
-            simoneTextView.setText(Constants.BACK_TO_MENU);
-            simoneTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            });
-            DataManager.Companion.getInstance().getDatabase().child(key).child(whichPlayer).child("score").setValue(""+finalScore);
-        }
-    }
-
-
-
     @Override
     public void onBackPressed() {
 
@@ -363,9 +310,7 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if (isMultiplayerMode) {
-                                saveScore();
-                            }
+                            saveScore();
                             finish();
                             ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
                             GameActivity.super.onBackPressed();

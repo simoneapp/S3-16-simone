@@ -1,7 +1,8 @@
 package app.simone.shared.utils;
 
 /**
- * Created by sapi9 on 21/06/2017.
+ * Constants class.
+ * @author Michele Sapignoli
  */
 
 public class Constants {
@@ -30,7 +31,7 @@ public class Constants {
     public static final int ACHIEVEMENT_SEQ_6 = 42;
     public static final int ACHIEVEMENT_SEQ_7 = 50;
     public static final int ACHIEVEMENT_SEQ_8 = 100;
-    public static final String BACK_TO_MENU = "Back";
+    public static final String BACK_TO_MENU = "Game\nOver";
     public static final int CONNECT = 100;
     public static final int CONNECTION_ERROR = -100;
     public static final int LEADERBOARD = 0;
@@ -42,7 +43,7 @@ public class Constants {
     public static final String NEED_TO_SYNC_HARD= "NTSH";
     public static final int MULTIPLAYER_READY = 46;
     public static final String N_GAMES ="N_GAMES";
-    public static final int TEN = 10;
+    public static final int FIVE = 5;
     public static final int TWENTYFIVE = 25;
     public static final int FIFTY = 50;
     public static final int SEVENTYFIVE = 75;
@@ -54,4 +55,10 @@ public class Constants {
 
     public static final int MAX_FRIENDS_PER_MATCH = 3;
     public static final int FB_IMAGE_PICTURE_SIZE = 100;
+
+    public static final String MULTIPLAYER_MODE="multiplayerMode";
+    public static final String MATCH_KEY_S="key";
+    public static final String WHICH_PLAYER="whichPlayer";
+    public static final String FIRST_PLAYER="firstplayer";
+    public static final String SECOND_PLAYER="secondplayer";
 }

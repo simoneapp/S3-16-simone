@@ -1,45 +1,40 @@
 package app.simone.settings.view;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
 import app.simone.R;
+import app.simone.settings.controller.SettingsManager;
 import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.shared.utils.AudioManager;
 
 
 public class SettingsActivity extends FullscreenBaseGameActivity {
 
-    private boolean musicOn;
+    private SettingsManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       try{
-          musicOn=loadPreferences();
-       }catch (Exception e){
-           musicOn=true;
-       }
-        setText(musicOn);
+        manager = new SettingsManager(this);
+        showCurrentSettings();
 
         FloatingActionButton musicButton = (FloatingActionButton) this.findViewById(R.id.settings_music);
         musicButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-               musicOnOff();
+                musicSwitch();
             }
         });
 
         FloatingActionButton notificationButton = (FloatingActionButton) this.findViewById(R.id.settings_notification);
         notificationButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d("BUTTON","push");
+                notificationsSwitch();
             }
         });
-
     }
 
     @Override
@@ -53,35 +48,51 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
 
-    private void musicOnOff(){
+    private void musicSwitch(){
+        boolean enabled = manager.isMusicEnabled();
+        enabled = !enabled;
+        manager.setMusicEnabled(enabled);
+        playAudio(enabled);
+        showCurrentSettings();
+    }
 
-        musicOn=!musicOn;
-        if(musicOn){
+    private void notificationsSwitch() {
+        boolean enabled = manager.areNotificationsEnabled();
+        enabled = !enabled;
+        manager.setNotificationsEnabled(enabled);
+        showCurrentSettings();
+    }
+
+    private void showCurrentSettings() {
+        boolean musicEnabled = manager.isMusicEnabled();
+        setMusicText(musicEnabled);
+
+        boolean notificationsEnabled = manager.areNotificationsEnabled();
+        setNotificationsText(notificationsEnabled);
+    }
+
+    private void playAudio(boolean isMusicOn) {
+        if(isMusicOn){
             AudioManager.Companion.getInstance().playSimoneMusic();
         }else {
             AudioManager.Companion.getInstance().stopSimoneMusic();
         }
-        setText(musicOn);
-        savePreferences();
     }
 
-    private void savePreferences(){
-        SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.settings_uc), MODE_PRIVATE).edit();
-        editor.putBoolean(getString(R.string.music), musicOn);
-        editor.apply();
+    private void setMusicText(boolean enabled){
+        setBooleanText(enabled, R.id.music_text);
     }
 
-    private boolean loadPreferences(){
-        SharedPreferences prefs = getSharedPreferences(getString(R.string.settings_uc), MODE_PRIVATE);
-        return prefs.getBoolean(getString(R.string.music), true);
+    private void setNotificationsText(boolean enabled){
+        setBooleanText(enabled, R.id.notification_text);
     }
 
-    private void setText(boolean onOff){
-        TextView musicTxt = (TextView)findViewById(R.id.music_text);
-        if(onOff){
-            musicTxt.setText(R.string.on);
+    private void setBooleanText(boolean value, int viewID) {
+        TextView textView = (TextView)findViewById(viewID);
+        if(value){
+            textView.setText(R.string.on);
         }else {
-            musicTxt.setText(R.string.off);
+            textView.setText(R.string.off);
         }
     }
 

@@ -43,4 +43,8 @@ public class Constants {
     public static final int MULTIPLAYER_READY = 46;
     public static final int MAX_FRIENDS_PER_MATCH = 3;
     public static final int FB_IMAGE_PICTURE_SIZE = 100;
+    public static final String NOTIFICATIONS_KEY = "notifications";
+    public static final String MUSIC_KEY = "music";
+    public static final String SETTINGS_KEY = "settings";
+
 }

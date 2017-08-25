@@ -12,7 +12,8 @@ import app.simone.multiplayer.controller.DataManager;
 import app.simone.shared.application.App;
 import app.simone.singleplayer.messages.ComputeFullMultiplayerSequenceMsg;
 import app.simone.singleplayer.messages.ReceivedSequenceMsg;
-import app.simone.singleplayer.model.SColor;
+import app.simone.singleplayer.model.SimonColor;
+import app.simone.singleplayer.model.SimonColorImpl;
 import app.simone.singleplayer.messages.TimeToBlinkMsg;
 import app.simone.shared.messages.IMessage;
 import app.simone.singleplayer.messages.StartGameVsCPUMsg;
@@ -26,8 +27,8 @@ import app.simone.shared.utils.Utilities;
  */
 public class CPUActor extends UntypedActor {
     private int nColors = 0;
-    private List<SColor> currentSequence;
-    private List<SColor> multiplayerFullSequence;
+    private List<SimonColorImpl> currentSequence;
+    private List<SimonColorImpl> multiplayerFullSequence;
 
     @Override
     public void preStart() throws Exception {
@@ -62,7 +63,7 @@ public class CPUActor extends UntypedActor {
                  1st player in multiplayer classic mode - Computes a full sequence of 100 colors to play in multiplayer classic mode and communicates to the GameViewActor "let the game begin!"
                  */
                 for (int i = 0; i <= 100; i++) {
-                    this.multiplayerFullSequence.add(SColor.values()[new Random().nextInt(((ComputeFullMultiplayerSequenceMsg) message).getNColors())]);
+                    this.multiplayerFullSequence.add(SimonColorImpl.values()[new Random().nextInt(((ComputeFullMultiplayerSequenceMsg) message).getNColors())]);
                 }
                 final String key= ((ComputeFullMultiplayerSequenceMsg) message).getMatchKey();
                 DataManager.Companion.getInstance().getDatabase().child(key).child("sequence").setValue(this.multiplayerFullSequence);
@@ -89,7 +90,7 @@ public class CPUActor extends UntypedActor {
         Different behaviour depending on singleplayer or multiplayer
          */
         if(multiplayerFullSequence == null || multiplayerFullSequence.isEmpty()){
-            this.currentSequence.add(SColor.values()[new Random().nextInt(nColors)]);
+            this.currentSequence.add(SimonColorImpl.values()[new Random().nextInt(nColors)]);
         } else {
             this.currentSequence.add(this.multiplayerFullSequence.get(currentSequence.size()));
         }

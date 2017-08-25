@@ -14,14 +14,14 @@ import app.simone.singleplayer.messages.StartGameVsCPUMsg;
 
 /**
  * SingleplayerGameActivity, the activity of the single play.
- * Subclass of GameActivity.
+ * Subclass of GameActivityImpl.
  *
  * @author Michele Sapignoli
  */
-public class SingleplayerGameActivity extends GameActivity {
+public class SingleplayerGameActivity extends GameActivityImpl {
 
     /**
-     * Implementation of the abstract method setup() of GameActivity.
+     * Implementation of the abstract method setup() of GameActivityImpl.
      * Sets the listener on the game fab and the initial properties.
      * Calls the CPUActor to begin the game.
      */

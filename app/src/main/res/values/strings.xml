@@ -135,7 +135,7 @@
 
     <!-- Strings related to settings activity -->
     <string name="music">Music</string>
-    <string name="notification">Notification</string>
+    <string name="notification">Notify</string>
     <string name="music_on">On</string>
     <string name="notification_on">On</string>
     <string name="waiting_for_your_color">waiting for your color...</string>

@@ -15,24 +15,25 @@ import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
 import app.simone.singleplayer.messages.ComputeFullMultiplayerSequenceMsg;
 import app.simone.singleplayer.messages.ReceivedSequenceMsg;
-import app.simone.singleplayer.model.SColor;
+import app.simone.singleplayer.model.SimonColor;
+import app.simone.singleplayer.model.SimonColorImpl;
 
 /**
  * MultiplayerGameActivity, the activity of the classic multiplayer.
- * Subclass of GameActivity.
+ * Subclass of GameActivityImpl.
  *
  * @author Michele Sapignoli
  */
 
-public class MultiplayerGameActivity extends GameActivity {
+public class MultiplayerGameActivity extends GameActivityImpl {
 
     /**
-     * Implementation of the abstract method setup() of GameActivity.
+     * Implementation of the abstract method setup() of GameActivityImpl.
      * Behaves differently dependently on which player is playing (first or second).
      */
     @Override
     void setup() {
-        final IGameActivity context = this;
+        final GameActivity context = this;
         if (getIntent().hasExtra(Constants.MULTIPLAYER_MODE)) {
             this.key = getIntent().getExtras().getString(Constants.MATCH_KEY_S);
             this.whichPlayer = getIntent().getExtras().getString(Constants.WHICH_PLAYER);
@@ -46,7 +47,7 @@ public class MultiplayerGameActivity extends GameActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         OnlineMatch match = dataSnapshot.child(key).getValue(OnlineMatch.class);
-                        List<SColor> sequenceToPlay = match.getSequence();
+                        List<SimonColorImpl> sequenceToPlay = match.getSequence();
 
                         Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
                                 .tell(new ReceivedSequenceMsg(sequenceToPlay, context), ActorRef.noSender());

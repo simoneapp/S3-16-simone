@@ -2,16 +2,12 @@ package app.simone.scores.google;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.widget.CompoundButton;
 
 import com.google.android.gms.games.Games;
 
 import app.simone.R;
 import app.simone.shared.application.App;
-import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
-import app.simone.singleplayer.view.IGameActivity;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 

@@ -69,7 +69,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
 
             @Override
             public void onClick(View view) {
-                openActivity(SettingsActivity.class, R.anim.left_in, R.anim.right_out);
+                openActivity(SettingsActivity.class, R.anim.right_in, R.anim.left_out);
             }
         });
 

@@ -1,6 +1,6 @@
 package app.simone.singleplayer.messages;
 import app.simone.shared.messages.IMessage;
-import app.simone.singleplayer.view.IGameActivity;
+import app.simone.singleplayer.view.GameActivity;
 
 /**
  * ComputeFullMultiplayerSequenceMsg,
@@ -8,12 +8,12 @@ import app.simone.singleplayer.view.IGameActivity;
  * @author Michele Sapignoli
  */
 public class ComputeFullMultiplayerSequenceMsg implements IMessage {
-    private IGameActivity activity;
+    private GameActivity activity;
     private String matchKey;
     private int nColors;
     private boolean isSecondPlayer;
 
-    public ComputeFullMultiplayerSequenceMsg(IGameActivity activity,String key, int nColors,boolean isSecondPlayer){
+    public ComputeFullMultiplayerSequenceMsg(GameActivity activity, String key, int nColors, boolean isSecondPlayer){
         this.activity = activity;
         this.matchKey=key;
         this.nColors = nColors;
@@ -25,7 +25,7 @@ public class ComputeFullMultiplayerSequenceMsg implements IMessage {
         return MessageType.COMPUTE_FULL_MULTIPLAYER_SEQUENCE_MSG;
     }
 
-    public IGameActivity getActivity(){
+    public GameActivity getActivity(){
         return this.activity;
     }
 

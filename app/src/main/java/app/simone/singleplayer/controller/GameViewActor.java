@@ -6,10 +6,11 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.simone.singleplayer.view.IGameActivity;
+import app.simone.singleplayer.model.SimonColor;
+import app.simone.singleplayer.model.SimonColorImpl;
+import app.simone.singleplayer.view.GameActivity;
 import akka.actor.UntypedActor;
 import app.simone.shared.application.App;
-import app.simone.singleplayer.model.SColor;
 import app.simone.singleplayer.messages.AttachViewMsg;
 import app.simone.singleplayer.messages.PauseMsg;
 import app.simone.singleplayer.messages.TimeToBlinkMsg;
@@ -28,9 +29,9 @@ import app.simone.shared.utils.Utilities;
  * @author Michele Sapignoli
  */
 public class GameViewActor extends UntypedActor {
-    private IGameActivity gameActivity;
-    private List<SColor> cpuSequence;
-    private List<SColor> playerSequence;
+    private GameActivity gameActivity;
+    private List<SimonColorImpl> cpuSequence;
+    private List<SimonColorImpl> playerSequence;
     private int cpuColorIndex;
     private int playerColorIndex;
     private boolean playerTurn;
@@ -47,10 +48,10 @@ public class GameViewActor extends UntypedActor {
         switch (((IMessage) message).getType()) {
             case ATTACH_VIEW_MSG:
                 /*
-                Received AttachViewMsg from IGameActivity
+                Received AttachViewMsg from GameActivity
                  */
                 this.gameActivity = ((AttachViewMsg) message).getIActivity();
-                Log.d("##VIEW ACTOR", "Current GameActivity registered + StartGameVSCPUMsg sent to CPUActor ACTOR");
+                Log.d("##VIEW ACTOR", "Current GameActivityImpl registered + StartGameVSCPUMsg sent to CPUActor ACTOR");
                 break;
             case TIME_TO_BLINK_MSG:
                 /*
@@ -80,7 +81,7 @@ public class GameViewActor extends UntypedActor {
                 break;
             case PLAYER_TURN_MSG:
                 /*
-                Player turn, msg to the public handler of IGameActivity
+                Player turn, msg to the public handler of GameActivity
                  */
                 Log.d("##VIEW ACTOR", "Player turn");
                 playerColorIndex = 0;
@@ -141,7 +142,7 @@ public class GameViewActor extends UntypedActor {
         }
     }
 
-    private void blink(SColor color) {
+    private void blink(SimonColor color) {
         Message m = new Message();
         m.what = Constants.CPU_TURN;
         m.arg1 = color.getButtonId();

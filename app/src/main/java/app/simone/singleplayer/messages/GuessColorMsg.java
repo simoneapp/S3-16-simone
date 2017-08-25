@@ -1,6 +1,6 @@
 package app.simone.singleplayer.messages;
 
-import app.simone.singleplayer.model.SColor;
+import app.simone.singleplayer.model.SimonColorImpl;
 import app.simone.shared.messages.IMessage;
 
 /**
@@ -9,9 +9,9 @@ import app.simone.shared.messages.IMessage;
  * @author Michele Sapignoli
  */
 public class GuessColorMsg implements IMessage {
-    private SColor guessColor;
+    private SimonColorImpl guessColor;
 
-    public GuessColorMsg(SColor color){
+    public GuessColorMsg(SimonColorImpl color){
         this.guessColor = color;
     }
 
@@ -20,7 +20,7 @@ public class GuessColorMsg implements IMessage {
         return MessageType.GUESS_COLOR_MSG;
     }
 
-    public SColor getGuessColor(){
+    public SimonColorImpl getGuessColor(){
         return this.guessColor;
     }
 }

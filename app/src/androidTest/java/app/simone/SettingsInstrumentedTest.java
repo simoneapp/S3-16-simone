@@ -1,7 +1,5 @@
 package app.simone;
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
@@ -20,7 +18,7 @@ public class SettingsInstrumentedTest {
 
     @Test
     public void testNotificationsSettings(){
-        SettingsManager manager = getManager();
+        SettingsManager manager = TestUtils.getManager();
         boolean current = manager.areNotificationsEnabled();
         manager.setNotificationsEnabled(!current);
         assertTrue(manager.areNotificationsEnabled() != current);
@@ -28,14 +26,9 @@ public class SettingsInstrumentedTest {
 
     @Test
     public void testMusicSettings(){
-        SettingsManager manager = getManager();
+        SettingsManager manager = TestUtils.getManager();
         boolean current = manager.isMusicEnabled();
         manager.setMusicEnabled(!current);
         assertTrue(manager.isMusicEnabled() != current);
-    }
-
-    private SettingsManager getManager() {
-        Context appContext = InstrumentationRegistry.getTargetContext();
-        return new SettingsManager(appContext);
     }
 }

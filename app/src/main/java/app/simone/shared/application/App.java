@@ -2,6 +2,9 @@ package app.simone.shared.application;
 
 import android.app.Application;
 
+import java.util.Arrays;
+import java.util.List;
+
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import app.simone.multiplayer.controller.FacebookManagerActor;
@@ -21,6 +24,12 @@ public class App extends Application {
     private GoogleApiHelper googleApiHelper;
     private static App mInstance;
 
+    public static List<ActorDefinitor> actorDefinitions =  Arrays.asList(
+            new ActorDefinitor(CPUActor.class, Constants.CPU_ACTOR_NAME),
+            new ActorDefinitor(GameViewActor.class, Constants.GAMEVIEW_ACTOR_NAME),
+            new ActorDefinitor(FacebookViewActor.class, Constants.FBVIEW_ACTOR_NAME),
+            new ActorDefinitor(FacebookManagerActor.class, Constants.FACEBOOK_ACTOR_NAME));
+
 
     @Override
     public void onCreate() {
@@ -28,12 +37,17 @@ public class App extends Application {
 
         mInstance = this;
         googleApiHelper = new GoogleApiHelper(mInstance);
+        this.system = buildActorSystem();
+    }
 
-        system = ActorSystem.create("system");
-        system.actorOf(Props.create(CPUActor.class), Constants.CPU_ACTOR_NAME);
-        system.actorOf(Props.create(GameViewActor.class), Constants.GAMEVIEW_ACTOR_NAME);
-        system.actorOf(Props.create(FacebookViewActor.class), Constants.FBVIEW_ACTOR_NAME);
-        system.actorOf(Props.create(FacebookManagerActor.class), Constants.FACEBOOK_ACTOR_NAME);
+    public static ActorSystem buildActorSystem() {
+        ActorSystem system = ActorSystem.create("system");
+
+        for(ActorDefinitor definitor : actorDefinitions) {
+            system.actorOf(Props.create(definitor.getActorClass()), definitor.getActorName());
+        }
+
+        return system;
     }
 
     public ActorSystem getActorSystem(){

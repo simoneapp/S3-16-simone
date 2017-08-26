@@ -8,10 +8,10 @@ import com.facebook.FacebookSdk.getApplicationContext
  * Created by nicola on 08/07/2017.
  */
 
-class AudioManager private constructor() {
+open class AudioManager {
 
-    val IS_DEBUG = true
-    private val player = AudioPlayer()
+    open val IS_DEBUG = false
+    protected open val player = AudioPlayer()
     val settingsManager = SettingsManager(getApplicationContext())
 
     private object Holder {

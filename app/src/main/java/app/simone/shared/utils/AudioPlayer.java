@@ -20,7 +20,6 @@ public class AudioPlayer {
 
     public void play(Context c, int rid) {
         stop();
-
         mMediaPlayer = MediaPlayer.create(c, rid);
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -28,9 +27,11 @@ public class AudioPlayer {
                 stop();
             }
         });
-
         mMediaPlayer.start();
+    }
 
+    public boolean isPlaying() {
+        return mMediaPlayer.isPlaying();
     }
 
 }

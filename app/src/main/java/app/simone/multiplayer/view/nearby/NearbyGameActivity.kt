@@ -14,21 +14,24 @@ import com.facebook.Profile
 import com.google.firebase.database.*
 import java.util.concurrent.ExecutionException
 
-class NearbyGameActivity : AppCompatActivity() {
+class NearbyGameActivity : AppCompatActivity(), NearbyView {
 
+    private var handler: Handler? = null
     private var playerID = ""
-    private var matchID = ""
     private var playerColor: SColor? = null
+    private var matchID = ""
     private var db: DatabaseReference? = null
     private val CHILD_PLAYERS = "users"
     private val NODE_REF_ROOT = "matches"
     private val CHILD_PLAYERSSEQUENCE = "playersSequence"
     private val CHILD_CPUSEQUENCE = "cpuSequence"
     private val CHILD_INDEX = "index"
-    private var cpuSequenceRef : DatabaseReference? = null
+    private var cpuSequenceRef: DatabaseReference? = null
     private var buttonColor: Button? = null
     private var blinkCount = 0
     private var player = AudioPlayer()
+    private var presenter: NearbyViewPresenter? = null
+    var context: NearbyView = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,178 +42,93 @@ class NearbyGameActivity : AppCompatActivity() {
         matchID = intent.getStringExtra("match")
         playerID = Profile.getCurrentProfile().id
 
-        setColor()
-        observePlayersSequence()
+
+
+
     }
 
     public override fun onResume() {
         super.onResume()
-        blink()
-    }
 
-    @Throws(ExecutionException::class, InterruptedException::class)
-    fun sendColor(view: View) {
-
-        if(playerColor != null) {
-            player.play(this, playerColor!!.soundId)
-        }
-
-        db?.child(matchID)?.child(CHILD_PLAYERSSEQUENCE)?.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if(dataSnapshot.value != "playing") {
-                    val count = dataSnapshot.childrenCount
-                    dataSnapshot.ref.child((count + 1).toString()).setValue(playerColor)
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) { }
-        })
-
-    }
-
-    private fun setColor() {
-        Log.d("PROVA", "executing query")
         db?.child(matchID)?.child(CHILD_PLAYERS)?.child(playerID)?.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
                 val child = dataSnapshot.child("color")
 
-                if(child.value != null) {
+                if (child.value != null) {
                     val color = child.value.toString()
                     playerColor = SColor.valueOf(color)
-                    render()
+                    val pl = Player(playerColor, playerID)
+                    val match = Match(matchID, pl)
+                    presenter = NearbyViewPresenter(match, context)
+                    presenter?.onResume()
                 }
             }
-
-            override fun onCancelled(databaseError: DatabaseError) { }
         })
     }
 
-    private fun observePlayersSequence() {
+    override fun getHandler(): Handler? {
+        return handler
 
-        /*
-        db?.child(matchID)?.child(CHILD_PLAYERSSEQUENCE)?.addValueEventListener(object: ValueEventListener {
-            override fun onCancelled(p0: DatabaseError?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(p0: DataSnapshot?) {
-                val value = p0?.value
-
-                if(value == null || value == "wrong") {
-
-                }
-
-            }
-
-        })*/
-
-        db?.child(matchID)?.child("blink")?.addValueEventListener(object: ValueEventListener{
-            override fun onCancelled(p0: DatabaseError?) {
-
-            }
-
-            override fun onDataChange(p0: DataSnapshot?) {
-                if(p0?.child("color")?.value == playerColor.toString()) {
-                    renderBlink(p0.child("index")?.value.toString())
-                }
-            }
-
-        })
     }
 
-    private fun renderBlink(sequenceIndex: String) {
-        buttonColor?.alpha = 0.5F
+    override fun updateButtonBlink(blinkTonality: Float) {
+        buttonColor?.alpha = blinkTonality
         player.play(this, playerColor!!.soundId)
-
-        val handler = Handler()
-        handler.postDelayed(Runnable {
-            buttonColor?.alpha = 1.0F
-
-            //db?.child(matchID)?.child("blink")?.child("status")?.setValue("replied")
-
-            val nextIndex = sequenceIndex.toLong() + 1
-
-            val cpuSeqRef = db?.child(matchID)?.child(CHILD_CPUSEQUENCE)?.ref
-
-            cpuSeqRef?.addListenerForSingleValueEvent(object : ValueEventListener{
-                override fun onCancelled(p0: DatabaseError?) {
-                }
-
-                override fun onDataChange(p0: DataSnapshot?) {
-                    if(p0 != null && nextIndex <= p0.childrenCount) {
-                        val nextColor = p0?.child(nextIndex.toString()).value.toString()
-
-                        val map = HashMap<String,String>()
-                        map["color"] = nextColor
-                        map["index"] = nextIndex.toString()
-                        db?.child(matchID)?.child("blink")?.setValue(map)
-
-                        if(nextIndex == p0.childrenCount) {
-                            db?.child(matchID)?.child(CHILD_PLAYERSSEQUENCE)?.setValue("empty")
-                        }
-                    }
-                }
-            })
-
-        }, 500)
     }
 
-    private fun render() {
-        if(playerColor != null) {
-            buttonColor?.background = resources?.getDrawable(playerColor!!.colorId)
+    override fun listenOnCpuIndexChange() {
+
+
+        db?.child(matchID)?.child("blink")?.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError?) {
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot?) {
+                Log.d("BLINKLISTENERTEST", "I have changed blink")
+                Log.d("NEARBYVIEW", " color: " + p0?.child("color")?.value + " index " + p0?.child("index")?.value.toString())
+
+                if (p0?.child("color")?.value == playerColor.toString()) {
+                    val index = p0?.child("index").value.toString()
+
+                    handler = Handler()
+
+                    presenter?.listenOnBlinkChange(index.toLong())
+                }
+            }
+
+        })
+
+
+    }
+
+    override fun updateButtonText(text: String) {
+        buttonColor?.text = text
+    }
+
+    override fun updateColor(color: SColor) {
+
+        buttonColor?.background = resources?.getDrawable(color.colorId)
+    }
+
+
+    @Throws(ExecutionException::class, InterruptedException::class)
+    fun sendColor(view: View) {
+
+        if (playerColor != null) {
+            player.play(this, playerColor!!.soundId)
+            presenter?.updatePlayersSequence()
         }
-    }
 
-    private fun blink() {
-        cpuSequenceRef = db?.child(matchID)?.child(CHILD_CPUSEQUENCE)?.ref
-        db?.child(matchID)?.child(CHILD_INDEX)?.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                //Log.d("PROVAINDEX_BLINK", dataSnapshot.getValue(String.class));
-                val index = dataSnapshot.getValue(String::class.java)
-                if(index != null) {
-                    observeCpuSequence(index)
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) { }
-        })
 
     }
 
-    private fun observeCpuSequence(cpuIndex: String) {
-        cpuSequenceRef?.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val childrenCount = dataSnapshot.childrenCount.toString()
-                for (child in dataSnapshot.children) {
-                    val colorSequence = child.getValue(String::class.java)
-                    val index = child.key
-                    //Log.d("CHILDLOOP", colorSequence + " " + index);
 
-                    if (colorSequence != null
-                            && playerColor == SColor.valueOf(colorSequence)
-                            && cpuIndex == index) {
-                        ++blinkCount
 
-                        if (index == childrenCount) {
-                            buttonColor?.text = playerColor.toString() + " " + blinkCount + " your turn!"
-                        } else {
-                            val newIndex = Integer.parseInt(index) + 1
-                            buttonColor?.text = playerColor.toString() + " " + blinkCount
-                            db?.child(matchID)?.child(CHILD_INDEX)?.setValue(newIndex.toString())
-                        }
-                    } else {
-                        buttonColor?.text = playerColor.toString() + " " + blinkCount
-                    }
-                }
-            }
 
-            override fun onCancelled(databaseError: DatabaseError) { }
-        })
-    }
-
-    companion object {
-        private val handler: android.os.Handler? = null
-    }
 }

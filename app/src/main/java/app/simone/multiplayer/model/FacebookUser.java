@@ -20,26 +20,33 @@ public class FacebookUser {
     public static final String kID = "id";
     public static final String kSCORE = "score";
     public static final String kDATA = "data";
+    public static final String kPICTURE_URL = "url";
 
     private String id;
     private String name;
-    private FacebookPicture picture;
-
-    private String score = "";
-
-    public FacebookUser() {
-
-    }
+    private String picture;
+    private String score;
 
     public FacebookUser(JsonElement json) {
 
+        if(json==null){
+            return;
+        }
+
         JsonObject obj = json.getAsJsonObject();
 
-        this.name = obj.get(kNAME).getAsString();
-        if(obj.get(kPICTURE)!=null){
-            this.picture = new FacebookPicture(obj.get(kPICTURE).getAsJsonObject().get(kDATA).getAsJsonObject());
+        if(obj.get(kID)!=null) {
+            this.id = obj.get(kID).getAsString();
         }
-        this.id = obj.get(kID).getAsString();
+
+        if(obj.get(kNAME)!=null) {
+            this.name = obj.get(kNAME).getAsString();
+        }
+
+        if(obj.get(kPICTURE)!=null){
+            JsonObject pictureObject = obj.get(kPICTURE).getAsJsonObject().get(kDATA).getAsJsonObject();
+            this.picture = pictureObject.get(kPICTURE_URL).getAsString();
+        }
 
         if(obj.get(kSCORE)!=null) {
             this.score = obj.get(kSCORE).getAsString();
@@ -68,10 +75,9 @@ public class FacebookUser {
         dict.put(FacebookUser.kID, id);
         dict.put(FacebookUser.kNAME, name);
         dict.put(FacebookUser.kSCORE, score);
-        dict.put(FacebookUser.kPICTURE, picture.getUrl());
+        dict.put(FacebookUser.kPICTURE, picture);
         return dict;
     }
-
 
     public String getId() {
         return id;
@@ -81,7 +87,7 @@ public class FacebookUser {
         return name;
     }
 
-    public FacebookPicture getPicture() {
+    public String getPicture() {
         return picture;
     }
 
@@ -92,6 +98,7 @@ public class FacebookUser {
     public void setScore(String score) {
         this.score = score;
     }
+
 
     public void setId(String id) {
         this.id = id;

@@ -15,5 +15,13 @@ import app.simone.shared.utils.AudioPlayer
 open class TestableAudioManager : AudioManager() {
     override val IS_DEBUG = false
     override val player = AudioPlayer()
+
+    private object Holder {
+        val INSTANCE = TestableAudioManager()
+    }
+
+    companion object {
+        val instance: TestableAudioManager by lazy { Holder.INSTANCE }
+    }
 }
 

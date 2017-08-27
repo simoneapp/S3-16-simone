@@ -20,22 +20,23 @@ public class AudioManagerTest {
     @Test
     public void testPlayMusic() {
         enableMusic();
-        TestableAudioManager instance = (TestableAudioManager) TestableAudioManager.Companion.getInstance();
-        assertFalse(instance.getPlayer().isPlaying());
-        instance.playSimoneMusic();
+        TestableAudioManager instance = TestableAudioManager.Companion.getInstance();
+        instance.playSimoneMusic(TestUtils.getContext());
         assertTrue(instance.getPlayer().isPlaying());
         instance.stopSimoneMusic();
         assertFalse(instance.getPlayer().isPlaying());
     }
 
+    @Test
     public void testPreferencesEffectiveness() {
         disableMusic();
-        TestableAudioManager instance = (TestableAudioManager) TestableAudioManager.Companion.getInstance();
+        TestableAudioManager instance = TestableAudioManager.Companion.getInstance();
+        instance.stopSimoneMusic();
         assertFalse(instance.getPlayer().isPlaying());
-        instance.playSimoneMusic();
+        instance.playSimoneMusic(TestUtils.getContext());
         assertFalse(instance.getPlayer().isPlaying());
         enableMusic();
-        instance.playSimoneMusic();
+        instance.playSimoneMusic(TestUtils.getContext());
         assertTrue(instance.getPlayer().isPlaying());
     }
 
@@ -46,6 +47,6 @@ public class AudioManagerTest {
 
     private void disableMusic() {
         SettingsManager manager = TestUtils.getManager();
-        manager.setMusicEnabled(true);
+        manager.setMusicEnabled(false);
     }
 }

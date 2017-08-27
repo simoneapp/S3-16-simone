@@ -6,19 +6,19 @@ package app.simone.shared.application;
 
 public class ActorDefinitor {
 
-    private Class actorClass;
+    private String actorClass;
     private String actorName;
 
-    public ActorDefinitor(Class actorClass, String actorName) {
+    public ActorDefinitor(String actorClass, String actorName) {
         this.actorClass = actorClass;
         this.actorName = actorName;
     }
 
-    public Class getActorClass() {
+    public String getActorClass() {
         return actorClass;
     }
 
-    public java.lang.String getActorName() {
+    public String getActorName() {
         return actorName;
     }
 }

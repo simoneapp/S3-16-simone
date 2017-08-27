@@ -43,8 +43,5 @@ public class GoogleApiHelper {
                 .setViewForPopups(view)
                 .addApi(Games.API).build();
         mGoogleApiClient.connect();
-
     }
-
-
 }

@@ -9,10 +9,13 @@ import app.simone.settings.controller.SettingsManager;
  * Created by nicola on 25/08/2017.
  */
 
-public class TestUtils {
+class TestUtils {
 
-    public static SettingsManager getManager() {
-        Context appContext = InstrumentationRegistry.getTargetContext();
-        return new SettingsManager(appContext);
+    static SettingsManager getManager() {
+        return new SettingsManager(getContext());
+    }
+
+    static Context getContext() {
+        return InstrumentationRegistry.getTargetContext();
     }
 }

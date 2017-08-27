@@ -1,5 +1,6 @@
 package app.simone.shared.utils
 
+import android.content.Context
 import app.simone.R
 import app.simone.settings.controller.SettingsManager
 import com.facebook.FacebookSdk.getApplicationContext
@@ -12,7 +13,7 @@ open class AudioManager {
 
     open val IS_DEBUG = false
     protected open val player = AudioPlayer()
-    val settingsManager = SettingsManager(getApplicationContext())
+    var settingsManager : SettingsManager? = null
 
     private object Holder {
         val INSTANCE = AudioManager()
@@ -23,12 +24,20 @@ open class AudioManager {
     }
 
     fun playSimoneMusic() {
+        playSimoneMusic(getApplicationContext())
+    }
+
+    fun playSimoneMusic(c : Context) {
+
+        if(settingsManager == null) {
+            settingsManager = SettingsManager(c)
+        }
 
         if(IS_DEBUG) return
-        val value = settingsManager.isMusicEnabled
-        if(!value) return
+        val value = settingsManager?.isMusicEnabled
+        if(value == null || !value) return
 
-        player.play(getApplicationContext(), R.raw.simonintro)
+        player.play(c, R.raw.simonintro)
         player.mMediaPlayer.isLooping = true
     }
 

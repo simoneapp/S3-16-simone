@@ -31,7 +31,7 @@ public class AudioPlayer {
     }
 
     public boolean isPlaying() {
-        return mMediaPlayer.isPlaying();
+        return mMediaPlayer != null && mMediaPlayer.isPlaying();
     }
 
 }

@@ -101,8 +101,4 @@ public class FacebookUser {
         this.name = name;
     }
 
-    public void setPicture(FacebookPicture picture) {
-        this.picture = picture;
-    }
-
 }

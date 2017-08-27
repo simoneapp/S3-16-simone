@@ -43,8 +43,6 @@ public class GoogleGamesActivity extends AppCompatActivity implements GoogleApiC
 // minimum: 1 other player; maximum: 3 other players
             Intent intent = Games.RealTimeMultiplayer.getSelectOpponentsIntent(mGoogleApiClient, 1, 4);
             startActivityForResult(intent, RC_SELECT_PLAYERS);
-        } else {
-
         }
     }
 

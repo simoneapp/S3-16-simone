@@ -3,6 +3,7 @@ package app.simone;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import akka.actor.ActorRef;
@@ -24,29 +25,20 @@ public class MultiplayerControllerTest {
     public static void setup() {
         system = App.buildActorSystem();
     }
-/*
+
     @Test
-    public void checkActorsCreation() {
+    public void checkFbFriends() {
 
-        new TestKit(system) {{
-
-            MultiplayerPagerActivity mock = Mockito.mock(MultiplayerPagerActivity.class);
-
-            getFbManagerActor().tell(new FbRequestFriendsMsg(mock), testActor());
-
-            assertTrue(true);
-
-
-            }};
-    }
-*/
-    private ActorRef getFbViewActor() {
-        return Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, system);
     }
 
     private ActorRef getFbManagerActor() {
         return Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FACEBOOK_ACTOR_NAME, system);
     }
+
+    private ActorRef getFbViewActor() {
+        return Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, system);
+    }
+
 
 }
 

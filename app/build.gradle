@@ -65,7 +65,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
     testCompile group: 'com.typesafe.akka', name: 'akka-testkit_2.10', version: '2.3.16'
-    androidTestCompile "org.mockito:mockito-core:2.+"
+    testCompile "org.mockito:mockito-core:2.+"
     androidTestCompile group: 'com.typesafe.akka', name: 'akka-testkit_2.10', version: '2.3.16'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

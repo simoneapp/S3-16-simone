@@ -2,19 +2,17 @@ package app.simone.multiplayer.controller
 
 import akka.actor.UntypedActor
 import android.os.Bundle
-import app.simone.multiplayer.messages.*
+import app.simone.multiplayer.messages.FbRequestFriendsMsgMock
+import app.simone.multiplayer.messages.FbResponseFriendsMsg
 import app.simone.multiplayer.model.FacebookUser
-import app.simone.shared.application.App
 import app.simone.shared.messages.IMessage
-import app.simone.shared.utils.Constants
-import app.simone.shared.utils.Utilities
 import app.simone.singleplayer.messages.MessageType
 import com.facebook.AccessToken
 import com.facebook.GraphRequest
+import com.facebook.GraphResponse
 import com.facebook.HttpMethod
 import com.google.gson.Gson
 import com.google.gson.JsonElement
-import org.json.JSONObject
 
 /**
  * Created by nicola on 01/07/2017.
@@ -23,115 +21,58 @@ import org.json.JSONObject
 class FacebookManagerActor : UntypedActor() {
 
     val FRIENDS_PATH = "/me/friends"
-    val SCORE_PATH = "/scores"
     val FRIENDS_LIMIT = 5000
     val FIELDS = "name,picture,id"
-
-    val FB_WRITE_PERMISSIONS = arrayOf("publish_actions").toMutableList()
 
     override fun onReceive(message: Any?) {
 
         when ((message as IMessage).type) {
             MessageType.FB_REQUEST_FRIENDS_MSG -> {
-                this.getFacebookFriends(message as FbRequestFriendsMsg)
+                this.getFacebookFriends(null)
             }
 
-            MessageType.FB_GET_FRIEND_SCORE_MSG -> {
-                this.getFriendScore((message as FbRequestGetUserScoreMsg).friend)
-            }
-
-            MessageType.FB_UPDATE_SCORE_MSG -> {
-                this.updateScore((message as FbRequestScoreUpdateMsg).score)
+            MessageType.FB_REQUEST_FRIENDS_MSG_MOCK -> {
+                val msg = message as FbRequestFriendsMsgMock
+                this.getFacebookFriends(msg.bundle, msg.request)
             }
         }
     }
 
-    fun getFacebookFriends(message: FbRequestFriendsMsg) {
+    fun getFacebookFriends(parameters: Bundle?, request: GraphRequest?) {
 
-        val parameters = Bundle()
-        parameters.putInt("limit",FRIENDS_LIMIT)
-        parameters.putString("fields", FIELDS)
+        var params = parameters
+        if(params == null) {
+            params = Bundle()
+        } else {
+            this.handleFriendsResponse()
+            //// METTERE A POSTO, CHIAMARE DIRETTAMENTE IL METODO?
+        }
 
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().actorSystem)
+        params.putInt("limit",FRIENDS_LIMIT)
+        params.putString("fields", FIELDS)
+
 
         GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 FRIENDS_PATH,
                 parameters,
                 HttpMethod.GET,
-                GraphRequest.Callback { response ->
-                    if(response.error == null) {
-                        val gson = Gson()
-                        val jsonFriends = gson
-                                .fromJson(response.rawResponse, JsonElement::class.java)
-                                .asJsonObject.get("data").asJsonArray
-
-                        val list = FacebookUser.listFromJson(jsonFriends)
-                        actor.tell(FbResponseFriendsMsg(list, message.activity), self)
-                    } else {
-                        actor.tell(FbResponseFriendsMsg(response.error.errorUserMessage), self)
-                    }
-                }
+                GraphRequest.Callback(this::handleFriendsResponse)
         ).executeAsync()
     }
 
-    fun updateScore(score: Int) {
+    fun handleFriendsResponse(response: GraphResponse) {
+        if(response.error == null) {
+            val gson = Gson()
+            val jsonFriends = gson
+                    .fromJson(response.rawResponse, JsonElement::class.java)
+                    .asJsonObject.get("data").asJsonArray
 
-        val parameters = Bundle()
-        parameters.putString("score",score.toString())
-
-        if(AccessToken.getCurrentAccessToken().permissions.containsAll(FB_WRITE_PERMISSIONS)) {
-
-            GraphRequest(
-                    AccessToken.getCurrentAccessToken(),
-                    SCORE_PATH,
-                    parameters,
-                    HttpMethod.POST,
-                    GraphRequest.Callback { response ->
-                        if(response.error == null) {
-                            sender.tell(FbResponseScoreUpdateMsg(true), self)
-                        } else {
-                            sender.tell(FbResponseScoreUpdateMsg(response.error.errorMessage), self)
-                        }
-                    }
-            ).executeAsync()
-
+            val list = FacebookUser.listFromJson(jsonFriends)
+            sender.tell(FbResponseFriendsMsg(list), self)
         } else {
-            sender.tell(FbResponseScoreUpdateMsg("You need to accept Facebook publish permissions"), self)
+            sender.tell(FbResponseFriendsMsg(response.error.errorUserMessage), self)
         }
-    }
-
-    fun getMyScore() {  getUserScore("me") }
-
-    fun getFriendScore(user: FacebookUser?) {
-        val id = user?.id ?: return
-        getUserScore(id)
-    }
-
-    private fun getUserScore(id: String) {
-
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, App.getInstance().actorSystem)
-
-        GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/" + id + SCORE_PATH,
-                null,
-                HttpMethod.GET,
-                GraphRequest.Callback { response ->
-                    if(response.error == null) {
-                        val scores = response.jsonObject.getJSONArray("data")
-
-                        if(scores.length() > 0) {
-                            val score = (scores.get(0) as JSONObject).getInt("score")
-                            actor.tell(FbResponseGetUserScoreMsg(score), self)
-                        } else {
-                            actor.tell(FbResponseGetUserScoreMsg("Score not available"), self)
-                        }
-                    } else {
-                        actor.tell(FbResponseGetUserScoreMsg(0), self)
-                    }
-                }
-        ).executeAsync()
     }
 
     companion object {

@@ -16,7 +16,7 @@ import static junit.framework.Assert.assertTrue;
  * Created by nicola on 27/08/2017.
  */
 
-public class FacebookClassesTest {
+public class FacebookUserTest {
 
     private String testUid = "1020304050";
     private String testName = "John Appleseed";

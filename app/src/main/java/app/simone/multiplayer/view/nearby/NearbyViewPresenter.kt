@@ -166,35 +166,7 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
         }, 1000)
     }
 
-    private fun setPlayersTurn() {
-
-        databaseRootReference.child("blink").child("index").addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(p0: DataSnapshot?) {
-                val blinkIndex=p0?.value.toString()
-                cpuSeqRef?.addListenerForSingleValueEvent(object:ValueEventListener{
-                    override fun onDataChange(p0: DataSnapshot?) {
-                        val childrenCount=p0?.childrenCount
-                        if(blinkIndex.toLong()==childrenCount){
-                            nearbyView.showMessage("PLAYERS TURN!")
-                        }
-
-                    }
-
-                    override fun onCancelled(p0: DatabaseError?) {
-
-                    }
-
-                })
-
-
-            }
-
-            override fun onCancelled(p0: DatabaseError?) {
-
-            }
-
-        })
-    }
+  
 
 
 

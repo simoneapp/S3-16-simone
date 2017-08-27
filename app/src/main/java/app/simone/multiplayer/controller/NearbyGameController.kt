@@ -22,8 +22,6 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import java.util.*
 
 
-
-
 /**
  * Created by nicola on 01/08/2017.
  */

@@ -5,7 +5,10 @@ import java.util.List;
 import app.simone.singleplayer.model.SColor;
 
 /**
- * Created by Giacomo on 05/07/2017.
+ * This class models an online match (Instant Multiplayer mode), which is made by two players, a match id (key) and a sequence of colors.
+ *
+ * @author Giacomo
+ *
  */
 
 public class OnlineMatch{
@@ -20,6 +23,12 @@ public class OnlineMatch{
 
     }
 
+    /**
+     * The constructor is made by two players. The key is automatically generated while the list of colors is provided by CPU Actor (package singleplayer.controller.CPUActor)
+     *
+     * @param firstplayer first player of the match
+     * @param secondplayer second plyaer of the match
+     */
 
     public OnlineMatch(FacebookUser firstplayer, FacebookUser secondplayer) {
         this.firstplayer = firstplayer;

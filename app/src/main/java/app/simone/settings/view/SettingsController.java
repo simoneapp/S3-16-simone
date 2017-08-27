@@ -6,7 +6,10 @@ import android.preference.PreferenceManager;
 import app.simone.shared.utils.AudioManager;
 
 /**
- * Created by Giacomo on 11/08/2017.
+ * This class is the controller for the Settings Activity, it contains a boolean value which becomes true or false
+ * depending on the music state.
+ *
+ * @author Giacomo
  */
 
 class SettingsController {

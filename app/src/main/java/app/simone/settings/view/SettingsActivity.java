@@ -7,8 +7,13 @@ import android.view.View;
 import android.widget.TextView;
 import app.simone.R;
 import app.simone.shared.main.FullscreenBaseGameActivity;
-import app.simone.shared.utils.AudioManager;
 
+/**
+ *  This is the activity of the settings.
+ *  It is made by two buttons, the first one is about sounds (on/off) while the other one is about push notification (on/off)
+ *
+ *  @author Giacomo
+ */
 
 public class SettingsActivity extends FullscreenBaseGameActivity {
     

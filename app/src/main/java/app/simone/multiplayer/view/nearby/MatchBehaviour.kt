@@ -5,5 +5,7 @@ package app.simone.multiplayer.view.nearby
  */
 interface MatchBehaviour {
 
-    fun listenOnBlinkChange(sequenceIndex: Long)
+    fun listenOnBlinkChange()
+
+    fun increaseSpeed()
 }

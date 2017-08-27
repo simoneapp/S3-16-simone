@@ -8,7 +8,6 @@ import app.simone.singleplayer.model.SColor
  */
 interface NearbyView {
 
-    fun listenOnCpuIndexChange()
 
     fun updateButtonText(text:String)
 
@@ -17,5 +16,9 @@ interface NearbyView {
     fun getHandler(): Handler?
 
     fun updateColor(color: SColor)
+
+    fun startGame()
+
+    fun showMessage(text:String)
 
 }

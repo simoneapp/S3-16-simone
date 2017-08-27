@@ -7,7 +7,6 @@ import android.view.View
  */
 interface Presenter {
 
-    fun onResume()
 
     fun onCreate()
 

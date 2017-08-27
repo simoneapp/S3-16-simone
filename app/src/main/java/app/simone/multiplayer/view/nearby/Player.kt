@@ -19,4 +19,5 @@ class Player (var color:SColor?,val id:String){
 
 
 
+
 }

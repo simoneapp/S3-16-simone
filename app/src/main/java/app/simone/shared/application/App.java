@@ -41,7 +41,7 @@ public class App extends Application {
 
         for(ActorDefinitor definitor : actorDefinitions) {
             try {
-                system.actorOf(Props.create(Class.forName(definitor.getActorClass()), definitor.getActorName()));
+                system.actorOf(Props.create(Class.forName(definitor.getActorClass())), definitor.getActorName());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }

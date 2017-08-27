@@ -13,8 +13,6 @@ class KeysHandler {
         this.list.add(s)
     }
 
-    fun getElement(index: Int): String {
-        return list[index]
-    }
+    fun getElement(index: Int): String = list[index]
 
 }

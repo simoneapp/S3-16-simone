@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import app.simone.R;
 import app.simone.shared.main.FullscreenBaseGameActivity;
+import app.simone.shared.utils.AudioManager;
 
 
 public class SettingsActivity extends FullscreenBaseGameActivity {
@@ -56,6 +57,14 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
         }else {
             musicTxt.setText("off");
         }
+    }
+
+    @Override
+    protected void onPause() {
+        if(controller.isMusicOn()){
+            controller.musicOnOff();
+        }
+        super.onPause();
     }
 
 }

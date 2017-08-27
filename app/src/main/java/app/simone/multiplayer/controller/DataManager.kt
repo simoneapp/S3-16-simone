@@ -13,7 +13,6 @@ import com.google.firebase.database.FirebaseDatabase
 
 class DataManager private constructor() {
 
-
     var context: Context? = null
     val database = FirebaseDatabase.getInstance().getReference(MULTIPLAYER)!!
 

@@ -2,7 +2,6 @@ package app.simone.multiplayer.view.invites;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,6 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
         this.mContext=context;
     }
 
-    // View lookup cache
     private static class ViewHolder {
         TextView textPlayer1;
         TextView textPlayer2;

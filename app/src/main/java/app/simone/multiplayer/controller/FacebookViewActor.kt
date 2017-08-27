@@ -9,6 +9,7 @@ import app.simone.shared.utils.Constants
 import app.simone.shared.utils.Utilities
 import app.simone.singleplayer.messages.MessageType
 import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.facebook.share.widget.GameRequestDialog
@@ -100,11 +101,11 @@ class FacebookViewActor : akka.actor.UntypedActor() {
 
         val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FACEBOOK_ACTOR_NAME, App.getInstance().actorSystem)
 
-        callbackManager = com.facebook.CallbackManager.Factory.create()
+        callbackManager = CallbackManager.Factory.create()
 
         loginButton = msg.activity?.findViewById(app.simone.R.id.login_button) as com.facebook.login.widget.LoginButton
         loginButton?.setReadPermissions(FB_READ_PERMISSIONS)
-        loginButton?.registerCallback(callbackManager, object : com.facebook.FacebookCallback<LoginResult> {
+        loginButton?.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: com.facebook.login.LoginResult) {
                 actor.tell(FbRequestFriendsMsg(msg.activity), self)
                 msg.activity.setFacebookViewVisible(false)

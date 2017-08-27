@@ -2,7 +2,6 @@ package app.simone.multiplayer.controller
 
 import akka.actor.UntypedActor
 import android.os.Bundle
-import android.util.Log
 import app.simone.multiplayer.messages.*
 import app.simone.multiplayer.model.FacebookUser
 import app.simone.shared.application.App
@@ -61,7 +60,6 @@ class FacebookManagerActor : UntypedActor() {
                 parameters,
                 HttpMethod.GET,
                 GraphRequest.Callback { response ->
-                    Log.v("Sender Akka", sender.toString())
                     if(response.error == null) {
                         val gson = Gson()
                         val jsonFriends = gson
@@ -99,7 +97,6 @@ class FacebookManagerActor : UntypedActor() {
             ).executeAsync()
 
         } else {
-            //LoginManager.getInstance().logInWithPublishPermissions(activity, FB_WRITE_PERMISSIONS)
             sender.tell(FbResponseScoreUpdateMsg("You need to accept Facebook publish permissions"), self)
         }
     }
@@ -127,15 +124,11 @@ class FacebookManagerActor : UntypedActor() {
                         if(scores.length() > 0) {
                             val score = (scores.get(0) as JSONObject).getInt("score")
                             actor.tell(FbResponseGetUserScoreMsg(score), self)
-                            //sender.tell(FbResponseGetUserScoreMsg(score), self)
                         } else {
                             actor.tell(FbResponseGetUserScoreMsg("Score not available"), self)
-                            //sender.tell(FbResponseGetUserScoreMsg("Score not available"), self)
                         }
                     } else {
-                        //actor.tell(FbResponseGetUserScoreMsg(response.error.errorMessage), self)
                         actor.tell(FbResponseGetUserScoreMsg(0), self)
-                        //sender.tell(FbResponseGetUserScoreMsg(response.error.errorMessage), self)
                     }
                 }
         ).executeAsync()

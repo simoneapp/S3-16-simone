@@ -11,7 +11,7 @@ android:
     - build-tools-25.0.0
 
     # The SDK version used to compile your project
-    - android-23
+    - android-25
 
     # Additional components
     - extra-android-support
@@ -22,7 +22,8 @@ android:
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
-    - sys-img-armeabi-v7a-android-23
+    - sys-img-armeabi-v7a-android-19
+    - sys-img-armeabi-v7a-android-25
 
   licenses:
     - 'android-sdk-preview-license-52d11cd2'
@@ -31,27 +32,47 @@ android:
 
 env:
   matrix:
-    - API=android-15 ABI=armeabi-v7a
-    - API=android-16 ABI=armeabi-v7a
-    - API=android-17 ABI=armeabi-v7a
-    - API=android-18 ABI=armeabi-v7a
-    - API=android-19 ABI=armeabi-v7a
-    - API=android-21 ABI=armeabi-v7a
-    - API=android-22 ABI=armeabi-v7a
-    - API=android-24 ABI=armeabi-v7a
-    - API=android-24 ABI=arm64-v8a
+    - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-25 ANDROID_ABI=arm64-v8a
 
-# Emulator Management: Create, Start and Wait
+  global:   #Optional 
+    - ADB_INSTALL_TIMEOUT=10    #Time out to 10 mins
+
+before_cache:
+    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
+cache:
+  directories:      #Cache all dirs under .gradle folder
+    - $HOME/.gradle/daemon      #Cache daemon logs
+    - $HOME/.gradle/native      #Cache library downloaded from the gradle dependency
+    - $HOME/.gradle/wrapper     #Cache the gradle
+
+licenses:
+    - 'android-sdk-preview-license-52d11cd2'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+
 before_script:
-  - android-update-sdk --components=sys-img-$ABI-$API --accept-licenses='android-sdk-license-[0-9a-f]{8}'
-  - echo no | android create avd --force -n test -t $API --abi $ABI
-  - emulator -avd test -no-audio -no-window
-  - android-wait-for-emulator
-  - adb shell input keyevent 82 &
+    - chmod +x gradlew      #Grant permissions
+    - android list targets
+    - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi $ANDROID_ABI    #Create AVD for given api
+    - emulator -avd test -no-skin -no-audio -no-window &    #Start emulator
 
 script:
-  - chmod +x ./gradlew
-  - ./gradlew clean assemble
+    - echo "Travis branch is $TRAVIS_BRANCH"
+    - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
+    - android-wait-for-emulator
+    - adb devices   #Display list of devices
+    - adb shell input keyevent 82 &
+    - ./gradlew connectedCheck -PdisablePreDex --stacktrace
+
+before_install:
+    - pip install --user codecov    #Install codecov
+
+after_success:
+    - codecov                       #Run codecov
+
+after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
   
 notifications:
     slack: simone-app:ZuDGmNIMJSK28PW3c8Elca5G

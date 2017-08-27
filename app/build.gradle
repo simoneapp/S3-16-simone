@@ -46,7 +46,6 @@ dependencies {
     }
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile group: 'com.typesafe.akka', name: 'akka-actor_2.10', version: '2.3.16'
-    testCompile group: 'com.typesafe.akka', name: 'akka-testkit_2.10', version: '2.3.16'
     compile group: 'org.scala-lang', name: 'scala-library', version: '2.10.4'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
@@ -65,6 +64,9 @@ dependencies {
     compile 'com.firebaseui:firebase-ui-database:2.0.0'
     compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
+    testCompile group: 'com.typesafe.akka', name: 'akka-testkit_2.10', version: '2.3.16'
+    androidTestCompile "org.mockito:mockito-core:2.+"
+    androidTestCompile group: 'com.typesafe.akka', name: 'akka-testkit_2.10', version: '2.3.16'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

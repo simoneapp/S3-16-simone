@@ -17,7 +17,6 @@ import app.simone.multiplayer.controller.NearbyGameController;
 import app.simone.multiplayer.view.MultiplayerTypeActivity;
 import app.simone.multiplayer.view.nearby.NearbyGameActivity;
 import app.simone.multiplayer.view.newmatch.FriendsListFragment;
-import app.simone.scores.google.GoogleGamesActivity;
 import app.simone.scores.view.ScoreboardActivity;
 import app.simone.settings.view.SettingsActivity;
 import app.simone.shared.firebase.FCMTokenService;
@@ -27,6 +26,8 @@ import app.simone.singleplayer.view.VSCpuActivity;
 import io.fabric.sdk.android.Fabric;
 
 /**
+ * MainActivity of the app.
+ *
  * @author Michele Sapignoli
  */
 public class MainActivity extends FullscreenBaseGameActivity {
@@ -68,7 +69,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
 
             @Override
             public void onClick(View view) {
-                openActivity(SettingsActivity.class, R.anim.left_in, R.anim.right_out);
+                openActivity(SettingsActivity.class, R.anim.right_in, R.anim.left_out);
             }
         });
 
@@ -92,14 +93,6 @@ public class MainActivity extends FullscreenBaseGameActivity {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.pulse);
         mainFab.startAnimation(animation);
         simoneTextView.startAnimation(animation);
-
-        mainFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), GoogleGamesActivity.class);
-                startActivity(intent);
-            }
-        });
 
         AudioManager.Companion.getInstance().playSimoneMusic();
 

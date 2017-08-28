@@ -5,6 +5,7 @@ import app.simone.shared.utils.Constants;
 
 /**
  * Start Game Message.
+ * @author Michele Sapignoli
  */
 public class StartGameVsCPUMsg implements IMessage {
 	private int radiobtnIndex = 0;

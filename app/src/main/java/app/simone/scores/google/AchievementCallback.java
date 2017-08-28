@@ -7,7 +7,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.achievement.Achievements;
 
 /**
- * Created by sapi9 on 08/07/2017.
+ * Achievement Callback class.
+ * @author Michele Sapignoli
  */
 
 public class AchievementCallback implements ResultCallback<Achievements.UpdateAchievementResult>{

@@ -1,16 +1,16 @@
 package app.simone.singleplayer.messages;
 
-import app.simone.singleplayer.view.IGameActivity;
+import app.simone.singleplayer.view.GameActivity;
 import app.simone.shared.messages.IMessage;
 
 /**
- * Created by sapi9 on 21/06/2017.
+ * AttachViewMsg, used to send the current GameActivity to the GameviewActor.
+ * @author Michele Sapignoli
  */
-
 public class AttachViewMsg implements IMessage {
-    private IGameActivity activity;
+    private GameActivity activity;
 
-    public AttachViewMsg(IGameActivity activity){
+    public AttachViewMsg(GameActivity activity){
         this.activity = activity;
     }
 
@@ -19,7 +19,11 @@ public class AttachViewMsg implements IMessage {
         return MessageType.ATTACH_VIEW_MSG;
     }
 
-    public IGameActivity getIActivity(){
+    /**
+     * Gets the current GameActivity.
+     * @return activity current GameActivity
+     */
+    public GameActivity getIActivity(){
         return this.activity;
     }
 }

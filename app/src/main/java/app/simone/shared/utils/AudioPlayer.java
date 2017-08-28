@@ -1,7 +1,8 @@
 package app.simone.shared.utils;
 
 /**
- * Created by sapi9 on 01/07/2017.
+ * AudioPlayer class.
+ * @author Michele Sapignoli
  */
 
 import android.content.Context;

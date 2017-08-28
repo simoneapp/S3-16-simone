@@ -13,20 +13,22 @@ import android.widget.FrameLayout;
 import java.util.List;
 
 import app.simone.shared.main.FullscreenBaseGameActivity;
-import app.simone.singleplayer.view.GameActivity;
+import app.simone.singleplayer.view.GameActivityImpl;
 import app.simone.R;
 import app.simone.shared.styleable.SimoneTextView;
-import app.simone.singleplayer.model.SColor;
+import app.simone.singleplayer.model.SimonColorImpl;
 
 /**
- * Created by sapi9 on 07/07/2017.
+ * AnimationHandler class.
+ * Used to animate the fabs and the textviews.
+ * @author Michele Sapignoli
  */
 
 public class AnimationHandler {
     private static Animation gameButtonAnimation;
 
 
-    public static void initAnimations(final GameActivity context, final FloatingActionButton gameFab, final SimoneTextView simoneTextView) {
+    public static void initAnimations(final GameActivityImpl context, final FloatingActionButton gameFab, final SimoneTextView simoneTextView) {
         final Animation rotate = AnimationUtils.loadAnimation(context, R.anim.rotate);
         final Animation zoomIn = AnimationUtils.loadAnimation(context, R.anim.zoom_in);
         final Animation zoomOut = AnimationUtils.loadAnimation(context, R.anim.zoom_out);
@@ -66,8 +68,8 @@ public class AnimationHandler {
             layouts[i].addView(buttons.get(index));
             ObjectAnimator objectAnimator = ObjectAnimator.ofObject(buttons.get(i), "backgroundColor",
                     new ArgbEvaluator(),
-                    ContextCompat.getColor(context, SColor.getColorIdFromButtonId(buttons.get(index).getId())),
-                    ContextCompat.getColor(context, SColor.getColorIdFromButtonId(buttons.get(i).getId())));
+                    ContextCompat.getColor(context, SimonColorImpl.getColorIdFromButtonId(buttons.get(index).getId())),
+                    ContextCompat.getColor(context, SimonColorImpl.getColorIdFromButtonId(buttons.get(i).getId())));
             objectAnimator.setRepeatCount(0);
             objectAnimator.setRepeatMode(ValueAnimator.REVERSE);
             objectAnimator.setDuration(300);

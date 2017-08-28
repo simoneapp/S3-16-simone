@@ -12,7 +12,8 @@ import app.simone.singleplayer.controller.CPUActor;
 import app.simone.singleplayer.controller.GameViewActor;
 
 
-/**
+/** App class, extends Application.
+ *
  * @author Michele Sapignoli
  */
 
@@ -29,6 +30,9 @@ public class App extends Application {
         mInstance = this;
         googleApiHelper = new GoogleApiHelper(mInstance);
 
+        /*
+        Actors creation
+         */
         system = ActorSystem.create("system");
         system.actorOf(Props.create(CPUActor.class), Constants.CPU_ACTOR_NAME);
         system.actorOf(Props.create(GameViewActor.class), Constants.GAMEVIEW_ACTOR_NAME);
@@ -44,9 +48,18 @@ public class App extends Application {
         return mInstance;
     }
 
+    /**
+     * Gets GoogleApiHelper instance.
+     * @return googleApiHelper
+     */
     public GoogleApiHelper getGoogleApiHelperInstance() {
         return this.googleApiHelper;
     }
+
+    /**
+     * Gets GoogleApiHelper instance.
+     * @return googleApiHelper
+     */
     public static GoogleApiHelper getGoogleApiHelper() {
         return getInstance().getGoogleApiHelperInstance();
     }

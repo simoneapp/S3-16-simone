@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.simone.multiplayer.view.nearby.MatchBehaviour;
 import app.simone.singleplayer.view.IGameActivity;
 import akka.actor.UntypedActor;
 import app.simone.shared.application.App;
@@ -25,14 +26,14 @@ import app.simone.shared.utils.Utilities;
  * @author Michele Sapignoli
  */
 
-public class GameViewActor extends UntypedActor {
+public class GameViewActor extends UntypedActor implements MatchBehaviour {
     private IGameActivity gameActivity;
     private List<SColor> cpuSequence;
     private List<SColor> playerSequence;
     private int cpuColorIndex;
     private int playerColorIndex;
     private boolean playerTurn;
-
+    private SColor nextColor;
     private boolean paused = false;
 
     @Override
@@ -62,7 +63,8 @@ public class GameViewActor extends UntypedActor {
                         playerTurn = true;
                         getSelf().tell(new PlayerTurnMsg(), getSelf());
                     } else {
-                        this.blink(cpuSequence.get(cpuColorIndex));
+                        nextColor = cpuSequence.get(cpuColorIndex);
+                        blink();
                         Log.d("##VIEW ACTOR", "Blinked:" + cpuSequence.get(cpuColorIndex));
                         this.cpuColorIndex++;
                     }
@@ -74,7 +76,7 @@ public class GameViewActor extends UntypedActor {
                 playerSequence.clear();
                 Message msg = new Message();
                 msg.what = Constants.PLAYER_TURN;
-                msg.arg2 = cpuSequence.size() -1;
+                msg.arg2 = cpuSequence.size() - 1;
                 gameActivity.getHandler().sendMessage(msg);
                 break;
             case GUESS_COLOR_MSG:
@@ -119,12 +121,25 @@ public class GameViewActor extends UntypedActor {
         }
     }
 
-    private void blink(SColor color) {
-        Message m = new Message();
-        m.what = Constants.CPU_TURN;
-        m.arg1 = color.getButtonId();
-        this.gameActivity.getHandler().sendMessageDelayed(m, Constants.STD_DELAY_BTN_TIME);
+//    private void blink(SColor color) {
+//        Message m = new Message();
+//        m.what = Constants.CPU_TURN;
+//        m.arg1 = color.getButtonId();
+//        this.gameActivity.getHandler().sendMessageDelayed(m, Constants.STD_DELAY_BTN_TIME);
+//    }
+
+
+    @Override
+    public long increaseSpeed(long threshold) {
+        return 0;
     }
 
+    @Override
+    public void blink() {
+        Message m = new Message();
+        m.what = Constants.CPU_TURN;
+        m.arg1 = nextColor.getButtonId();
+        this.gameActivity.getHandler().sendMessageDelayed(m, Constants.STD_DELAY_BTN_TIME);
 
+    }
 }

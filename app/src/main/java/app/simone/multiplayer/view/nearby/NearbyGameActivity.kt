@@ -4,14 +4,11 @@ package app.simone.multiplayer.view.nearby
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import app.simone.R
 import app.simone.shared.utils.AudioPlayer
 import app.simone.singleplayer.model.SColor
-import com.facebook.Profile
-import com.google.firebase.database.*
 import java.util.concurrent.ExecutionException
 import android.widget.Toast
 
@@ -20,12 +17,11 @@ class NearbyGameActivity : AppCompatActivity(), NearbyView {
 
 
     private var handler: Handler? = null
-    private var playerID = ""
-    private var playerColor: SColor? = null
     private var matchID = ""
     private var buttonColor: Button? = null
     private var player = AudioPlayer()
     private var presenter: NearbyViewPresenter? = null
+    private var enhancedPresenter:EnhancedNearbyViewPresenter?=null
     var context: NearbyView = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +30,11 @@ class NearbyGameActivity : AppCompatActivity(), NearbyView {
         buttonColor = findViewById(R.id.beautifulButton) as Button
         handler = Handler()
         matchID = intent.getStringExtra("match")
-        playerID = Profile.getCurrentProfile().id
         presenter = NearbyViewPresenter(matchID, this)
+        enhancedPresenter= EnhancedNearbyViewPresenter(presenter!!)
+
         presenter?.onCreate()
+        enhancedPresenter?.onShamePlayer()
 
     }
 
@@ -49,14 +47,13 @@ class NearbyGameActivity : AppCompatActivity(), NearbyView {
     override fun updateButtonBlink(blinkTonality: Float) {
         buttonColor?.alpha = blinkTonality
         if (blinkTonality < 1.0F) {
-            Log.d("RINGTEST"," blink tonality: "+blinkTonality.toString())
             ring()
         }
     }
 
     override fun startGame() {
 
-        presenter?.listenOnBlinkChange()
+        presenter?.blink()
     }
 
     override fun showMessage(text: String) {
@@ -67,7 +64,6 @@ class NearbyGameActivity : AppCompatActivity(), NearbyView {
 
     override fun updateButtonText(text: String) {
         buttonColor?.text = text
-       // player.play(this, presenter?.player!!.color!!.soundId)
 
     }
 
@@ -79,7 +75,6 @@ class NearbyGameActivity : AppCompatActivity(), NearbyView {
 
     @Throws(ExecutionException::class, InterruptedException::class)
     fun sendColor(view: View) {
-        Log.d("BUTTONTEST", "button pressed")
         if (presenter?.player != null) {
             ring()
             presenter?.updatePlayersSequence()

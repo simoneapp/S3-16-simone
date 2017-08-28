@@ -38,8 +38,18 @@ public class Constants {
     public static final String PREF_KEY_LEAD_CLASSIC = "CLASSIC";
     public static final String PREF_KEY_LEAD_HARD = "HARD";
     public static final String PREF_KEY = "PREF";
-    public static final String NEED_TO_SYNC_CLASSIC= "NTSC";
-    public static final String NEED_TO_SYNC_HARD= "NTSH";
+    public static final String NEED_TO_SYNC_CLASSIC = "NTSC";
+    public static final String NEED_TO_SYNC_HARD = "NTSH";
     public static final int MULTIPLAYER_READY = 46;
     public static final int MAX_FRIENDS_PER_MATCH = 3;
+    public static final String NODE_CHILD_PLAYERSSEQUENCE = "playersSequence";
+    public static final String NODE_CHILD_CPUSEQUENCE = "cpuSequence";
+    public static final String NODE_ROOT = "matches";
+    public static final String NODE_CHILD_PLAYERS = "users";
+    public static final String NODE_CHILD_COLOR = "color";
+    public static final String NODE_CHILD_INDEX = "index";
+    public static final String NODE_CHILD_BLINK = "blink";
+    public static final String NODE_CHILD_STATUS = "status";
+    public static final String NODE_CHILD_CASE = "case";
+
 }

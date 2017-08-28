@@ -1,37 +1,39 @@
 package app.simone.multiplayer.view.nearby
 
-import android.util.Log
+import app.simone.shared.utils.Constants
 import app.simone.singleplayer.model.SColor
 import com.facebook.Profile
 import com.google.firebase.database.*
+import scala.collection.immutable.Stream
 
 /**
  * Created by gzano on 24/08/2017.
  */
 class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Presenter, MatchBehaviour {
 
-
-    val CHILD_PLAYERSSEQUENCE = "playersSequence"
-    val CHILD_CPUSEQUENCE = "cpuSequence"
-    private val NODE_REF_ROOT = "matches"
-    private val CHILD_PLAYERS = "users"
-    val databaseRootReference = FirebaseDatabase.getInstance().getReference(NODE_REF_ROOT)
+    val STATUS_VALUE_PLAYING = "playing"
+    val PLAYERS_SEQUENCE_VALUE_EMPTY = "empty"
+    val GAME_ABOUT_TO_START_VALUE = "game is about to start"
+    val BLINK_TONALITY_NORMAL = 1.0F
+    val BLINK_TONALITY_TRANSPARENT = 0.5F
+    var GAME_SPEED: Long = 2000
+    val databaseRootReference = FirebaseDatabase.getInstance().getReference(Constants.NODE_ROOT)
     val playerID = Profile.getCurrentProfile().id
     var player: Player? = null
-    val cpuSeqRef = databaseRootReference?.child(matchID)?.child(CHILD_CPUSEQUENCE)?.ref
+    val cpuSeqRef = databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_CPUSEQUENCE)?.ref
 
 
     init {
 
 
-        databaseRootReference?.child(matchID)?.child(CHILD_PLAYERS)?.child(playerID)?.addValueEventListener(object : ValueEventListener {
+        databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_PLAYERS)?.child(playerID)?.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                val child = dataSnapshot.child("color")
+                val child = dataSnapshot.child(Constants.NODE_CHILD_COLOR)
 
                 if (child.value != null) {
                     val color = child.value.toString()
@@ -47,10 +49,17 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
                 }
             }
         })
+
+
     }
 
-    override fun listenOnBlinkChange() {
-        databaseRootReference?.child(matchID)?.child("blink")?.addValueEventListener(object : ValueEventListener {
+
+    override fun onCreate() {
+        nearbyView.showMessage(GAME_ABOUT_TO_START_VALUE)
+    }
+
+    override fun blink() {
+        databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_BLINK)?.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
 
             }
@@ -58,8 +67,8 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
             override fun onDataChange(p0: DataSnapshot?) {
 
 
-                if (p0?.child("color")?.value == player?.color.toString()) {
-                    val index = p0?.child("index").value.toString()
+                if (p0?.child(Constants.NODE_CHILD_COLOR)?.value == player?.color.toString()) {
+                    val index = p0?.child(Constants.NODE_CHILD_INDEX).value.toString()
 
                     renderBlink(index.toLong())
 
@@ -71,23 +80,13 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
 
     }
 
-    override fun onCreate() {
-
-
-        val text = "game is about to start"
-        nearbyView.showMessage(text)
-        checkIfWrong()
-    }
-
 
     fun updatePlayersSequence() {
-        Log.d("CHECKREFNULL", " players sequence ref " + (databaseRootReference?.child(matchID)?.child(CHILD_PLAYERSSEQUENCE)?.ref == null).toString())
-        databaseRootReference?.child(matchID)?.child(CHILD_PLAYERSSEQUENCE)?.addListenerForSingleValueEvent(object : ValueEventListener {
+        databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_PLAYERSSEQUENCE)?.addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Log.d("TESTBUTTON", " I'm in data change " + dataSnapshot.value)
 
-                if (dataSnapshot.value != "playing") {
+                if (dataSnapshot.value != STATUS_VALUE_PLAYING) {
                     val count = dataSnapshot.childrenCount
                     dataSnapshot.ref.child((count + 1).toString()).setValue(player?.color)
                 }
@@ -99,34 +98,17 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
     }
 
 
+    private fun checkIfWrong() {
 
-    override fun increaseSpeed() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    private fun checkIfWrong(){
-        databaseRootReference?.child(matchID)?.child("status")?.addValueEventListener(object :ValueEventListener{
-            override fun onCancelled(p0: DatabaseError?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onDataChange(p0: DataSnapshot?) {
-                if(p0?.value?.toString()=="wrong"){
-                    nearbyView.updateButtonText("GAMEOVER")
-                }
-            }
-
-        })
     }
 
     private fun renderBlink(sequenceIndex: Long) {
-        Log.d("TESTBLINK"," blink count "+player?.blinkCount)
-        nearbyView.updateButtonBlink(0.5F)
+        nearbyView.updateButtonBlink(BLINK_TONALITY_TRANSPARENT)
         val handler = nearbyView.getHandler()
 
 
         handler?.postDelayed({
-            nearbyView.updateButtonBlink(1.0F)
+            nearbyView.updateButtonBlink(BLINK_TONALITY_NORMAL)
             if (player != null) {
                 player!!.blinkCount++
             }
@@ -136,38 +118,28 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
                 }
 
                 override fun onDataChange(p0: DataSnapshot?) {
-                    if (p0 != null && nextIndex < p0.childrenCount) {
+                    if (p0 != null && nextIndex <= p0.childrenCount) {
                         val nextColor = p0.child(nextIndex.toString()).value.toString()
                         val map = HashMap<String, String>()
-                        map["color"] = nextColor
-                        map["index"] = nextIndex.toString()
-                        databaseRootReference?.child(matchID)?.child("blink")?.setValue(map)
+                        map[Constants.NODE_CHILD_COLOR] = nextColor
+                        map[Constants.NODE_CHILD_INDEX] = nextIndex.toString()
+                        databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_BLINK)?.setValue(map)
                         nearbyView.updateButtonText(player?.blinkCount.toString())
 
-
                     }
-                    if (p0 != null && nextIndex == p0.childrenCount) {
-                        val nextColor = p0.child(nextIndex.toString()).value.toString()
-                        val map = HashMap<String, String>()
-                        map["color"] = nextColor
-                        map["index"] = nextIndex.toString()
-                        databaseRootReference?.child(matchID)?.child("blink")?.setValue(map)
 
-                    }
+
                     if (p0 != null && nextIndex > p0.childrenCount) {
                         nearbyView.updateButtonText(player?.blinkCount.toString())
-                        databaseRootReference?.child(matchID)?.child(CHILD_PLAYERSSEQUENCE)?.setValue("empty")
+                        databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_PLAYERSSEQUENCE)?.setValue(PLAYERS_SEQUENCE_VALUE_EMPTY)
 
                     }
                 }
             })
 
 
-        }, 1000)
+        }, GAME_SPEED)
     }
-
-  
-
 
 
 }

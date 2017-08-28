@@ -27,6 +27,10 @@ public class FacebookUser {
     private String picture;
     private String score;
 
+    public FacebookUser() {
+
+    }
+
     public FacebookUser(JsonElement json) {
 
         if(json==null){

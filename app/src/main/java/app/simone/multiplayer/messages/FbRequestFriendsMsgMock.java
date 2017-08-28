@@ -2,6 +2,7 @@ package app.simone.multiplayer.messages;
 
 import android.os.Bundle;
 
+import app.simone.multiplayer.model.GraphRequestWrapper;
 import app.simone.shared.messages.IMessage;
 import app.simone.singleplayer.messages.MessageType;
 
@@ -13,8 +14,11 @@ public class FbRequestFriendsMsgMock implements IMessage {
 
     private Bundle bundle;
 
-    public FbRequestFriendsMsgMock(Bundle bundle) {
+    private GraphRequestWrapper request;
+
+    public FbRequestFriendsMsgMock(Bundle bundle, GraphRequestWrapper request) {
         this.bundle = bundle;
+        this.request = request;
     }
 
     @Override
@@ -24,6 +28,10 @@ public class FbRequestFriendsMsgMock implements IMessage {
 
     public Bundle getBundle() {
         return bundle;
+    }
+
+    public GraphRequestWrapper getRequest() {
+        return request;
     }
 
 }

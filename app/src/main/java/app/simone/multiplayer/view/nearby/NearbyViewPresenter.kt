@@ -4,7 +4,6 @@ import app.simone.shared.utils.Constants
 import app.simone.singleplayer.model.SColor
 import com.facebook.Profile
 import com.google.firebase.database.*
-import scala.collection.immutable.Stream
 
 /**
  * Created by gzano on 24/08/2017.
@@ -97,10 +96,6 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
 
     }
 
-
-    private fun checkIfWrong() {
-
-    }
 
     private fun renderBlink(sequenceIndex: Long) {
         nearbyView.updateButtonBlink(BLINK_TONALITY_TRANSPARENT)

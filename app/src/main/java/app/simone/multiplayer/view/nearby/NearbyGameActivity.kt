@@ -22,7 +22,6 @@ class NearbyGameActivity : AppCompatActivity(), NearbyView {
     private var player = AudioPlayer()
     private var presenter: NearbyViewPresenter? = null
     private var enhancedPresenter:EnhancedNearbyViewPresenter?=null
-    var context: NearbyView = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

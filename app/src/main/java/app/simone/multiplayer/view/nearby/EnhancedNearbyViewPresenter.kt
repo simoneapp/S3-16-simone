@@ -23,6 +23,9 @@ class EnhancedNearbyViewPresenter(var nearbyViewPresenter: NearbyViewPresenter) 
         nearbyViewPresenter.blink()
     }
 
+
+    //Extended Behaviour
+
     fun onShamePlayer() {
 
         nearbyViewPresenter.databaseRootReference?.child(nearbyViewPresenter.matchID)?.child(Constants.NODE_CHILD_STATUS)?.addValueEventListener(object : ValueEventListener {
@@ -48,7 +51,6 @@ class EnhancedNearbyViewPresenter(var nearbyViewPresenter: NearbyViewPresenter) 
         })
 
 
-        //Extended Behaviour
 
     }
 }

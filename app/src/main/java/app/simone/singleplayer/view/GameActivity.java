@@ -3,275 +3,172 @@ package app.simone.singleplayer.view;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-import java.util.*;
-import app.simone.multiplayer.controller.*;
-import akka.actor.ActorRef;
-import app.simone.multiplayer.model.OnlineMatch;
-import app.simone.shared.main.FullscreenBaseGameActivity;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import app.simone.R;
-import app.simone.singleplayer.model.SColor;
+import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.shared.styleable.SimoneTextView;
-import app.simone.shared.application.App;
-import app.simone.singleplayer.messages.*;
-import app.simone.shared.utils.*;
-import app.simone.scores.google.ScoreHelper;
+import app.simone.shared.utils.AnimationHandler;
+import app.simone.shared.utils.AudioManager;
+import app.simone.shared.utils.AudioPlayer;
+import app.simone.shared.utils.Constants;
+import app.simone.singleplayer.controller.GameActivityPresenter;
+import app.simone.singleplayer.messages.StartGameVsCPUMsg;
+import app.simone.singleplayer.model.SimonColorImpl;
 
 /**
+ * GameActivity class.
+ * Made abstract, so that the abstract methods are implemented in the subclasses as a template method.
+ * This class is the class that interacts with the GameviewActor (through an Handler) and the user.
  * @author Michele Sapignoli
- */
-public class GameActivity extends FullscreenBaseGameActivity implements IGameActivity {
-    private boolean playerBlinking;
-    private boolean tapToBegin = true;
+ **/
+public abstract class GameActivity extends FullscreenBaseGameActivity {
 
-    private FloatingActionButton gameFab;
-    private boolean isMultiplayerMode = false;
-    private SimoneTextView simoneTextView;
-
-    private boolean viewPaused;
-
-    private int chosenMode = Constants.CLASSIC_MODE;
+    protected FloatingActionButton gameFab;
+    protected SimoneTextView simoneTextView;
+    protected FloatingActionButton scoreButton;
+    protected SimoneTextView scoreText;
 
     private List<Button> buttons;
     private Integer[] shuffle = new Integer[]{0, 1, 2, 3};
-
     private FrameLayout[] layouts = new FrameLayout[4];
 
-    private boolean isGameEnded = false;
+    protected String key;
+    protected String whichPlayer;
 
-    private int currentScore;
-    private int finalScore;
-    private String key;
-    private String whichPlayer;
-
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(final Message msg) {
-
-            switch (msg.what) {
-                case Constants.CPU_TURN:
-                    currentScore = msg.arg2 + 1;/*Score*/
-
-                    if (playerBlinking) {
-                        simoneTextView.setText(String.valueOf(currentScore));
-                        finalScore = currentScore;
-                        simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                        ScoreHelper.checkAchievement(currentScore, chosenMode);
-                    }
-                    playerBlinking = false;
-                    if (/*arg1 = 0 when PLAYER_TURN_MSG comes from GameViewActor*/msg.arg1 != 0) {
-                        blinkDelayed(msg);
-                    }
-                    break;
-                case Constants.PLAYER_TURN:
-                    if (!playerBlinking) {
-                        simoneTextView.setText(Constants.TURN_PLAYER);
-                        simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                        if (chosenMode == Constants.HARD_MODE) {
-                            swapButtonPositions();
-                        }
-                    }
-                    playerBlinking = true;
-                    if (/*arg1 = 0 when PLAYER_TURN_MSG comes from GameViewActor*/msg.arg1 != 0) {
-                        blinkDelayed(msg);
-                    }
-                    break;
-                case Constants.WHATTASHAMEYOULOST_MSG:
-                    finalScore = msg.arg1;
-                    ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
-                    tapToBegin = true;
-                    simoneTextView.setText(Constants.PLAY_AGAIN);
-                    simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
-                    gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#990000")));
-                    saveScore();
-                    simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                    break;
-                case Constants.MULTIPLAYER_READY:
-                    gameFab.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            AudioManager.Companion.getInstance().stopSimoneMusic();
-
-                            if (tapToBegin) {
-                                tapToBegin = false;
-                                finalScore = 0;
-                                playerBlinking = false;
-                                simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                                simoneTextView.setText(Constants.STRING_EMPTY);
-                                simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
-                                gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
-
-                                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                                        .tell(new StartGameVsCPUMsg(), ActorRef.noSender());
-
-                            }
-                        }
-                    });
-                    break;
-            }
-
-        }
-    };
-
-    private void blinkDelayed(Message msg) {
-        // Message from ViewActor or this activity itself, handling the blinking
-        Button b = (Button) findViewById(msg.arg1);
-        b.setAlpha(0.4f);
-        new AudioPlayer().play(getApplicationContext(), SColor.fromInt(msg.arg1).getSoundId());
-        Message m = new Message();
-        m.what = msg.what;
-        m.arg1 = msg.arg1;
-        vHandler.sendMessageDelayed(m, Constants.STD_DELAY_BTN_TIME);
-
-    }
-
-    private Handler vHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Button b = (Button) findViewById(msg.arg1);
-            b.setAlpha(1);
-
-            switch (msg.what) {
-                case Constants.CPU_TURN:
-                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
-                            .tell(new NextColorMsg(), ActorRef.noSender());
-                    break;
-                case Constants.PLAYER_TURN:
-                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
-                            .tell(new GuessColorMsg(SColor.fromInt(msg.arg1)), ActorRef.noSender());
-                    break;
-            }
-        }
-    };
+    protected GameActivityPresenter presenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final IGameActivity context = this;
-        if(getIntent().hasExtra("multiplayerMode")){
-            this.isMultiplayerMode=true;
-            this.key=getIntent().getExtras().getString("key");
-            this.whichPlayer=getIntent().getExtras().getString("whichPlayer");
-
-            if(whichPlayer.equals("firstplayer")){
-                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                        .tell(new ComputeFullMultiplayerSequenceMsg(context,key, 4,false), ActorRef.noSender());
-            }
-
-            if(whichPlayer.equals("secondplayer")) {
-
-                DataManager.Companion.getInstance().getDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        OnlineMatch match = dataSnapshot.child(key).getValue(OnlineMatch.class);
-                        List<SColor> sequenceToPlay =  match.getSequence();
-
-                        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                                .tell(new ReceivedSequenceMsg(sequenceToPlay, context), ActorRef.noSender());
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-
-                });
-
-            }
-        }
-
-        chosenMode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
-
-        buttons = new ArrayList<>();
-
-        gameFab = (FloatingActionButton) findViewById(R.id.game_fab);
-        simoneTextView = (SimoneTextView) findViewById(R.id.game_simone_textview);
+        int mode = getIntent().getIntExtra(Constants.CHOSEN_MODE, Constants.CLASSIC_MODE);
+        presenter = new GameActivityPresenter(this, mode);
+        initFields();
 
         AnimationHandler.initAnimations(this, gameFab, simoneTextView);
 
-        layouts[0] = (FrameLayout) findViewById(R.id.game_top_left_frame);
-        layouts[1] = (FrameLayout) findViewById(R.id.game_top_right_frame);
-        layouts[2] = (FrameLayout) findViewById(R.id.game_bottom_left_frame);
-        layouts[3] = (FrameLayout) findViewById(R.id.game_bottom_right_frame);
+        int[] viewIds = new int[]{R.id.game_top_left_frame, R.id.game_top_right_frame,
+                R.id.game_bottom_left_frame, R.id.game_bottom_right_frame};
 
-        if(!getIntent().hasExtra("multiplayerMode")){
-            gameFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    AudioManager.Companion.getInstance().stopSimoneMusic();
-
-                    if (tapToBegin) {
-                        tapToBegin = false;
-                        finalScore = 0;
-                        playerBlinking = false;
-                        simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                        simoneTextView.setText(Constants.STRING_EMPTY);
-                        simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
-                        gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
-
-                        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                                .tell(new StartGameVsCPUMsg(true), ActorRef.noSender());
-
-                    }
-                }
-            });
+        for(int i = 0; i < layouts.length; i++) {
+            layouts[i] = (FrameLayout)findViewById(viewIds[i]);
         }
 
-
-
-        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
-                .tell(new AttachViewMsg(this), ActorRef.noSender());
+        this.setup();
     }
 
+    private void initFields() {
+        buttons = new ArrayList<>();
+        gameFab = (FloatingActionButton) findViewById(R.id.game_fab);
+        simoneTextView = (SimoneTextView) findViewById(R.id.game_simone_textview);
+        scoreText =(SimoneTextView) findViewById(R.id.game_score_textview);
+        scoreButton = (FloatingActionButton) findViewById(R.id.game_score_fab);
+    }
+
+    public void renderYouLost(int score) {
+        gameFab.setEnabled(true);
+        simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
+        scoreText.setText(""+score);
+        gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#990000")));
+        scoreText.setVisibility(View.VISIBLE);
+        scoreButton.setVisibility(View.VISIBLE);
+    }
+
+    public void updateSimoneTextview(String text, Animation animation) {
+        simoneTextView.setText(text);
+        simoneTextView.startAnimation(animation);
+    }
+
+    public void blinkDelayed(Message msg) {
+        Button b = (Button) findViewById(msg.arg1);
+        b.setAlpha(0.4f);
+        new AudioPlayer().play(getApplicationContext(), SimonColorImpl.fromInt(msg.arg1).getSoundId());
+        presenter.handleMessage(msg);
+    }
+
+    public void resetButton(int buttonId) {
+        Button b = (Button)findViewById(buttonId);
+        b.setAlpha(1);
+    }
+
+    public void prepareMultiplayer(){
+        gameFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AudioManager.Companion.getInstance().stopSimoneMusic();
+
+                if (presenter.isTapToBegin()) {
+                    prepareViewsForGame();
+                    presenter.prepareGame(new StartGameVsCPUMsg());
+                }
+            }
+        });
+    }
+
+    protected void prepareViewsForGame() {
+        scoreText.setVisibility(View.GONE);
+        scoreButton.setVisibility(View.GONE);
+        gameFab.setEnabled(false);
+        simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
+        simoneTextView.setText(Constants.STRING_EMPTY);
+        simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
+        gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
+    }
+
+    /**
+     * Abstract method implemented in the subclasses that sets up the settings of the
+     * SingleplayerGameActivity or the MultiplayerGameActivity
+     */
+    abstract void setup();
+
+    /**
+     * Abstract method implemented in the subclasses that handles the score
+     */
+    public abstract void saveScore();
+
+    /**
+     * Implementation of the abstract method of FullscreenBaseGameActivity, used to set the
+     * contentView.
+     */
     @Override
     protected void setSubclassContentView() {
         setContentView(R.layout.activity_game);
         mContentView = findViewById(R.id.game_fullscreen_content);
     }
 
-
-    public Handler getHandler() {
-        return this.handler;
-    }
-
+    /**
+     * Convenient method that returns true if it's player's turn.
+     * @return playerBlinking
+     */
     public boolean isPlayerBlinking() {
-        return this.playerBlinking;
-    }
-
-    public void setPlayerBlinking(boolean isPlayerTurn) {
-        this.playerBlinking = isPlayerTurn;
+        return this.presenter.isPlayerBlinking();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (!playerBlinking) {
-            this.viewPaused = true;
-            Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
-                    .tell(new PauseMsg(true), ActorRef.noSender());
-        }
+        presenter.handleOnPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!playerBlinking && viewPaused) {
-            this.viewPaused = false;
-            Utilities.getActorByName(Constants.PATH_ACTOR + Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())
-                    .tell(new PauseMsg(false), ActorRef.noSender());
-        }
+        presenter.handleOnResume();
     }
 
     @Override
@@ -280,77 +177,57 @@ public class GameActivity extends FullscreenBaseGameActivity implements IGameAct
     }
 
 
-    private void swapButtonPositions() {
+    public void swapButtonPositions() {
         Collections.shuffle(Arrays.asList(shuffle));
-
         for (FrameLayout f : layouts) {
             f.removeAllViews();
         }
-        AnimationHandler.performColorSwapAnimation(this, this.shuffle, this.buttons, this.layouts);
+        AnimationHandler.performColorSwapAnimation(this, shuffle, buttons, layouts);
     }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if (buttons.size() == 0) {
-            buttons.add(initColorButton(SColor.GREEN));
-            buttons.add(initColorButton(SColor.RED));
-            buttons.add(initColorButton(SColor.YELLOW));
-            buttons.add(initColorButton(SColor.BLUE));
+            SimonColorImpl[] colors = new SimonColorImpl[]{
+                    SimonColorImpl.GREEN, SimonColorImpl.RED, SimonColorImpl.YELLOW, SimonColorImpl.BLUE};
+            for(SimonColorImpl color : colors) {
+                buttons.add(initColorButton(color));
+            }
         }
     }
 
-
-    private Button initColorButton(final SColor color) {
+    /**
+     * Initialization of the buttons, with relative listener.
+     * @param color
+     * @return button
+     */
+    private Button initColorButton(final SimonColorImpl color) {
         final Button button = (Button) findViewById(color.getButtonId());
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (playerBlinking && !tapToBegin) {
-                    Message m = new Message();
-                    m.arg1 = color.getButtonId();
-                    m.what = Constants.PLAYER_TURN;
-                    handler.sendMessage(m);
-                }
+                presenter.didTapColorButton(color.getButtonId());
             }
         });
         return button;
     }
 
-    private void saveScore() {
-        if (isMultiplayerMode) {
-            isGameEnded = true;
-            simoneTextView.setText(Constants.BACK_TO_MENU);
-            simoneTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            });
-            DataManager.Companion.getInstance().getDatabase().child(key).child(whichPlayer).child("score").setValue(""+finalScore);
-        }
-    }
-
-
-
     @Override
     public void onBackPressed() {
 
-        if (!tapToBegin) {
+        if (!presenter.isTapToBegin()) {
             AlertDialog alertDialog = new AlertDialog.Builder(GameActivity.this).create();
             alertDialog.setTitle("Are you letting Simone win?");
-            alertDialog.setMessage("Your final score will be considered " + finalScore);
+            alertDialog.setMessage("Your final score will be considered " + presenter.getFinalScore());
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if (isMultiplayerMode) {
-                                saveScore();
-                            }
+                            saveScore();
                             finish();
-                            ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
+                            presenter.endGame();
                             GameActivity.super.onBackPressed();
-                            AudioManager.Companion.getInstance().playSimoneMusic();
                         }
                     });
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL",

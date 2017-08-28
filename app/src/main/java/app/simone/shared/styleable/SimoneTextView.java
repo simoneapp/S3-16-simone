@@ -7,7 +7,8 @@ import android.util.AttributeSet;
 
 
 /**
- * Created by sapi9 on 29/06/2017.
+ * Custom textview with Simone font.
+ * @author Michele Sapignoli
  */
 public class SimoneTextView extends AppCompatTextView {
 

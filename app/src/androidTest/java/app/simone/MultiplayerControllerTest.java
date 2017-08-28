@@ -32,11 +32,11 @@ public class MultiplayerControllerTest {
     }
 
     private ActorRef getFbManagerActor() {
-        return Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FACEBOOK_ACTOR_NAME, system);
+        return Utilities.getActor(Constants.FACEBOOK_ACTOR_NAME, system);
     }
 
     private ActorRef getFbViewActor() {
-        return Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FBVIEW_ACTOR_NAME, system);
+        return Utilities.getActor(Constants.FBVIEW_ACTOR_NAME, system);
     }
 
 

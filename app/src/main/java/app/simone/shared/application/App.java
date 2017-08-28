@@ -11,7 +11,8 @@ import app.simone.scores.google.GoogleApiHelper;
 import app.simone.shared.utils.Constants;
 
 
-/**
+/** App class, extends Application.
+ *
  * @author Michele Sapignoli
  */
 
@@ -58,9 +59,18 @@ public class App extends Application {
         return mInstance;
     }
 
+    /**
+     * Gets GoogleApiHelper instance.
+     * @return googleApiHelper
+     */
     public GoogleApiHelper getGoogleApiHelperInstance() {
         return this.googleApiHelper;
     }
+
+    /**
+     * Gets GoogleApiHelper instance.
+     * @return googleApiHelper
+     */
     public static GoogleApiHelper getGoogleApiHelper() {
         return getInstance().getGoogleApiHelperInstance();
     }

@@ -8,7 +8,6 @@ import akka.actor.ActorSystem;
 import akka.testkit.TestKit;
 import app.simone.shared.application.ActorDefinitor;
 import app.simone.shared.application.App;
-import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
 
 import static junit.framework.Assert.assertTrue;
@@ -30,7 +29,7 @@ public class AppTest {
     public void checkActorsCreation() {
         new TestKit(system) {{
             for(ActorDefinitor definitor : App.actorDefinitions) {
-                ActorRef ref = Utilities.getActorByName(Constants.PATH_ACTOR + definitor.getActorName(), system);
+                ActorRef ref = Utilities.getActor(definitor.getActorName(), system);
                 assertTrue(ref != null);
             }
         }};
@@ -41,7 +40,7 @@ public class AppTest {
         new TestKit(system) {{
             //Check if a new actor is not included in the actors created in the system.
             String testActorName = "testActor";
-            ActorRef ref = Utilities.getActorByName(Constants.PATH_ACTOR + testActorName, system);
+            ActorRef ref = Utilities.getActor(testActorName, system);
             assertTrue(ref == null);
         }};
     }

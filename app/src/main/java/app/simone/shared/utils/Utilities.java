@@ -14,15 +14,22 @@ import akka.actor.ActorSystem;
 import akka.actor.Identify;
 import akka.pattern.AskableActorSelection;
 import akka.util.Timeout;
+import app.simone.shared.application.App;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 
 /**
- * Created by sapi9 on 20/06/2017.
+ * @author Michele Sapignoli
  */
 
 public class Utilities {
 
+    /**
+     * Returns an ActorRef from the actor's name and the actor system.
+     * @param name
+     * @param system
+     * @return actorRef
+     */
     public static ActorRef getActorByName(String name, ActorSystem system){
         ActorSelection sel = system.actorSelection(name);
         Timeout t = new Timeout(3, TimeUnit.SECONDS);
@@ -37,6 +44,9 @@ public class Utilities {
         return ident.getRef();
     }
 
+    public static ActorRef getActor(String name, ActorSystem system) {
+        return getActorByName(Constants.PATH_ACTOR + name, system);
+    }
 
     public static void displayToast(final String text, final Activity activity) {
         activity.runOnUiThread(new Runnable() {

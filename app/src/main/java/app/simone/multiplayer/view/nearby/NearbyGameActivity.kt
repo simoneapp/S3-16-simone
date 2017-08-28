@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.Button
 import app.simone.R
 import app.simone.shared.utils.AudioPlayer
-import app.simone.singleplayer.model.SColor
+import app.simone.singleplayer.model.SimonColorImpl
 import com.facebook.Profile
 import com.google.firebase.database.*
 import java.util.concurrent.ExecutionException
@@ -18,7 +18,7 @@ class NearbyGameActivity : AppCompatActivity() {
 
     private var playerID = ""
     private var matchID = ""
-    private var playerColor: SColor? = null
+    private var playerColor: SimonColorImpl? = null
     private var db: DatabaseReference? = null
     private val CHILD_PLAYERS = "users"
     private val NODE_REF_ROOT = "matches"
@@ -78,7 +78,7 @@ class NearbyGameActivity : AppCompatActivity() {
 
                 if(child.value != null) {
                     val color = child.value.toString()
-                    playerColor = SColor.valueOf(color)
+                    playerColor = SimonColorImpl.valueOf(color)
                     render()
                 }
             }
@@ -187,7 +187,7 @@ class NearbyGameActivity : AppCompatActivity() {
                     //Log.d("CHILDLOOP", colorSequence + " " + index);
 
                     if (colorSequence != null
-                            && playerColor == SColor.valueOf(colorSequence)
+                            && playerColor == SimonColorImpl.valueOf(colorSequence)
                             && cpuIndex == index) {
                         ++blinkCount
 

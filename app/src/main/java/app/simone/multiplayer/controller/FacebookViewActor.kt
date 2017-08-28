@@ -34,7 +34,7 @@ class FacebookViewActor : akka.actor.UntypedActor() {
 
     override fun onReceive(message: Any?) {
 
-        val actor = Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR + app.simone.shared.utils.Constants.FACEBOOK_ACTOR_NAME, App.getInstance().actorSystem)
+        val actor = Utilities.getActor(Constants.FACEBOOK_ACTOR_NAME, App.getInstance().actorSystem)
 
         when((message as IMessage).type) {
 
@@ -102,7 +102,7 @@ class FacebookViewActor : akka.actor.UntypedActor() {
     fun registerLoginButton(msg: FbViewSetupMsg) {
 
 
-        val actor = Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FACEBOOK_ACTOR_NAME, App.getInstance().actorSystem)
+        val actor = Utilities.getActor(Constants.FACEBOOK_ACTOR_NAME, App.getInstance().actorSystem)
 
         callbackManager = CallbackManager.Factory.create()
 

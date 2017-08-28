@@ -13,11 +13,16 @@ import app.simone.shared.utils.Constants;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
- * Created by sapi9 on 12/07/2017.
+ * ClassicLeaderboardCallback class.
+ * @author Michele Sapignoli
  */
 
 public class ClassicLeaderboardCallback implements ResultCallback<Leaderboards.SubmitScoreResult> {
 
+    /**
+     Scored pushed online.
+     Update of the value NEED_TO_SYNC on SharedPreferences: there's no need to sync.
+     */
     @Override
     public void onResult(@NonNull Leaderboards.SubmitScoreResult res) {
         if (res.getStatus().getStatusCode() == 0) {

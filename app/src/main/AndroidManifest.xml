@@ -48,10 +48,6 @@
             android:name=".scores.view.ScoreboardActivity"
             android:label="Scoreboard"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".scores.google.GoogleGamesActivity"
-            android:label="Games"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -68,7 +64,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".singleplayer.view.GameActivity"
+            android:name=".singleplayer.view.SingleplayerGameActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="Game"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".singleplayer.view.MultiplayerGameActivity"
             android:configChanges="orientation|screenSize"
             android:label="Game"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -88,6 +89,8 @@
         
         <activity android:name=".multiplayer.view.nearby.NearbyGameActivity"
             android:theme="@style/AppTheme.NoActionBar"  />
+
+
         <activity
             android:name=".multiplayer.view.MultiplayerTypeActivity"
             android:label="Multiplayer"
@@ -109,8 +112,6 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".multiplayer.view.invites.InvitesFragment" />
-        <activity android:name=".multiplayer.view.invites.NearbyInvitesFragment"></activity>
     </application>
 
 </manifest>

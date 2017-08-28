@@ -63,6 +63,6 @@ public class FacebookManagerTest {
 */
     
     private ActorRef getFbManagerActor() {
-        return Utilities.getActorByName(Constants.PATH_ACTOR + Constants.FACEBOOK_ACTOR_NAME, system);
+        return Utilities.getActor(Constants.FACEBOOK_ACTOR_NAME, system);
     }
 }

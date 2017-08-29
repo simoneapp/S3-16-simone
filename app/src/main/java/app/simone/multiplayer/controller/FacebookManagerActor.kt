@@ -3,7 +3,6 @@ package app.simone.multiplayer.controller
 import akka.actor.ActorRef
 import akka.actor.UntypedActor
 import android.os.Bundle
-import app.simone.multiplayer.messages.FbRequestFriendsMsg
 import app.simone.multiplayer.messages.FbRequestFriendsMsgMock
 import app.simone.multiplayer.messages.FbResponseFriendsMsg
 import app.simone.multiplayer.model.FacebookUser
@@ -19,9 +18,10 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 
 /**
- * Created by nicola on 01/07/2017.
+ * Actor that handles the communication with the Facebook Graph, e.g. for fetching the
+ * list of friends.
+ * @author Nicola Giancecchi
  */
-
 class FacebookManagerActor : UntypedActor() {
 
     val FRIENDS_PATH = "/me/friends"
@@ -30,13 +30,16 @@ class FacebookManagerActor : UntypedActor() {
 
     var currentSender : ActorRef? = null
 
+    /**
+     * Akka's onReceive function, called everytime the current actor receives a message.
+     * @param message the incoming message.
+     */
     override fun onReceive(message: Any?) {
 
         currentSender = sender
 
         when ((message as IMessage).type) {
             MessageType.FB_REQUEST_FRIENDS_MSG -> {
-                val msg = message as FbRequestFriendsMsg
                 this.getFacebookFriends(null, null)
             }
 
@@ -47,6 +50,11 @@ class FacebookManagerActor : UntypedActor() {
         }
     }
 
+    /**
+     * Handles the download of the list of Facebook friends from the current logged user.
+     * @param parameters A real or mocked bundle object that will contain the parameters of the request
+     * @param request A real or mocked graph request
+     */
     fun getFacebookFriends(parameters: Bundle?, request: GraphRequestWrapper?) {
 
         var params = parameters
@@ -72,6 +80,10 @@ class FacebookManagerActor : UntypedActor() {
         request.executeAsync()
     }
 
+    /**
+     * Handles the response containing friends (or error) from the server
+     * @param response the GraphResponse object received from the server or mocked
+     */
     fun handleFriendsResponse(response: GraphResponse) {
         if(response.error == null) {
             val gson = Gson()
@@ -86,6 +98,10 @@ class FacebookManagerActor : UntypedActor() {
         }
     }
 
+    /**
+     * Helper method to know if there's a user currently logged
+     * @return boolean indicating if the user is logged or not.
+     */
     companion object {
         fun isLoggedIn() : Boolean {
             val accessToken = AccessToken.getCurrentAccessToken()

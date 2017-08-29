@@ -106,15 +106,3 @@ public class FacebookUserTest {
         return objs;
     }
 }
-
-
-/*
-    public Map<String,String> toDictionary() {
-        Map<String,String> dict = new HashMap<>();
-        dict.put(FacebookUser.kID, id);
-        dict.put(FacebookUser.kNAME, name);
-        dict.put(FacebookUser.kSCORE, score);
-        dict.put(FacebookUser.kPICTURE, picture.getUrl());
-        return dict;
-    }
- */

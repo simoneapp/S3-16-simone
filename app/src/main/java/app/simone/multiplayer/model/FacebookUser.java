@@ -3,7 +3,6 @@ package app.simone.multiplayer.model;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +52,7 @@ public class FacebookUser {
 
     public static List<FacebookUser> listFromJson(JsonArray json) {
 
-        List<FacebookUser> objectFriends = new ArrayList<FacebookUser>();
+        List<FacebookUser> objectFriends = new ArrayList<>();
 
         for(JsonElement item : json) {
             objectFriends.add(new FacebookUser(item));
@@ -99,10 +98,6 @@ public class FacebookUser {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setPicture(FacebookPicture picture) {
-        this.picture = picture;
     }
 
 }

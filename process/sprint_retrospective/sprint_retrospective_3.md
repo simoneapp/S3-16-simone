@@ -2,7 +2,7 @@
 
 ## Sprint Retrospective (3nd)
 
-A brief analysis concerning issues faced during the second sprint of development.
+A brief analysis concerning issues faced during the third sprint of development.
 
 
 Multiplayer (Firebase):

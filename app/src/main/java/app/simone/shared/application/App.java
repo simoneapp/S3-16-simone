@@ -2,6 +2,8 @@ package app.simone.shared.application;
 
 import android.app.Application;
 
+import com.google.firebase.FirebaseApp;
+
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import app.simone.multiplayer.controller.FacebookManagerActor;
@@ -28,7 +30,7 @@ public class App extends Application {
 
         mInstance = this;
         googleApiHelper = new GoogleApiHelper(mInstance);
-
+        FirebaseApp.initializeApp(this);
         system = ActorSystem.create("system");
         system.actorOf(Props.create(CPUActor.class), Constants.CPU_ACTOR_NAME);
         system.actorOf(Props.create(GameViewActor.class), Constants.GAMEVIEW_ACTOR_NAME);

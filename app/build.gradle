@@ -38,6 +38,9 @@ android {
         javaMaxHeapSize "4g"
         keepRuntimeAnnotatedClasses false
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 realm {
     syncEnabled = true;
@@ -87,6 +90,9 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
+    testCompile 'org.powermock:powermock:1.6.5'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
 
 }
 

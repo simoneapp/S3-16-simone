@@ -1,4 +1,4 @@
-package app.simone;
+package app.simone.multiplayer;
 
 /**
  * Created by nicola on 28/08/2017.

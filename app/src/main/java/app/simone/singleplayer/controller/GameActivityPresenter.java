@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
 import app.simone.scores.google.ScoreHelper;
 import app.simone.shared.application.App;
 import app.simone.shared.messages.IMessage;
@@ -15,38 +16,52 @@ import app.simone.singleplayer.messages.AttachPresenterMsg;
 import app.simone.singleplayer.messages.GuessColorMsg;
 import app.simone.singleplayer.messages.NextColorMsg;
 import app.simone.singleplayer.messages.PauseMsg;
-import app.simone.singleplayer.model.MessageWrapper;
+import app.simone.singleplayer.model.MessageBuilder;
 import app.simone.singleplayer.model.SimonColorImpl;
 import app.simone.singleplayer.view.GameActivity;
 
 /**
- * Created by nicola on 28/08/2017.
+ * Bridging class between the Game Activity and the Game View Actor.
+ * @author Michele Sapignoli, Nicola Giancecchi
  */
-
 public class GameActivityPresenter {
 
     private GameActivity activity;
     private int currentScore;
-    protected int finalScore;
+    private int finalScore;
     private int chosenMode = Constants.CLASSIC_MODE;
-    protected boolean playerBlinking;
-
-    protected boolean tapToBegin = true;
+    private boolean playerBlinking;
+    private boolean tapToBegin = true;
     private boolean viewPaused;
-
     private ActorRef gameViewActor;
     private ActorRef cpuActor;
+    private ActorRef sender;
+
+
+    public GameActivityPresenter() {
+
+    }
 
     public GameActivityPresenter(GameActivity activity, int mode) {
+        setup(activity, mode, App.getInstance().getActorSystem(), ActorRef.noSender());
+    }
+
+    public GameActivityPresenter(GameActivity activity, int mode, ActorSystem system, ActorRef sender) {
+        setup(activity, mode, system, sender);
+    }
+
+    public void setup(GameActivity activity, int mode, ActorSystem system, ActorRef sender) {
         this.activity = activity;
+        this.sender = sender;
         this.chosenMode = mode;
-        this.gameViewActor = Utilities.getActor(Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem());
-        this.cpuActor = Utilities.getActor(Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem());
-        this.gameViewActor.tell(new AttachPresenterMsg(this), ActorRef.noSender());
+        this.gameViewActor = Utilities.getActor(Constants.GAMEVIEW_ACTOR_NAME, system);
+        this.cpuActor = Utilities.getActor(Constants.CPU_ACTOR_NAME, system);
+        this.gameViewActor.tell(new AttachPresenterMsg(this), sender);
     }
 
     /**
-     * Handler used to communicate with the GameviewActor. It is the only interface that receives info from outside the class.
+     * Handler used to communicate with the GameviewActor. It is the only interface that receives
+     * info from outside the class.
      */
     private Handler handler = new Handler() {
         @Override
@@ -70,10 +85,14 @@ public class GameActivityPresenter {
         }
     };
 
-
+    /**
+     * Entry point handler for a PLAYER_TURN message
+     * @param msg the message received
+     */
     private void computePlayerTurn(Message msg) {
         if (!playerBlinking) {
-            activity.updateSimoneTextview(Constants.TURN_PLAYER, AnimationHandler.getGameButtonAnimation());
+            activity.updateSimoneTextview(Constants.TURN_PLAYER,
+                    AnimationHandler.getGameButtonAnimation());
             if (chosenMode == Constants.HARD_MODE) {
                 activity.swapButtonPositions();
             }
@@ -87,12 +106,28 @@ public class GameActivityPresenter {
     }
 
 
+    /**
+     *  Prepares the game variables and tells the CPU Actor to start.
+     * @param message the received IMessage.
+     */
+    public void prepareGame(IMessage message) {
+        tapToBegin = false;
+        finalScore = 0;
+        playerBlinking = false;
+        cpuActor.tell(message, sender);
+    }
+
+    /**
+     * Entry point handler for a CPU_TURN message
+     * @param msg the message received
+     */
     private void computeCpuTurn(Message msg) {
 
         currentScore = msg.arg2 + 1; //Score
 
         if (playerBlinking) {
-            activity.updateSimoneTextview(String.valueOf(currentScore), AnimationHandler.getGameButtonAnimation());
+            activity.updateSimoneTextview(String.valueOf(currentScore),
+                    AnimationHandler.getGameButtonAnimation());
             finalScore = currentScore;
             ScoreHelper.checkAchievement(currentScore, chosenMode);
         }
@@ -114,6 +149,10 @@ public class GameActivityPresenter {
         return this.handler;
     }
 
+    /**
+     * Handler of the "You Lost" message, occurring when a user loses the game
+     * @param msg the received message
+     */
     private void handleYouLost(Message msg) {
         finalScore = msg.arg1;
         ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
@@ -123,65 +162,78 @@ public class GameActivityPresenter {
         activity.renderYouLost(finalScore);
     }
 
-    public void handleMessage(Message msg) {
-        Message m = MessageWrapper.withArg1(msg.what, msg.arg1);
-        vHandler.sendMessageDelayed(m, Constants.STD_DELAY_BTN_TIME);
+    /**
+     * Handler for the blink messages, received from the GameActivity.
+     * @param msg the message received
+     */
+    public void handleBlinkDelayedMessage(Message msg) {
+        blinkHandler.sendMessageDelayed(msg, Constants.STD_DELAY_BTN_TIME);
     }
 
+    /**
+     * Method called from the game activity and attached to each of the four colored buttons.
+     * @param buttonId Resource ID for the button
+     */
     public void didTapColorButton(int buttonId) {
         if (playerBlinking && !tapToBegin) {
-            Message m = MessageWrapper.withArg1(Constants.PLAYER_TURN, buttonId);
-            handler.sendMessage(m);
+            Message m = MessageBuilder.withArg1(Constants.PLAYER_TURN, buttonId);
+            getHandler().sendMessage(m);
         }
     }
 
     /**
      * Private handler used to blink
      */
-    private Handler vHandler = new Handler() {
+    private Handler blinkHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
             activity.resetButton(msg.arg1);
+            IMessage message = null;
             switch (msg.what) {
                 case Constants.CPU_TURN:
-                    gameViewActor.tell(new NextColorMsg(), ActorRef.noSender());
+                    message = new NextColorMsg();
                     break;
                 case Constants.PLAYER_TURN:
-                    gameViewActor.tell(new GuessColorMsg(SimonColorImpl.fromInt(msg.arg1)), ActorRef.noSender());
+                    message = new GuessColorMsg(SimonColorImpl.fromInt(msg.arg1));
                     break;
             }
+
+            gameViewActor.tell(message, sender);
         }
     };
 
+    /**
+     * Bridging methods for OnResume and OnPause
+     */
     public void handleOnResume() {
         if (!playerBlinking && viewPaused) {
             viewPaused = false;
-            gameViewActor.tell(new PauseMsg(false), ActorRef.noSender());
+            gameViewActor.tell(new PauseMsg(false), sender);
         }
     }
 
     public void handleOnPause() {
         if (!playerBlinking) {
             viewPaused = true;
-            gameViewActor.tell(new PauseMsg(true), ActorRef.noSender());
+            gameViewActor.tell(new PauseMsg(true), sender);
         }
     }
 
+    /**
+     * Method called when the user taps on the "back" button and the game ends
+     */
     public void endGame() {
         ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
         AudioManager.Companion.getInstance().playSimoneMusic();
     }
 
-    public boolean isTapToBegin() {
-        return tapToBegin;
+    void blinkDelayed(Message m, long time) {
+        getHandler().sendMessageDelayed(m, time);
     }
 
-    public void prepareGame(IMessage message) {
-        tapToBegin = false;
-        finalScore = 0;
-        playerBlinking = false;
-        cpuActor.tell(message, ActorRef.noSender());
+    public boolean isTapToBegin() {
+        return tapToBegin;
     }
 
     /**

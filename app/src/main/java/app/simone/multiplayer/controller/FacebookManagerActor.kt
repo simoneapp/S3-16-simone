@@ -27,7 +27,6 @@ class FacebookManagerActor : UntypedActor() {
     val FRIENDS_PATH = "/me/friends"
     val FRIENDS_LIMIT = 5000
     val FIELDS = "name,picture,id"
-
     var currentSender : ActorRef? = null
 
     /**

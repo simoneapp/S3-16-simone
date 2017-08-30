@@ -5,6 +5,7 @@ import android.os.Message;
 import java.util.ArrayList;
 import java.util.List;
 
+import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
 import app.simone.shared.application.App;
 import app.simone.shared.messages.IMessage;
@@ -17,7 +18,7 @@ import app.simone.singleplayer.messages.NextColorMsg;
 import app.simone.singleplayer.messages.PauseMsg;
 import app.simone.singleplayer.messages.PlayerTurnMsg;
 import app.simone.singleplayer.messages.TimeToBlinkMsg;
-import app.simone.singleplayer.model.MessageWrapper;
+import app.simone.singleplayer.model.MessageBuilder;
 import app.simone.singleplayer.model.SimonColor;
 import app.simone.singleplayer.model.SimonColorImpl;
 
@@ -35,6 +36,7 @@ public class GameViewActor extends UntypedActor {
     private int playerColorIndex;
     private boolean playerTurn;
     private boolean paused = false;
+    private ActorRef currentSender;
 
     @Override
     public void preStart() throws Exception {
@@ -44,6 +46,8 @@ public class GameViewActor extends UntypedActor {
 
     @Override
     public void onReceive(Object message) throws Exception {
+        currentSender = sender();
+
         switch (((IMessage) message).getType()) {
             case ATTACH_VIEW_MSG:
                 attachPresenter((AttachPresenterMsg) message);
@@ -67,8 +71,8 @@ public class GameViewActor extends UntypedActor {
     }
 
     private void blink(SimonColor color) {
-        Message m = MessageWrapper.withArg1(Constants.CPU_TURN, color.getButtonId());
-        presenter.getHandler().sendMessageDelayed(m, Constants.STD_DELAY_BTN_TIME);
+        Message m = MessageBuilder.withArg1(Constants.CPU_TURN, color.getButtonId());
+        presenter.blinkDelayed(m, Constants.STD_DELAY_BTN_TIME);
     }
 
     /**
@@ -88,7 +92,9 @@ public class GameViewActor extends UntypedActor {
         paused = false;
         playerTurn = false;
         cpuSequence = message.getSequence();
-        getSelf().tell(new NextColorMsg(), getSelf());
+
+        IMessage msg = new NextColorMsg();
+        getSelf().tell(msg, currentSender);
     }
 
     /**
@@ -98,7 +104,12 @@ public class GameViewActor extends UntypedActor {
         if (!paused) {
             if (cpuColorIndex >= cpuSequence.size() /*Player turn if true*/) {
                 playerTurn = true;
-                getSelf().tell(new PlayerTurnMsg(), getSelf());
+                IMessage playerTurnMsg = new PlayerTurnMsg();
+                getSelf().tell(playerTurnMsg, getSelf());
+
+                if(currentSender != null && currentSender != ActorRef.noSender()) {
+                    currentSender.tell(playerTurnMsg, getSelf());
+                }
             } else {
                 this.blink(cpuSequence.get(cpuColorIndex));
                 this.cpuColorIndex++;
@@ -112,7 +123,7 @@ public class GameViewActor extends UntypedActor {
     private void handlePlayerTurn() {
         playerColorIndex = 0;
         playerSequence.clear();
-        Message msg = MessageWrapper.withArg2(Constants.PLAYER_TURN, cpuSequence.size() - 1);
+        Message msg = MessageBuilder.withArg2(Constants.PLAYER_TURN, cpuSequence.size() - 1);
         presenter.getHandler().sendMessage(msg);
     }
 
@@ -135,7 +146,7 @@ public class GameViewActor extends UntypedActor {
                          */
                     if (cpuSequence.size() - playerSequence.size() == 0) {
 
-                        Message m = MessageWrapper.withArg2(Constants.CPU_TURN, playerColorIndex);
+                        Message m = MessageBuilder.withArg2(Constants.CPU_TURN, playerColorIndex);
                         presenter.getHandler().sendMessage(m);
 
                         Utilities.getActor(Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
@@ -150,7 +161,7 @@ public class GameViewActor extends UntypedActor {
                     playerSequence.clear();
                     cpuColorIndex = 0;
 
-                    Message m = MessageWrapper.withArg1(Constants.WHATTASHAMEYOULOST_MSG, cpuSequence.size() - 1);
+                    Message m = MessageBuilder.withArg1(Constants.WHATTASHAMEYOULOST_MSG, cpuSequence.size() - 1);
                     playerColorIndex = 0;
                     cpuSequence.clear();
                     presenter.getHandler().sendMessage(m);

@@ -1,4 +1,4 @@
-package app.simone;
+package app.simone.multiplayer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

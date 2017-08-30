@@ -1,4 +1,4 @@
-package app.simone;
+package app.simone.multiplayer;
 
 import android.os.Bundle;
 

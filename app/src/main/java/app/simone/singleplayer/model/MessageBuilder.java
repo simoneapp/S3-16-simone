@@ -6,7 +6,7 @@ import android.os.Message;
  * Created by nicola on 28/08/2017.
  */
 
-public class MessageWrapper {
+public class MessageBuilder {
 
     public static Message withArg1(int what, int arg1) {
         Message m = new Message();

@@ -9,7 +9,6 @@ import java.util.Random;
 import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
 import app.simone.multiplayer.controller.DataManager;
-import app.simone.shared.application.App;
 import app.simone.shared.messages.IMessage;
 import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
@@ -29,6 +28,7 @@ public class CPUActor extends UntypedActor {
     private int nColors = 0;
     private List<SimonColorImpl> currentSequence;
     private List<SimonColorImpl> multiplayerFullSequence;
+    private ActorRef currentSender;
 
     @Override
     public void preStart() throws Exception {
@@ -44,6 +44,7 @@ public class CPUActor extends UntypedActor {
      */
     @Override
     public void onReceive(Object message) throws Exception {
+        currentSender = sender();
         switch (((IMessage) message).getType()) {
             case START_GAME_VS_CPU:
                 startGame((StartGameVsCPUMsg)message);
@@ -71,8 +72,7 @@ public class CPUActor extends UntypedActor {
             this.multiplayerFullSequence.clear();
         }
 
-        ActorRef actor = Utilities.getActor(Constants.GAMEVIEW_ACTOR_NAME,
-                App.getInstance().getActorSystem());
+        ActorRef actor = Utilities.getActor(Constants.GAMEVIEW_ACTOR_NAME, message.getSystem());
         this.generateAndSendColor(actor);
     }
 
@@ -91,7 +91,11 @@ public class CPUActor extends UntypedActor {
             this.currentSequence.add(this.multiplayerFullSequence.get(currentSequence.size()));
         }
 
-        viewActor.tell(new TimeToBlinkMsg(this.currentSequence), getSelf());
+        ActorRef sender = getSelf();
+        if(currentSender != null && currentSender != ActorRef.noSender()) {
+            sender = currentSender;
+        }
+        viewActor.tell(new TimeToBlinkMsg(this.currentSequence), sender);
     }
 
     /**

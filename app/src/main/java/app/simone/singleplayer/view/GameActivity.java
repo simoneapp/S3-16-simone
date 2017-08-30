@@ -27,6 +27,7 @@ import app.simone.shared.utils.AudioPlayer;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.controller.GameActivityPresenter;
 import app.simone.singleplayer.messages.StartGameVsCPUMsg;
+import app.simone.singleplayer.model.MessageBuilder;
 import app.simone.singleplayer.model.SimonColorImpl;
 
 /**
@@ -97,7 +98,8 @@ public abstract class GameActivity extends FullscreenBaseGameActivity {
         Button b = (Button) findViewById(msg.arg1);
         b.setAlpha(0.4f);
         new AudioPlayer().play(getApplicationContext(), SimonColorImpl.fromInt(msg.arg1).getSoundId());
-        presenter.handleMessage(msg);
+        Message m = MessageBuilder.withArg1(msg.what, msg.arg1);
+        presenter.handleBlinkDelayedMessage(m);
     }
 
     public void resetButton(int buttonId) {

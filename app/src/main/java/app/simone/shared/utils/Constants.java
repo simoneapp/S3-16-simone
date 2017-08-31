@@ -30,7 +30,7 @@ public class Constants {
     public static final int ACHIEVEMENT_SEQ_6 = 42;
     public static final int ACHIEVEMENT_SEQ_7 = 50;
     public static final int ACHIEVEMENT_SEQ_8 = 100;
-    public static final String BACK_TO_MENU = "Back";
+    public static final String BACK_TO_MENU = "Game\nOver";
     public static final int CONNECT = 100;
     public static final int CONNECTION_ERROR = -100;
     public static final int LEADERBOARD = 0;
@@ -41,6 +41,17 @@ public class Constants {
     public static final String NEED_TO_SYNC_CLASSIC = "NTSC";
     public static final String NEED_TO_SYNC_HARD = "NTSH";
     public static final int MULTIPLAYER_READY = 46;
+    public static final String N_GAMES ="N_GAMES";
+    public static final int FIVE = 5;
+    public static final int TWENTYFIVE = 25;
+    public static final int FIFTY = 50;
+    public static final int SEVENTYFIVE = 75;
+    public static final int HUNDRED = 100;
+    public static final int TWOHUNDREDFIFTY = 250;
+    public static final int FIVEHUNDRED = 500;
+    public static final int THOUSAND = 1000;
+
+
     public static final int MAX_FRIENDS_PER_MATCH = 3;
     public static final String NODE_CHILD_PLAYERSSEQUENCE = "playersSequence";
     public static final String NODE_CHILD_CPUSEQUENCE = "cpuSequence";
@@ -52,4 +63,11 @@ public class Constants {
     public static final String NODE_CHILD_STATUS = "status";
     public static final String NODE_CHILD_CASE = "case";
 
+    public static final int FB_IMAGE_PICTURE_SIZE = 100;
+
+    public static final String MULTIPLAYER_MODE="multiplayerMode";
+    public static final String MATCH_KEY_S="key";
+    public static final String WHICH_PLAYER="whichPlayer";
+    public static final String FIRST_PLAYER="firstplayer";
+    public static final String SECOND_PLAYER="secondplayer";
 }

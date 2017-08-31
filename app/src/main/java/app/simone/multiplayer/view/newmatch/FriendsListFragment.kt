@@ -7,7 +7,7 @@ import app.simone.multiplayer.view.nearby.WaitingRoomActivity
 import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
 import app.simone.shared.utils.Constants
 import app.simone.shared.utils.Utilities
-import app.simone.singleplayer.view.GameActivity
+import app.simone.singleplayer.view.MultiplayerGameActivity
 import com.facebook.Profile
 
 class FriendsListFragment : Fragment() {
@@ -44,7 +44,7 @@ class FriendsListFragment : Fragment() {
 
                     if(type == app.simone.multiplayer.model.MultiplayerType.INSTANT) {
 
-                        val intent = android.content.Intent(context, GameActivity::class.java)
+                        val intent = android.content.Intent(context, MultiplayerGameActivity::class.java)
                         intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
                         println("ME: " + com.facebook.Profile.getCurrentProfile().firstName.toString() + " " + com.facebook.Profile.getCurrentProfile().lastName.toString())
                         setUser()
@@ -57,13 +57,13 @@ class FriendsListFragment : Fragment() {
 
                     } else if(type == app.simone.multiplayer.model.MultiplayerType.NEARBY) {
 
-                        var parceled = ArrayList<Map<String, String>>()
+                        val parceled = ArrayList<Map<String, String>>()
 
                         val profile = Profile.getCurrentProfile()
                         val userMap = HashMap<String,String>()
                         userMap[FacebookUser.kNAME] = profile.name
                         userMap[FacebookUser.kID] = profile.id
-                        userMap[FacebookUser.kPICTURE] = profile.getProfilePictureUri(120,120).toString()
+                        userMap[FacebookUser.kPICTURE] = profile.getProfilePictureUri(Constants.FB_IMAGE_PICTURE_SIZE,Constants.FB_IMAGE_PICTURE_SIZE).toString()
 
                         selectedUsers.mapTo(parceled) { it.toDictionary() }
                         parceled.add(userMap)

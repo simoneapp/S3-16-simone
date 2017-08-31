@@ -1,18 +1,13 @@
 package app.simone.scores.google;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.games.Games;
-import com.google.android.gms.games.leaderboard.Leaderboard;
-import com.google.android.gms.games.leaderboard.LeaderboardScore;
 import com.google.android.gms.games.leaderboard.Leaderboards;
 
-import app.simone.shared.application.App;
-
 /**
- * Created by sapi9 on 07/07/2017.
+ * Leaderboard Callback class.
+ * @author Michele Sapignoli
  */
 
 

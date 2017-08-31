@@ -11,7 +11,6 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
-apply plugin: 'realm-android'
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.0'
@@ -40,9 +39,6 @@ android {
         keepRuntimeAnnotatedClasses false
     }
 }
-realm {
-    syncEnabled = true;
-}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -51,26 +47,23 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile group: 'com.typesafe.akka', name: 'akka-actor_2.10', version: '2.3.16'
     compile group: 'org.scala-lang', name: 'scala-library', version: '2.10.4'
-    compile group: 'com.pubnub', name: 'pubnub-gson', version: '4.6.5'
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.57'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
 
-
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
     compile 'org.scala-lang:scala-library:2.10.4'
     compile 'com.facebook.android:facebook-android-sdk:4.25.0'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    compile 'com.github.bumptech.glide:glide:4.0.0'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'org.slf4j:slf4j-api:1.7.5'
     compile 'org.slf4j:slf4j-log4j12:1.7.5'
     compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
-    compile 'com.beust:klaxon:0.30'
     compile 'com.google.android.gms:play-services:11.0.2'
     compile 'com.google.android.gms:play-services-games:11.0.2'
     compile 'com.google.android.gms:play-services-identity:11.0.2'
@@ -78,17 +71,11 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:11.0.2'
     compile 'com.firebaseui:firebase-ui-database:2.0.0'
     testCompile 'junit:junit:4.12'
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.powermock:powermock:1.6.5'
-    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
-    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
     androidTestCompile 'com.android.support:support-annotations:25.3.1'
-//    // Android JUnit Runner
     androidTestCompile 'com.android.support.test:runner:0.5'
-//// JUnit4 Rules
     androidTestCompile 'com.android.support.test:rules:0.5'
-//// Espresso core
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
 }
 
 repositories {

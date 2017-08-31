@@ -23,14 +23,12 @@ import com.google.android.gms.games.Games;
 
 import app.simone.scores.google.ClassicLeaderboardCallback;
 import app.simone.scores.google.HardLeaderboardCallback;
-import app.simone.scores.google.LeaderboardCallback;
 import app.simone.shared.application.App;
 import app.simone.shared.utils.Constants;
-import app.simone.singleplayer.view.GameActivity;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
-/**
+/** FullscreenBaseGameActivity, base class of all activities.
+ *  OnCreate method is a template method: subclasses implements the method setSubclassContentView.
+ *  This class implements GoogleApiClient features to connect with Google Games API.
  * @author Michele Sapignoli
  */
 
@@ -151,6 +149,11 @@ public abstract class FullscreenBaseGameActivity extends AppCompatActivity imple
         // are available.
         //delayedHide(initialDelay);
 
+        if(App.getGoogleApiHelper()!= null && App.getGoogleApiHelper().getGoogleApiClient()!=null
+                && App.getGoogleApiHelper().getGoogleApiClient().isConnected()){
+            Games.setViewForPopups(App.getGoogleApiHelper().getGoogleApiClient(), this.mContentView);
+        }
+
 
     }
 
@@ -221,6 +224,11 @@ public abstract class FullscreenBaseGameActivity extends AppCompatActivity imple
 
     protected abstract void backTransition();
 
+    /**
+     * Callback of Google API, when GoogleApiHelper is connected.
+     * If there's a highscore not pushed online, it pushes it.
+     * @param bundle
+     */
     @Override
     public void onConnected(Bundle bundle) {
         Log.d("##FULLSCREEN ACTIVITY", "connected");
@@ -261,6 +269,9 @@ public abstract class FullscreenBaseGameActivity extends AppCompatActivity imple
 
     }
 
+    /**
+     * Method to connect the GoogleApiClient
+     */
     public void connect() {
         if (App.getGoogleApiHelper().getGoogleApiClient() != null) {
             App.getGoogleApiHelper().getGoogleApiClient().connect();

@@ -1,14 +1,11 @@
 package app.simone.singleplayer.messages;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import app.simone.shared.messages.IMessage;
 import app.simone.shared.utils.Constants;
-import app.simone.singleplayer.model.SColor;
 
 /**
  * Start Game Message.
+ * @author Michele Sapignoli
  */
 public class StartGameVsCPUMsg implements IMessage {
 	private int radiobtnIndex = 0;

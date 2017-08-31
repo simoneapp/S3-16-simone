@@ -6,11 +6,11 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.simone.multiplayer.view.nearby.MatchBehaviour;
-import app.simone.singleplayer.view.IGameActivity;
+import app.simone.singleplayer.model.SimonColor;
+import app.simone.singleplayer.model.SimonColorImpl;
+import app.simone.singleplayer.view.GameActivity;
 import akka.actor.UntypedActor;
 import app.simone.shared.application.App;
-import app.simone.singleplayer.model.SColor;
 import app.simone.singleplayer.messages.AttachViewMsg;
 import app.simone.singleplayer.messages.PauseMsg;
 import app.simone.singleplayer.messages.TimeToBlinkMsg;
@@ -23,17 +23,18 @@ import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
 
 /**
+ * GameViewActor.
+ * Handles the interaction between CPUActor and Player.
+ *
  * @author Michele Sapignoli
  */
-
-public class GameViewActor extends UntypedActor implements MatchBehaviour {
-    private IGameActivity gameActivity;
-    private List<SColor> cpuSequence;
-    private List<SColor> playerSequence;
+public class GameViewActor extends UntypedActor {
+    private GameActivity gameActivity;
+    private List<SimonColorImpl> cpuSequence;
+    private List<SimonColorImpl> playerSequence;
     private int cpuColorIndex;
     private int playerColorIndex;
     private boolean playerTurn;
-    private SColor nextColor;
     private boolean paused = false;
 
     @Override
@@ -46,10 +47,16 @@ public class GameViewActor extends UntypedActor implements MatchBehaviour {
     public void onReceive(Object message) throws Exception {
         switch (((IMessage) message).getType()) {
             case ATTACH_VIEW_MSG:
+                /*
+                Received AttachViewMsg from GameActivity
+                 */
                 this.gameActivity = ((AttachViewMsg) message).getIActivity();
-                Log.d("##VIEW ACTOR", "Current GameActivity registered + StartGameVSCPUMsg sent to CPUActor ACTOR");
+                Log.d("##VIEW ACTOR", "Current GameActivityImpl registered + StartGameVSCPUMsg sent to CPUActor ACTOR");
                 break;
             case TIME_TO_BLINK_MSG:
+                /*
+                Time to blink the cpuSequence until it's over
+                 */
                 this.cpuColorIndex = 0;
                 paused = false;
                 playerTurn = false;
@@ -58,19 +65,24 @@ public class GameViewActor extends UntypedActor implements MatchBehaviour {
                 getSelf().tell(new NextColorMsg(), getSelf());
                 break;
             case NEXT_COLOR_MSG:
+                /*
+                Next color to blink, if the index is = size --> Player turn
+                 */
                 if (!paused) {
                     if (cpuColorIndex >= cpuSequence.size() /*Player turn if true*/) {
                         playerTurn = true;
                         getSelf().tell(new PlayerTurnMsg(), getSelf());
                     } else {
-                        nextColor = cpuSequence.get(cpuColorIndex);
-                        blink();
+                        this.blink(cpuSequence.get(cpuColorIndex));
                         Log.d("##VIEW ACTOR", "Blinked:" + cpuSequence.get(cpuColorIndex));
                         this.cpuColorIndex++;
                     }
                 }
                 break;
             case PLAYER_TURN_MSG:
+                /*
+                Player turn, msg to the public handler of GameActivity
+                 */
                 Log.d("##VIEW ACTOR", "Player turn");
                 playerColorIndex = 0;
                 playerSequence.clear();
@@ -80,6 +92,9 @@ public class GameViewActor extends UntypedActor implements MatchBehaviour {
                 gameActivity.getHandler().sendMessage(msg);
                 break;
             case GUESS_COLOR_MSG:
+                /*
+                Check of the color guessed by the player
+                 */
                 if (playerTurn) {
                     Log.d("##VIEW ACTOR", "Player inserted :" + ((GuessColorMsg) message).getGuessColor());
 
@@ -87,6 +102,10 @@ public class GameViewActor extends UntypedActor implements MatchBehaviour {
                         playerSequence.add(((GuessColorMsg) message).getGuessColor());
 
                         if (playerSequence.get(playerColorIndex).equals(cpuSequence.get(playerColorIndex))) { /*1by1 check*/
+                        /*
+                        Correct -- If sequence is completed --> CPUActor has to compute another color
+                                    else --> player can continue tapping
+                         */
                             if (cpuSequence.size() - playerSequence.size() == 0) {
                                 Message m = new Message();
                                 m.what = Constants.CPU_TURN;
@@ -98,7 +117,9 @@ public class GameViewActor extends UntypedActor implements MatchBehaviour {
                             }
                             this.playerColorIndex++;
                         } else {
-                            //Player Loss
+                            /*
+                            Incorrect -- Player loss
+                             */
                             playerSequence.clear();
                             cpuColorIndex = 0;
                             Message m = new Message();
@@ -121,25 +142,12 @@ public class GameViewActor extends UntypedActor implements MatchBehaviour {
         }
     }
 
-//    private void blink(SColor color) {
-//        Message m = new Message();
-//        m.what = Constants.CPU_TURN;
-//        m.arg1 = color.getButtonId();
-//        this.gameActivity.getHandler().sendMessageDelayed(m, Constants.STD_DELAY_BTN_TIME);
-//    }
-
-
-    @Override
-    public long increaseSpeed(long threshold) {
-        return 0;
-    }
-
-    @Override
-    public void blink() {
+    private void blink(SimonColor color) {
         Message m = new Message();
         m.what = Constants.CPU_TURN;
-        m.arg1 = nextColor.getButtonId();
+        m.arg1 = color.getButtonId();
         this.gameActivity.getHandler().sendMessageDelayed(m, Constants.STD_DELAY_BTN_TIME);
-
     }
+
+
 }

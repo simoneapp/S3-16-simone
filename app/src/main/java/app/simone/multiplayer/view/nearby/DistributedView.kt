@@ -2,8 +2,7 @@ package app.simone.multiplayer.view.nearby
 
 import android.content.Intent
 import android.os.Handler
-import app.simone.singleplayer.model.SColor
-import scala.util.parsing.combinator.testing.Str
+import app.simone.singleplayer.model.SimonColor
 
 /**
  * Created by gzano on 31/08/2017.
@@ -18,7 +17,7 @@ interface DistributedView {
 
         fun getHandler(): Handler?
 
-        fun updateColor(color: SColor)
+        fun updateColor(color: SimonColor)
 
         fun startGame()
 

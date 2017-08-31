@@ -3,9 +3,10 @@ package app.simone.singleplayer.messages;
 import app.simone.shared.messages.IMessage;
 
 /**
- * Created by sapi9 on 23/06/2017.
+ * NextColorMsg,
+ * used to make the GameViewActor blink the next color.
+ * @author Michele Sapignoli
  */
-
 public class NextColorMsg implements IMessage {
 
     @Override

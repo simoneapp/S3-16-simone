@@ -1,5 +1,6 @@
 package app.simone.multiplayer.view.nearby
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.ListView
@@ -33,6 +34,12 @@ class WaitingRoomActivity : AppCompatActivity(), DistributedView.WaitingRoomView
     override fun getActivityContext(): WaitingRoomActivity {
 
         return this
+    }
+    fun startGameActivity(matchID: String){
+        val intent = Intent(this, NearbyGameActivity::class.java)
+        intent.putExtra("match", matchID)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        this.startActivity(intent)
     }
 
 }

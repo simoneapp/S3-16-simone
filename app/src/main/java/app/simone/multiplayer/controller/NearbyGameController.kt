@@ -1,28 +1,14 @@
 package app.simone.multiplayer.controller
 
-import android.app.Activity
-import android.content.Intent
-import android.graphics.Bitmap
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import app.simone.R
 import app.simone.multiplayer.model.FacebookUser
-import app.simone.multiplayer.model.MatchUserInfo
-import app.simone.multiplayer.view.nearby.NearbyGameActivity
 import app.simone.multiplayer.view.nearby.WaitingRoomActivity
+import app.simone.shared.utils.Constants
 import com.facebook.Profile
-import com.firebase.ui.database.FirebaseListAdapter
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.nostra13.universalimageloader.core.ImageLoader
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
 import java.util.*
-
-
-
 
 /**
  * Created by nicola on 01/08/2017.
@@ -32,19 +18,25 @@ class NearbyGameController {
     companion object {
         const val USERS_REF = "users"
         const val MATCHES_REF = "matches"
+        const val TAKEN = "taken"
+        const val TOKEN = "token"
+        const val STARTED = "started"
     }
 
     val db = FirebaseDatabase.getInstance()
 
     fun updateToken(token: String, fbid: String) {
-        db.getReference(USERS_REF).child(fbid).child("token").setValue(token)
+        db.getReference(USERS_REF).child(fbid).child(TOKEN).setValue(token)
     }
 
     fun updateUserData(){
-        val profile = Profile.getCurrentProfile()
-        val userNode = db.getReference(USERS_REF).child(profile.id)
-        userNode.child(FacebookUser.kNAME).setValue(profile.name)
-        userNode.child(FacebookUser.kPICTURE).setValue(profile.getProfilePictureUri(250,250).toString())
+        if(FacebookManagerActor.isLoggedIn()){
+            val profile = Profile.getCurrentProfile()
+            val userNode = db.getReference(USERS_REF).child(profile.id)
+            userNode.child(FacebookUser.kNAME).setValue(profile.name)
+            val profileUri = profile.getProfilePictureUri(Constants.FB_IMAGE_PICTURE_SIZE,Constants.FB_IMAGE_PICTURE_SIZE)
+            userNode.child(FacebookUser.kPICTURE).setValue(profileUri.toString())
+        }
     }
 
     fun createMatch(userIDs: List<String>, playerID: String): String {
@@ -64,29 +56,8 @@ class NearbyGameController {
     fun getAndListenForNewPlayers(match: String, activity: WaitingRoomActivity) {
 
         val ref = db.getReference(MATCHES_REF).child(match)
-
-        val adapter = object : FirebaseListAdapter<MatchUserInfo>(activity, MatchUserInfo::class.java,
-                R.layout.cell_friends, ref.child(USERS_REF)) {
-            override fun populateView(v: View?, model: MatchUserInfo?, position: Int) {
-                val itemRef = getRef(position)
-                val key = itemRef.key
-
-                val userRef = db.getReference(USERS_REF).child(key)
-                val name = v?.findViewById(R.id.text_name) as TextView
-
-                userRef.addListenerForSingleValueEvent(object: ValueEventListener{
-                    override fun onCancelled(p0: DatabaseError?) { }
-
-                    override fun onDataChange(p0: DataSnapshot?) {
-                        name.text = p0?.child(FacebookUser.kNAME)?.value.toString()
-                        setImage(v, p0?.child(FacebookUser.kPICTURE)?.value.toString())
-                        if(model != null) {
-                            setSelected(v, model.taken, activity)
-                        }
-                    }
-                })
-            }
-        }
+        val adapter = FirebaseListAdapterFactory.getWaitingRoomAdapter(ref, activity)
+        activity.listView?.adapter = adapter
 
         var activityStarted = false
 
@@ -94,53 +65,19 @@ class NearbyGameController {
             override fun onCancelled(p0: DatabaseError?) { }
 
             override fun onDataChange(p0: DataSnapshot?) {
-                val started = p0?.child("started")
+                val started = p0?.child(STARTED)
                 val users = p0?.child(USERS_REF)
-                if(users?.children?.filter { it.child("taken").value == false }?.count() == 0
+                if(users?.children?.filter { it.child(TAKEN).value == false }?.count() == 0
                         && !activityStarted){
-                    val intent = Intent(activity, NearbyGameActivity::class.java)
-                    intent.putExtra("match", match)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    activity.startActivity(intent)
+                    activity.startGameActivity(match)
                     activityStarted = true
                 }
             }
 
         })
-
-
-        activity.listView?.adapter = adapter
-    }
-
-    /*fun checkMatch(p0: DataSnapshot?, activity: WaitingRoomActivity, match: String) {
-
-    }*/
-
-
-    fun setSelected(convertView: View?, isSelected: Boolean, activity: Activity) {
-        if(isSelected){
-            convertView?.background = activity?.resources?.getDrawable(R.color.myGreen)
-        } else {
-            convertView?.background = activity?.resources?.getDrawable(R.color.myWhite)
-        }
-    }
-
-    fun setImage(convertView: View?, url: String?){
-
-        val imgProfile = convertView!!.findViewById(R.id.img_profile) as ImageView
-
-        if(url != null) {
-            imgProfile.setImageDrawable(null)
-            ImageLoader.getInstance().cancelDisplayTask(imgProfile)
-            ImageLoader.getInstance().loadImage(url, object : SimpleImageLoadingListener() {
-                override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
-                    imgProfile.setImageBitmap(loadedImage)
-                }
-            })
-        }
     }
 
     fun acceptInvite(user: String, match: String) {
-        db.getReference(MATCHES_REF).child(match).child(USERS_REF).child(user).child("taken").setValue(true)
+        db.getReference(MATCHES_REF).child(match).child(USERS_REF).child(user).child(TAKEN).setValue(true)
     }
 }

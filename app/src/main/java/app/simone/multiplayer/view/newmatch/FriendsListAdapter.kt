@@ -1,33 +1,23 @@
 package app.simone.multiplayer.view.newmatch
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.TextView
-import app.simone.R.*
-import app.simone.multiplayer.model.FacebookPicture
+import app.simone.R.layout
 import app.simone.multiplayer.model.FacebookUser
-import com.nostra13.universalimageloader.core.ImageLoader
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
+import app.simone.multiplayer.view.FriendsCellFiller
 
 /**
  * Created by nicola on 23/06/2017.
  */
 
-class FriendsListAdapter : ArrayAdapter<FacebookUser> {
+class FriendsListAdapter//val config = ImageLoaderConfiguration.createDefault(getContext())
+//ImageLoader.getInstance().init(config)
+(context: Context, data: List<FacebookUser>, fragment: FriendsListFragment) : ArrayAdapter<FacebookUser>(context, layout.cell_friends) {
 
-    var activity : FriendsListFragment? = null
-
-    constructor(context: Context, data: List<FacebookUser>, activity : FriendsListFragment) : super(context, layout.cell_friends) {
-        this.activity = activity
-        val config = ImageLoaderConfiguration.createDefault(getContext())
-        ImageLoader.getInstance().init(config)
-    }
+    var fragment : FriendsListFragment? = fragment
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
 
@@ -39,41 +29,12 @@ class FriendsListAdapter : ArrayAdapter<FacebookUser> {
 
         val friend = getItem(position).let { it } ?: return convertView!!
 
-        setName(convertView, friend.name)
-        setImage(convertView, friend.picture)
-
-        if(activity?.selectedUsers != null) {
-            setSelected(convertView, activity!!.selectedUsers.contains(friend))
+        FriendsCellFiller.setName(convertView, friend.name)
+        FriendsCellFiller.setImage(convertView, friend.picture.url, fragment?.activity)
+        if(fragment?.selectedUsers != null) {
+            FriendsCellFiller.setSelected(convertView, fragment!!.selectedUsers.contains(friend), fragment?.activity)
         }
 
         return convertView
-    }
-
-    fun setSelected(convertView: View?, isSelected: Boolean) {
-        if(isSelected){
-            convertView?.background = activity?.resources?.getDrawable(color.myGreen)
-        } else {
-            convertView?.background = activity?.resources?.getDrawable(color.myWhite)
-        }
-    }
-
-    fun setName(convertView: View?, name: String?) {
-        val txvName = convertView?.findViewById(id.text_name) as TextView
-        txvName.text = name
-    }
-
-    fun setImage(convertView: View?, picture: FacebookPicture?){
-
-        val imgProfile = convertView!!.findViewById(id.img_profile) as ImageView
-
-        if(picture != null) {
-            imgProfile.setImageDrawable(null)
-            ImageLoader.getInstance().cancelDisplayTask(imgProfile)
-            ImageLoader.getInstance().loadImage(picture.url, object : SimpleImageLoadingListener() {
-                override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
-                    imgProfile.setImageBitmap(loadedImage)
-                }
-            })
-        }
     }
 }

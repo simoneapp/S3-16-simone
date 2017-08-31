@@ -1,13 +1,11 @@
 package app.simone.multiplayer.view.nearby;
 
-import android.app.Activity;
+
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 
@@ -20,11 +18,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.concurrent.ExecutionException;
 
 import app.simone.R;
 import app.simone.shared.utils.Constants;
-import app.simone.singleplayer.model.SColor;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

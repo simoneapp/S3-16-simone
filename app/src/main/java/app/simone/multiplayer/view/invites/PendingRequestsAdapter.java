@@ -2,7 +2,6 @@ package app.simone.multiplayer.view.invites;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import app.simone.R;
 import app.simone.multiplayer.model.FacebookUser;
 import app.simone.multiplayer.model.OnlineMatch;
-import app.simone.singleplayer.view.GameActivity;
+import app.simone.singleplayer.view.GameActivityImpl;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -59,7 +58,7 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
 
             case R.id.item_info:
 
-                Intent intent = new Intent(mContext,GameActivity.class);
+                Intent intent = new Intent(mContext,GameActivityImpl.class);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("multiplayerMode", "multiplayerMode");
                 intent.putExtra("key",dataModel.getKey());

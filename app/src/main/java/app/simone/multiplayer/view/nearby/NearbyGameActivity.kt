@@ -8,9 +8,9 @@ import android.view.View
 import android.widget.Button
 import app.simone.R
 import app.simone.shared.utils.AudioPlayer
-import app.simone.singleplayer.model.SColor
 import java.util.concurrent.ExecutionException
 import android.widget.Toast
+import app.simone.singleplayer.model.SimonColor
 
 
 class NearbyGameActivity : AppCompatActivity(),DistributedView.NearbyView {
@@ -66,7 +66,7 @@ class NearbyGameActivity : AppCompatActivity(),DistributedView.NearbyView {
 
     }
 
-    override fun updateColor(color: SColor) {
+    override fun updateColor(color: SimonColor) {
 
         buttonColor?.background = resources?.getDrawable(color.colorId)
     }

@@ -1,7 +1,8 @@
 package app.simone.multiplayer.view.nearby
 
 import app.simone.shared.utils.Constants
-import app.simone.singleplayer.model.SColor
+import app.simone.singleplayer.model.SimonColor
+import app.simone.singleplayer.model.SimonColorImpl
 import com.facebook.Profile
 import com.google.firebase.database.*
 
@@ -35,7 +36,7 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: DistributedView.N
                 if (child.value != null) {
                     val color = child.value.toString()
 
-                    val playerColor = SColor.valueOf(color)
+                    val playerColor = SimonColorImpl.valueOf(color)
                     player = Player(playerColor, playerID)
                     player?.resetBlinkCount()
                     nearbyView.updateColor(playerColor)

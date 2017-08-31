@@ -1,12 +1,14 @@
 package app.simone.singleplayer.model;
-
 import app.simone.R;
 
 /**
- * Created by sapi9 on 27/06/2017.
+ * SimonColorImpl, enum.
+ * Each value (GREEN, RED, BLUE, YELLOW) is associated with a button, a sound, and a color.
+ *
+ * @author Michele Sapignoli
  */
 
-public enum SColor {
+public enum SimonColorImpl implements SimonColor{
     GREEN(R.id.GREEN, R.raw.simonsound1, R.color.myGreen),
     RED(R.id.RED, R.raw.simonsound2, R.color.myRed),
     BLUE(R.id.BLUE, R.raw.simonsound3, R.color.myBlue),
@@ -16,20 +18,27 @@ public enum SColor {
     private final int soundId;
     private final int colorId;
 
-    SColor(final int buttonId, final int soundId, final int colorId) {
+    SimonColorImpl(final int buttonId, final int soundId, final int colorId) {
         this.buttonId = buttonId;
         this.soundId = soundId;
         this.colorId = colorId;
     }
 
     public int getButtonId() { return buttonId; }
+
     public int getSoundId() { return soundId; }
+
     public int getColorId() {
         return colorId;
     }
 
-    public static SColor fromInt(int number){
-        for (SColor type : SColor.values()) {
+    /**
+     * Gets SimonColorImpl from buttonId
+     * @param number buttonId
+     * @return color SimonColorImpl
+     */
+    public static SimonColorImpl fromInt(int number){
+        for (SimonColorImpl type : SimonColorImpl.values()) {
             if (type.getButtonId() == number) {
                 return type;
             }
@@ -37,8 +46,13 @@ public enum SColor {
         return null;
     }
 
+    /**
+     * Gets colorId from buttonId
+     * @param buttonId buttonId
+     * @return colorId
+     */
     public static int getColorIdFromButtonId(int buttonId){
-        for (SColor type : SColor.values()) {
+        for (SimonColorImpl type : SimonColorImpl.values()) {
             if (type.getButtonId() == buttonId) {
                 return type.colorId;
             }

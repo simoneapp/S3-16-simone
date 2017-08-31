@@ -18,10 +18,16 @@ import scala.concurrent.Await;
 import scala.concurrent.Future;
 
 /**
- * Created by sapi9 on 20/06/2017.
+ * @author Michele Sapignoli
  */
 
 public class Utilities {
+    /**
+     * Returns an ActorRef from the actor's name and the actor system.
+     * @param name
+     * @param system
+     * @return actorRef
+     */
     public static ActorRef getActorByName(String name, ActorSystem system){
         ActorSelection sel = system.actorSelection(name);
 

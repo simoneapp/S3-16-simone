@@ -27,7 +27,7 @@ import app.simone.singleplayer.model.SimonColorImpl;
  * @author Michele Sapignoli
  */
 
-public class MultiplayerGameActivity extends GameActivity {
+public class MultiplayerGameActivity extends GameActivityImpl {
 
     /**
      * Implementation of the abstract method setup() of GameActivityImpl.

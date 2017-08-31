@@ -10,7 +10,7 @@ import app.simone.singleplayer.controller.GameViewActor;
  * Created by nicola on 30/08/2017.
  */
 
-public class ActorsContainer {
+public class SinglePlayerActorsContainer {
 
     private TestActorRef<CPUActor> cpuActorRef;
     private TestActorRef<GameViewActor> gameViewActorRef;
@@ -18,7 +18,7 @@ public class ActorsContainer {
     private CPUActor cpuActor;
     private GameViewActor gameViewActor;
 
-    public ActorsContainer(ActorSystem system) {
+    public SinglePlayerActorsContainer(ActorSystem system) {
 
         Props p1 = Props.create(CPUActor.class);
         cpuActorRef = TestActorRef.create(system, p1);

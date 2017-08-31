@@ -21,7 +21,7 @@ import app.simone.shared.utils.Utilities
 import com.facebook.Profile
 
 
-class MultiplayerPagerActivity : AppCompatActivity() {
+open class MultiplayerPagerActivity : AppCompatActivity() {
 
     var type : MultiplayerType? = null
     var friendsList = FriendsListFragment()
@@ -58,6 +58,7 @@ class MultiplayerPagerActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         setFacebookViewVisible(Profile.getCurrentProfile() == null)
+
     }
 
     fun setFacebookViewVisible(visible : Boolean) {

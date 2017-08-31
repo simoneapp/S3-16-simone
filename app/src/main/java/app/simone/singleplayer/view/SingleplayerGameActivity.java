@@ -14,7 +14,7 @@ import app.simone.singleplayer.messages.StartGameVsCPUMsg;
  *
  * @author Michele Sapignoli
  */
-public class SingleplayerGameActivity extends GameActivity {
+public class SingleplayerGameActivity extends GameActivityImpl {
 
     /**
      * Implementation of the abstract method setup() of GameActivityImpl.

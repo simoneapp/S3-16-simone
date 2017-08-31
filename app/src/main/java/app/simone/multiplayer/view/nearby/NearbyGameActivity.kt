@@ -13,14 +13,14 @@ import java.util.concurrent.ExecutionException
 import android.widget.Toast
 
 
-class NearbyGameActivity : AppCompatActivity(), NearbyView {
+class NearbyGameActivity : AppCompatActivity(),DistributedView.NearbyView {
 
 
     private var handler: Handler? = null
     private var matchID = ""
     private var buttonColor: Button? = null
     private var player = AudioPlayer()
-    private var presenter: NearbyViewPresenter? = null
+    var presenter: NearbyViewPresenter? = null
     private var enhancedPresenter:EnhancedNearbyViewPresenter?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {

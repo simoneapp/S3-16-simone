@@ -8,7 +8,7 @@ import com.google.firebase.database.*
 /**
  * Created by gzano on 24/08/2017.
  */
-class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Presenter, MatchBehaviour {
+class NearbyViewPresenter(var matchID: String, var nearbyView: DistributedView.NearbyView) : Presenter, MatchBehaviour {
 
     val STATUS_VALUE_PLAYING = "playing"
     val PLAYERS_SEQUENCE_VALUE_EMPTY = "empty"
@@ -16,16 +16,14 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
     val BLINK_TONALITY_NORMAL = 1.0F
     val BLINK_TONALITY_TRANSPARENT = 0.5F
     var GAME_SPEED: Long = 2000
-    val databaseRootReference = FirebaseDatabase.getInstance().getReference(Constants.NODE_ROOT)
-    val playerID = Profile.getCurrentProfile().id
+    var databaseRootReference = FirebaseDatabase.getInstance().getReference(Constants.NODE_ROOT)!!
+    val playerID = Profile.getCurrentProfile().id!!
     var player: Player? = null
-    val cpuSeqRef = databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_CPUSEQUENCE)?.ref
+    var cpuSeqRef = databaseRootReference.child(matchID)?.child(Constants.NODE_CHILD_CPUSEQUENCE)?.ref
 
 
     init {
-
-
-        databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_PLAYERS)?.child(playerID)?.addValueEventListener(object : ValueEventListener {
+        databaseRootReference.child(matchID)?.child(Constants.NODE_CHILD_PLAYERS)?.child(playerID)?.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -58,7 +56,7 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
     }
 
     override fun blink() {
-        databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_BLINK)?.addValueEventListener(object : ValueEventListener {
+        databaseRootReference.child(matchID)?.child(Constants.NODE_CHILD_BLINK)?.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError?) {
 
             }
@@ -67,7 +65,7 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
 
 
                 if (p0?.child(Constants.NODE_CHILD_COLOR)?.value == player?.color.toString()) {
-                    val index = p0?.child(Constants.NODE_CHILD_INDEX).value.toString()
+                    val index = p0.child(Constants.NODE_CHILD_INDEX).value.toString()
 
                     renderBlink(index.toLong())
 
@@ -81,7 +79,7 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
 
 
     fun updatePlayersSequence() {
-        databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_PLAYERSSEQUENCE)?.addListenerForSingleValueEvent(object : ValueEventListener {
+        databaseRootReference.child(matchID)?.child(Constants.NODE_CHILD_PLAYERSSEQUENCE)?.addListenerForSingleValueEvent(object : ValueEventListener {
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
@@ -118,7 +116,7 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
                         val map = HashMap<String, String>()
                         map[Constants.NODE_CHILD_COLOR] = nextColor
                         map[Constants.NODE_CHILD_INDEX] = nextIndex.toString()
-                        databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_BLINK)?.setValue(map)
+                        databaseRootReference.child(matchID)?.child(Constants.NODE_CHILD_BLINK)?.setValue(map)
                         nearbyView.updateButtonText(player?.blinkCount.toString())
 
                     }
@@ -126,7 +124,7 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: NearbyView) : Pre
 
                     if (p0 != null && nextIndex > p0.childrenCount) {
                         nearbyView.updateButtonText(player?.blinkCount.toString())
-                        databaseRootReference?.child(matchID)?.child(Constants.NODE_CHILD_PLAYERSSEQUENCE)?.setValue(PLAYERS_SEQUENCE_VALUE_EMPTY)
+                        databaseRootReference.child(matchID)?.child(Constants.NODE_CHILD_PLAYERSSEQUENCE)?.setValue(PLAYERS_SEQUENCE_VALUE_EMPTY)
 
                     }
                 }

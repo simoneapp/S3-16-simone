@@ -8,15 +8,12 @@ import app.simone.R
 import app.simone.multiplayer.controller.NearbyGameController
 import com.facebook.Profile
 
-class WaitingRoomActivity : AppCompatActivity() {
+class WaitingRoomActivity : AppCompatActivity(), DistributedView.WaitingRoomView {
 
-    private var txvMatchID : TextView? = null
-    private val nearbyController = NearbyGameController()
-    private var currentMatchID = ""
 
-    var listView : ListView? = null
-    var users : List<Map<String,String>>? = null
-    private val controller = NearbyGameController()
+    private var txvMatchID: TextView? = null
+    private var waitingRoomPresenter: WaitingRoomPresenter? = null
+    var listView: ListView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,33 +21,18 @@ class WaitingRoomActivity : AppCompatActivity() {
 
         listView = findViewById(R.id.list_waiting_room) as ListView
         txvMatchID = findViewById(R.id.text_match_id) as TextView
+        waitingRoomPresenter = WaitingRoomPresenter(this)
+        waitingRoomPresenter?.onCreate()
 
-        if(intent.hasExtra("users")) {
-            val users = intent.getSerializableExtra("users") as List<Map<String,String>>
-
-                val profile = Profile.getCurrentProfile()
-                val pid = profile.id
-
-                val playerIDs = ArrayList<String>()
-
-                users?.forEach { player ->
-                    val id = player["id"]
-                    if(id != null){
-                        playerIDs.add(id)
-                    }
-                }
-
-            currentMatchID = nearbyController.createMatch(playerIDs, pid)
-
-        } else if (intent.hasExtra("matchID")) {
-            currentMatchID = intent.getStringExtra("matchID")
-            nearbyController.acceptInvite(Profile.getCurrentProfile().id, currentMatchID)
-        }
-
-        txvMatchID?.text = currentMatchID
-
-        controller.getAndListenForNewPlayers(currentMatchID, this)
     }
 
+    override fun updateText(text: String) {
+        txvMatchID?.text = text
+    }
+
+    override fun getActivityContext(): WaitingRoomActivity {
+
+        return this
+    }
 
 }

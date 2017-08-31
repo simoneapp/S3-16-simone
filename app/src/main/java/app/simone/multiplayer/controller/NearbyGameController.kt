@@ -11,7 +11,8 @@ import com.google.firebase.database.ValueEventListener
 import java.util.*
 
 /**
- * Created by nicola on 01/08/2017.
+ * Controller containing useful functions for communicating with Firebase about the Nearby multiplayer.
+ * @author Nicola Giancecchi
  */
 class NearbyGameController {
 
@@ -25,10 +26,18 @@ class NearbyGameController {
 
     val db = FirebaseDatabase.getInstance()
 
+    /**
+     * Updates Firebase Cloud Notifications token
+     * @param token notification token, as provided by FCM
+     * @param fbid Facebook ID of the user linked to the token
+     */
     fun updateToken(token: String, fbid: String) {
         db.getReference(USERS_REF).child(fbid).child(TOKEN).setValue(token)
     }
 
+    /**
+     * Updates the online profile of the user.
+     */
     fun updateUserData(){
         if(FacebookManagerActor.isLoggedIn()){
             val profile = Profile.getCurrentProfile()
@@ -39,6 +48,11 @@ class NearbyGameController {
         }
     }
 
+    /**
+     * Creates a node on the Realtime Database to start a new match
+     * @param userIDs a list of strings containing the Facebook IDs of the participating users.
+     * @param playerID the Facebook ID of the current player.
+     */
     fun createMatch(userIDs: List<String>, playerID: String): String {
 
         val matchName = UUID.randomUUID().toString()
@@ -53,6 +67,11 @@ class NearbyGameController {
         return matchName
     }
 
+    /**
+     * Observes current players and updates the list when data changes.
+     * @param match the ID of the match to observe
+     * @param activity the activity to be attached.
+     */
     fun getAndListenForNewPlayers(match: String, activity: WaitingRoomActivity) {
 
         val ref = db.getReference(MATCHES_REF).child(match)
@@ -77,6 +96,11 @@ class NearbyGameController {
         })
     }
 
+    /**
+     * A call to Database made when the user accepts an invite to a match
+     * @param user Facebook ID of the user
+     * @param match ID of the match
+     */
     fun acceptInvite(user: String, match: String) {
         db.getReference(MATCHES_REF).child(match).child(USERS_REF).child(user).child(TAKEN).setValue(true)
     }

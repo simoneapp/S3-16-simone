@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import app.simone.multiplayer.model.FacebookUser
 import app.simone.multiplayer.view.nearby.WaitingRoomActivity
 import app.simone.multiplayer.view.pager.MultiplayerPagerActivity
+import app.simone.shared.application.App
 import app.simone.shared.utils.Constants
 import app.simone.shared.utils.Utilities
 import app.simone.singleplayer.view.MultiplayerGameActivity
@@ -29,9 +30,7 @@ class FriendsListFragment : Fragment() {
 
         initMainList()
 
-        val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR
-                + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
-                app.simone.shared.application.App.getInstance().actorSystem)
+        val actor = Utilities.getActor(Constants.FBVIEW_ACTOR_NAME, App.getInstance().actorSystem)
 
         actor.tell(app.simone.multiplayer.messages.FbViewSetupMsg(activity as MultiplayerPagerActivity), akka.actor.ActorRef.noSender())
 

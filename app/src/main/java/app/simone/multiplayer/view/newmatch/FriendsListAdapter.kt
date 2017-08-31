@@ -30,7 +30,7 @@ class FriendsListAdapter//val config = ImageLoaderConfiguration.createDefault(ge
         val friend = getItem(position).let { it } ?: return convertView!!
 
         FriendsCellFiller.setName(convertView, friend.name)
-        FriendsCellFiller.setImage(convertView, friend.picture.url, fragment?.activity)
+        FriendsCellFiller.setImage(convertView, friend.picture, fragment?.activity)
         if(fragment?.selectedUsers != null) {
             FriendsCellFiller.setSelected(convertView, fragment!!.selectedUsers.contains(friend), fragment?.activity)
         }

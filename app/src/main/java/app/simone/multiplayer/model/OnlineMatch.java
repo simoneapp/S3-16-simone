@@ -3,7 +3,6 @@ package app.simone.multiplayer.model;
 
 import java.util.List;
 
-import app.simone.singleplayer.model.SimonColor;
 import app.simone.singleplayer.model.SimonColorImpl;
 
 /**
@@ -17,11 +16,9 @@ public class OnlineMatch{
     private String key;
     private List<SimonColorImpl> sequence;
 
-
     public OnlineMatch(){
 
     }
-
 
     public OnlineMatch(FacebookUser firstplayer, FacebookUser secondplayer) {
         this.firstplayer = firstplayer;

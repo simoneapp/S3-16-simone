@@ -10,6 +10,7 @@ import android.support.v7.app.NotificationCompat
 import android.util.Log
 import app.simone.R
 import app.simone.multiplayer.view.nearby.WaitingRoomActivity
+import app.simone.settings.controller.SettingsManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -31,6 +32,12 @@ class FCMNotificationService : FirebaseMessagingService() {
     }
 
     private fun displayNotification(remoteMessage: RemoteMessage) {
+
+        val settingsManager = SettingsManager(this)
+        if(!settingsManager.areNotificationsEnabled()) {
+            return
+        }
+
         val notification = remoteMessage.notification
         val intent = Intent(this, WaitingRoomActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

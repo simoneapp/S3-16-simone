@@ -16,6 +16,8 @@ import app.simone.multiplayer.view.invites.InvitesFragment
 import app.simone.multiplayer.view.invites.NearbyInvitesFragment
 import app.simone.multiplayer.view.newmatch.FriendsListFragment
 import app.simone.shared.application.App
+import app.simone.shared.utils.Constants
+import app.simone.shared.utils.Utilities
 import com.facebook.Profile
 
 
@@ -77,8 +79,7 @@ class MultiplayerPagerActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
-                App.getInstance().actorSystem)
+        val actor = Utilities.getActor(Constants.FBVIEW_ACTOR_NAME, App.getInstance().actorSystem);
         actor.tell(FbOnActivityResultMsg(requestCode, resultCode, data), akka.actor.ActorRef.noSender())
     }
 

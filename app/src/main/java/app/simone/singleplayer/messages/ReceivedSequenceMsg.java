@@ -3,9 +3,8 @@ package app.simone.singleplayer.messages;
 import java.util.List;
 
 import app.simone.shared.messages.IMessage;
-import app.simone.singleplayer.model.SimonColor;
+import app.simone.singleplayer.controller.GameActivityPresenter;
 import app.simone.singleplayer.model.SimonColorImpl;
-import app.simone.singleplayer.view.GameActivity;
 
 /**
  * ReceivedSequenceMsg,
@@ -14,12 +13,12 @@ import app.simone.singleplayer.view.GameActivity;
  */
 public class ReceivedSequenceMsg implements IMessage {
     private List<SimonColorImpl> sequence;
-    private GameActivity activity;
+    private GameActivityPresenter presenter;
 
 
-    public ReceivedSequenceMsg(List<SimonColorImpl> listToPlay, GameActivity activity){
+    public ReceivedSequenceMsg(List<SimonColorImpl> listToPlay, GameActivityPresenter presenter){
         this.sequence = listToPlay;
-        this.activity = activity;
+        this.presenter = presenter;
     }
 
     @Override
@@ -31,7 +30,7 @@ public class ReceivedSequenceMsg implements IMessage {
         return sequence;
     }
 
-    public GameActivity getActivity() {
-        return activity;
+    public GameActivityPresenter getPresenter() {
+        return presenter;
     }
 }

@@ -12,7 +12,9 @@ import com.google.firebase.database.*
 
 
 /**
- * Created by nicola on 21/08/2017.
+ * Helper class producing adapters containing Facebook friends. Using `FirebaseListAdapter`, there's no
+ * need to handle updates to the adapter, since they're already handled by this custom adapter.
+ * @author Nicola Giancecchi
  */
 class FirebaseListAdapterFactory {
 
@@ -20,6 +22,12 @@ class FirebaseListAdapterFactory {
 
         val db = FirebaseDatabase.getInstance()
 
+        /**
+         * Produces a Waiting Room Adapter, starting from the `ref` reference.
+         * @param ref reference node to be observed
+         * @param activity activity to be updated
+         * @return a FirebaseListAdapter<> object
+         */
         fun getWaitingRoomAdapter(ref: DatabaseReference, activity: WaitingRoomActivity) : FirebaseListAdapter<MatchUserInfo> {
 
             return object : FirebaseListAdapter<MatchUserInfo>(activity, MatchUserInfo::class.java,

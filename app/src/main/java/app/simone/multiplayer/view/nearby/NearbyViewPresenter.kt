@@ -21,7 +21,7 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: DistributedView.N
     val GAME_ABOUT_TO_START_VALUE = "game is about to start"
     val BLINK_TONALITY_NORMAL = 1.0F
     val BLINK_TONALITY_TRANSPARENT = 0.5F
-    var GAME_SPEED: Long = 2000
+    var GAME_SPEED: Long = 1000
     var databaseRootReference = FirebaseDatabase.getInstance().getReference(Constants.NODE_ROOT)!!
     val playerID = Profile.getCurrentProfile().id!!
     var player: Player? = null
@@ -125,14 +125,15 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: DistributedView.N
                         map[Constants.NODE_CHILD_COLOR] = nextColor
                         map[Constants.NODE_CHILD_INDEX] = nextIndex.toString()
                         databaseRootReference.child(matchID)?.child(Constants.NODE_CHILD_BLINK)?.setValue(map)
-                        nearbyView.updateButtonText(player?.blinkCount.toString())
+                       // nearbyView.updateButtonText(player?.blinkCount.toString())
 
                     }
 
 
                     if (p0 != null && nextIndex > p0.childrenCount) {
-                        nearbyView.updateButtonText(player?.blinkCount.toString())
+                      //  nearbyView.updateButtonText(player?.blinkCount.toString())
                         databaseRootReference.child(matchID)?.child(Constants.NODE_CHILD_PLAYERSSEQUENCE)?.setValue(PLAYERS_SEQUENCE_VALUE_EMPTY)
+                        databaseRootReference.child(matchID)?.child(Constants.NODE_CHILD_STATUS)?.setValue(Constants.NODE_CHILD_STATUS_VALUE)
 
                     }
                 }

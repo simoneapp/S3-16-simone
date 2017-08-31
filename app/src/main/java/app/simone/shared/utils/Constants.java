@@ -60,7 +60,9 @@ public class Constants {
     public static final String NODE_CHILD_BLINK = "blink";
     public static final String NODE_CHILD_STATUS = "status";
     public static final String NODE_CHILD_CASE = "case";
-
+    public static final String NODE_CHILD_STATUS_VALUE="players turn";
+    public static final String BUTTON_TEXT_PLAYER_TUNR=" player turn";
+    public static final String BUTTON_TEXT_SIMONE_TURN ="simone's turn";
     public static final int FB_IMAGE_PICTURE_SIZE = 100;
     public static final String NOTIFICATIONS_KEY = "notifications";
     public static final String MUSIC_KEY = "music";

@@ -16,7 +16,7 @@ import app.simone.singleplayer.model.SimonColor
  * actvity for nearby game user interaction, implements DistrbutedView.NearbyView
  *
  */
-class NearbyGameActivity : AppCompatActivity(),DistributedView.NearbyView {
+class NearbyGameActivity : AppCompatActivity(), DistributedView.NearbyView {
 
 
     private var handler: Handler? = null
@@ -24,7 +24,7 @@ class NearbyGameActivity : AppCompatActivity(),DistributedView.NearbyView {
     private var buttonColor: Button? = null
     private var player = AudioPlayer()
     var presenter: NearbyViewPresenter? = null
-    private var enhancedPresenter:EnhancedNearbyViewPresenter?=null
+    private var enhancedPresenter: EnhancedNearbyViewPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,9 +33,9 @@ class NearbyGameActivity : AppCompatActivity(),DistributedView.NearbyView {
         handler = Handler()
         matchID = intent.getStringExtra("match")
         presenter = NearbyViewPresenter(matchID, this)
-        enhancedPresenter= EnhancedNearbyViewPresenter(presenter!!)
-        presenter?.onCreate()
-        enhancedPresenter?.onShamePlayer()
+        enhancedPresenter = EnhancedNearbyViewPresenter(presenter!!)
+        enhancedPresenter?.onCreate()
+
 
     }
 

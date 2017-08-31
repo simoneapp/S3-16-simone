@@ -26,7 +26,7 @@ public class Constants {
     public static final int ACHIEVEMENT_SEQ_2 = 7;
     public static final int ACHIEVEMENT_SEQ_3 = 14;
     public static final int ACHIEVEMENT_SEQ_4 = 20;
-    public static final int ACHIEVEMENT_SEQ_5 = 30;
+    public static final int ACHIEVEMENT_SEQ_5 = 10;
     public static final int ACHIEVEMENT_SEQ_6 = 42;
     public static final int ACHIEVEMENT_SEQ_7 = 50;
     public static final int ACHIEVEMENT_SEQ_8 = 100;
@@ -50,8 +50,6 @@ public class Constants {
     public static final int TWOHUNDREDFIFTY = 250;
     public static final int FIVEHUNDRED = 500;
     public static final int THOUSAND = 1000;
-
-
     public static final int MAX_FRIENDS_PER_MATCH = 3;
     public static final String NODE_CHILD_PLAYERSSEQUENCE = "playersSequence";
     public static final String NODE_CHILD_CPUSEQUENCE = "cpuSequence";
@@ -64,10 +62,13 @@ public class Constants {
     public static final String NODE_CHILD_CASE = "case";
 
     public static final int FB_IMAGE_PICTURE_SIZE = 100;
-
+    public static final String NOTIFICATIONS_KEY = "notifications";
+    public static final String MUSIC_KEY = "music";
+    public static final String SETTINGS_KEY = "settings";
     public static final String MULTIPLAYER_MODE="multiplayerMode";
     public static final String MATCH_KEY_S="key";
     public static final String WHICH_PLAYER="whichPlayer";
     public static final String FIRST_PLAYER="firstplayer";
     public static final String SECOND_PLAYER="secondplayer";
+    public static final int MULTIPLAYER_GEN_COUNT = 100;
 }

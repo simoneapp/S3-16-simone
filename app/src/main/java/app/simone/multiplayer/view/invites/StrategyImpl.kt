@@ -5,7 +5,7 @@ import app.simone.multiplayer.model.OnlineMatch
 import com.google.firebase.database.DataSnapshot
 
 /**
- * This class is a Strategy Pattern for downloading matches from the database.
+ * This class is used for downloading matches from the database.
  *
  * @author Giacomo
  * @return requestsUser this is the list of previous/on going matches of a specific user.

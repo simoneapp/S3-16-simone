@@ -6,6 +6,13 @@ import com.facebook.Profile
 /**
  * Created by gzano on 31/08/2017.
  */
+/**
+ * waiting room presenter handles rendering logic for the activity to which is assigned
+ * using a nearby game controller
+ *
+ * @param waitingRoomView is the view implemented by the activity
+ *
+ */
 class WaitingRoomPresenter(var waitingRoomView: DistributedView.WaitingRoomView) : Presenter {
 
 

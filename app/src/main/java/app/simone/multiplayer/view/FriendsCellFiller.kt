@@ -25,7 +25,7 @@ class FriendsCellFiller {
 
             val imgProfile = convertView!!.findViewById(R.id.img_profile) as ImageView
 
-            if(url != null) {
+            if(url != null && activity!=null && !activity.isDestroyed) {
                 Glide.with(activity).load(url).into(imgProfile)
             }
         }

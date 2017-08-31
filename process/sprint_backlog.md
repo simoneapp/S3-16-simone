@@ -19,4 +19,4 @@
 
 | Details |
 |---|---|---|---|---|---|
-| Coming soon...|
+| Simone app is completed! Now it is possible to play as a Single Player, both classic and hard mode, Multiplayer (classic or nearby). Moreover, settings let the user to enable/disable music and push notifications. After reaching a prefixed threshold achivements are unlocked.|

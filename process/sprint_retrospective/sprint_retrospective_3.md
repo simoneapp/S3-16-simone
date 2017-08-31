@@ -14,3 +14,7 @@ Fragments (GUI Android):
 
 - The multiplayer user interface is now composed by two tabs. On the first tab it is possible to see Facebook's friend, while on the second tab there are all the on going/previous matches. This refactoring was not easy at all, but now we have a sort of example that we can reuse at anytime we need it.
 
+Distributed part:
+
+- How can we coordinate 4 different players that want to play using the nearby mode? This is not a simple problem. The main idea, still not implemented, is to create a sort of "handshake" amongst players. This strategy will lead to the "waiting room" idea.
+

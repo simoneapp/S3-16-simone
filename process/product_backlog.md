@@ -11,4 +11,5 @@
 | Single Player must be completed considering: difficulty, stopping the game, score and minor things. | DONE | 8 | 4 | The user can choose the mode (easy or hard), obtain the final score and see its score in the leaderboard. Moreover he should be able to unlock achivements. | 31/07/2017 | |
 | Nearby Playing. | DONE | 8 | 8 | 4 user can be connected through the Simone platform and each device becomes a color . | 21/08/2017 | |
 | Settings. | DONE | 3 | 3 | A user can choose to enable/disable the music and the push notification . | 21/08/2017 | |
-| Push Notification. | ON GOING | 5 | 7 | A user should receive a push notification when someone send him a request to play (multiplayer mode) . | --/--/2017 | |
+| Achievements | DONE | 6 | 3 | Unlock special prices/rewards when achiving a new score. | 30/08/2017 | |
+| Push Notifications. | DONE | 5 | 7 | A user should receive a push notification when someone send him a request to play (multiplayer mode) . | 30/08/2017 | |

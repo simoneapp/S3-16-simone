@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import java.util.List;
 
 import app.simone.shared.main.FullscreenBaseGameActivity;
-import app.simone.singleplayer.view.GameActivityImpl;
+import app.simone.singleplayer.view.GameActivity;
 import app.simone.R;
 import app.simone.shared.styleable.SimoneTextView;
 import app.simone.singleplayer.model.SimonColorImpl;
@@ -28,7 +28,7 @@ public class AnimationHandler {
     private static Animation gameButtonAnimation;
 
 
-    public static void initAnimations(final GameActivityImpl context, final FloatingActionButton gameFab, final SimoneTextView simoneTextView) {
+    public static void initAnimations(final GameActivity context, final FloatingActionButton gameFab, final SimoneTextView simoneTextView) {
         final Animation rotate = AnimationUtils.loadAnimation(context, R.anim.rotate);
         final Animation zoomIn = AnimationUtils.loadAnimation(context, R.anim.zoom_in);
         final Animation zoomOut = AnimationUtils.loadAnimation(context, R.anim.zoom_out);

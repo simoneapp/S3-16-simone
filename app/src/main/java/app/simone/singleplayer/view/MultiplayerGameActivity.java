@@ -3,10 +3,13 @@ package app.simone.singleplayer.view;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.View;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
+
 import akka.actor.ActorRef;
 import app.simone.multiplayer.controller.DataManager;
 import app.simone.multiplayer.model.OnlineMatch;
@@ -15,7 +18,6 @@ import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
 import app.simone.singleplayer.messages.ComputeFullMultiplayerSequenceMsg;
 import app.simone.singleplayer.messages.ReceivedSequenceMsg;
-import app.simone.singleplayer.model.SimonColor;
 import app.simone.singleplayer.model.SimonColorImpl;
 
 /**
@@ -25,7 +27,7 @@ import app.simone.singleplayer.model.SimonColorImpl;
  * @author Michele Sapignoli
  */
 
-public class MultiplayerGameActivity extends GameActivityImpl {
+public class MultiplayerGameActivity extends GameActivity {
 
     /**
      * Implementation of the abstract method setup() of GameActivityImpl.
@@ -39,8 +41,8 @@ public class MultiplayerGameActivity extends GameActivityImpl {
             this.whichPlayer = getIntent().getExtras().getString(Constants.WHICH_PLAYER);
 
             if (whichPlayer.equals(Constants.FIRST_PLAYER)) {
-                Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                        .tell(new ComputeFullMultiplayerSequenceMsg(this, key, 4, false), ActorRef.noSender());
+                Utilities.getActor(Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                        .tell(new ComputeFullMultiplayerSequenceMsg(presenter, key, 4, false), ActorRef.noSender());
             } else if (whichPlayer.equals(Constants.SECOND_PLAYER)) {
 
                 DataManager.Companion.getInstance().getDatabase().addListenerForSingleValueEvent(new ValueEventListener() {
@@ -49,8 +51,8 @@ public class MultiplayerGameActivity extends GameActivityImpl {
                         OnlineMatch match = dataSnapshot.child(key).getValue(OnlineMatch.class);
                         List<SimonColorImpl> sequenceToPlay = match.getSequence();
 
-                        Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                                .tell(new ReceivedSequenceMsg(sequenceToPlay, context), ActorRef.noSender());
+                        Utilities.getActor(Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                                .tell(new ReceivedSequenceMsg(sequenceToPlay, presenter), ActorRef.noSender());
                     }
 
                     @Override
@@ -78,7 +80,7 @@ public class MultiplayerGameActivity extends GameActivityImpl {
                 finish();
             }
         });
-        DataManager.Companion.getInstance().getDatabase().child(key).child(whichPlayer).child("score").setValue("" + finalScore);
+        DataManager.Companion.getInstance().getDatabase().child(key).child(whichPlayer).child("score").setValue("" + presenter.getFinalScore());
 
     }
 }

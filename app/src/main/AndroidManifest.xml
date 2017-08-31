@@ -34,8 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".scores.view.LoginActivity" />
-        <activity android:name=".scores.view.DBShowActivity" />
+
         <activity
             android:name=".singleplayer.view.VSCpuActivity"
             android:label="VS CPU"

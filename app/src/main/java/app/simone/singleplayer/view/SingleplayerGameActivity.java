@@ -4,12 +4,8 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.View;
 
-import akka.actor.ActorRef;
-import app.simone.shared.application.App;
-import app.simone.shared.utils.AnimationHandler;
 import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
-import app.simone.shared.utils.Utilities;
 import app.simone.singleplayer.messages.StartGameVsCPUMsg;
 
 /**
@@ -18,7 +14,7 @@ import app.simone.singleplayer.messages.StartGameVsCPUMsg;
  *
  * @author Michele Sapignoli
  */
-public class SingleplayerGameActivity extends GameActivityImpl {
+public class SingleplayerGameActivity extends GameActivity {
 
     /**
      * Implementation of the abstract method setup() of GameActivityImpl.
@@ -33,21 +29,9 @@ public class SingleplayerGameActivity extends GameActivityImpl {
 
                 AudioManager.Companion.getInstance().stopSimoneMusic();
 
-                if (tapToBegin) {
-                    scoreText.setVisibility(View.GONE);
-                    scoreButton.setVisibility(View.GONE);
-                    gameFab.setEnabled(false);
-                    tapToBegin = false;
-                    finalScore = 0;
-                    playerBlinking = false;
-                    simoneTextView.startAnimation(AnimationHandler.getGameButtonAnimation());
-                    simoneTextView.setText(Constants.STRING_EMPTY);
-                    simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#737373")));
-                    gameFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#f2f2f2")));
-
-                    Utilities.getActorByName(Constants.PATH_ACTOR + Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
-                            .tell(new StartGameVsCPUMsg(true), ActorRef.noSender());
-
+                if (presenter.isTapToBegin()) {
+                    prepareViewsForGame();
+                    presenter.prepareGame(new StartGameVsCPUMsg(true));
                 }
             }
         });
@@ -55,7 +39,7 @@ public class SingleplayerGameActivity extends GameActivityImpl {
     }
 
     @Override
-    void saveScore() {
+    public void saveScore() {
         simoneTextView.setText(Constants.PLAY_AGAIN);
         simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
     }

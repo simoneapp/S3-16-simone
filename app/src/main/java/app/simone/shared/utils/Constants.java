@@ -1,8 +1,7 @@
 package app.simone.shared.utils;
 
 /**
- * Constants class.
- * @author Michele Sapignoli
+ * Created by sapi9 on 21/06/2017.
  */
 
 public class Constants {
@@ -39,8 +38,8 @@ public class Constants {
     public static final String PREF_KEY_LEAD_CLASSIC = "CLASSIC";
     public static final String PREF_KEY_LEAD_HARD = "HARD";
     public static final String PREF_KEY = "PREF";
-    public static final String NEED_TO_SYNC_CLASSIC= "NTSC";
-    public static final String NEED_TO_SYNC_HARD= "NTSH";
+    public static final String NEED_TO_SYNC_CLASSIC = "NTSC";
+    public static final String NEED_TO_SYNC_HARD = "NTSH";
     public static final int MULTIPLAYER_READY = 46;
     public static final String N_GAMES ="N_GAMES";
     public static final int FIVE = 5;
@@ -51,14 +50,25 @@ public class Constants {
     public static final int TWOHUNDREDFIFTY = 250;
     public static final int FIVEHUNDRED = 500;
     public static final int THOUSAND = 1000;
-
-
     public static final int MAX_FRIENDS_PER_MATCH = 3;
-    public static final int FB_IMAGE_PICTURE_SIZE = 100;
+    public static final String NODE_CHILD_PLAYERSSEQUENCE = "playersSequence";
+    public static final String NODE_CHILD_CPUSEQUENCE = "cpuSequence";
+    public static final String NODE_ROOT = "matches";
+    public static final String NODE_CHILD_PLAYERS = "users";
+    public static final String NODE_CHILD_COLOR = "color";
+    public static final String NODE_CHILD_INDEX = "index";
+    public static final String NODE_CHILD_BLINK = "blink";
+    public static final String NODE_CHILD_STATUS = "status";
+    public static final String NODE_CHILD_CASE = "case";
 
+    public static final int FB_IMAGE_PICTURE_SIZE = 100;
+    public static final String NOTIFICATIONS_KEY = "notifications";
+    public static final String MUSIC_KEY = "music";
+    public static final String SETTINGS_KEY = "settings";
     public static final String MULTIPLAYER_MODE="multiplayerMode";
     public static final String MATCH_KEY_S="key";
     public static final String WHICH_PLAYER="whichPlayer";
     public static final String FIRST_PLAYER="firstplayer";
     public static final String SECOND_PLAYER="secondplayer";
+    public static final int MULTIPLAYER_GEN_COUNT = 100;
 }

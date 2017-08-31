@@ -17,6 +17,7 @@ import app.simone.singleplayer.messages.GuessColorMsg;
 import app.simone.singleplayer.messages.NextColorMsg;
 import app.simone.singleplayer.messages.PauseMsg;
 import app.simone.singleplayer.messages.PlayerTurnMsg;
+import app.simone.singleplayer.messages.TestMessage;
 import app.simone.singleplayer.messages.TimeToBlinkMsg;
 import app.simone.singleplayer.model.MessageBuilder;
 import app.simone.singleplayer.model.SimonColor;
@@ -83,6 +84,10 @@ public class GameViewActor extends UntypedActor {
         this.presenter = message.getPresenter();
     }
 
+    public GameActivityPresenter getPresenter() {
+        return presenter;
+    }
+
     /**
      * Time to blink the cpuSequence until it's over
      * @param message
@@ -93,8 +98,8 @@ public class GameViewActor extends UntypedActor {
         playerTurn = false;
         cpuSequence = message.getSequence();
 
-        IMessage msg = new NextColorMsg();
-        getSelf().tell(msg, currentSender);
+        currentSender.tell(new TestMessage(), self());
+        getSelf().tell(new NextColorMsg(), currentSender);
     }
 
     /**
@@ -102,15 +107,12 @@ public class GameViewActor extends UntypedActor {
      */
     private void nextColor(){
         if (!paused) {
-            if (cpuColorIndex >= cpuSequence.size() /*Player turn if true*/) {
+            if (cpuColorIndex >= cpuSequence.size()) { /*Player turn if true*/
                 playerTurn = true;
                 IMessage playerTurnMsg = new PlayerTurnMsg();
                 getSelf().tell(playerTurnMsg, getSelf());
-
-                if(currentSender != null && currentSender != ActorRef.noSender()) {
-                    currentSender.tell(playerTurnMsg, getSelf());
-                }
             } else {
+                currentSender.tell(new TestMessage(), self());
                 this.blink(cpuSequence.get(cpuColorIndex));
                 this.cpuColorIndex++;
             }
@@ -123,6 +125,7 @@ public class GameViewActor extends UntypedActor {
     private void handlePlayerTurn() {
         playerColorIndex = 0;
         playerSequence.clear();
+        currentSender.tell(new TestMessage(), self());
         Message msg = MessageBuilder.withArg2(Constants.PLAYER_TURN, cpuSequence.size() - 1);
         presenter.getHandler().sendMessage(msg);
     }
@@ -172,9 +175,34 @@ public class GameViewActor extends UntypedActor {
 
     private void pause(PauseMsg message) {
         this.paused = message.isPausing();
+        currentSender.tell(new TestMessage(), self());
         if (!this.paused) {
             getSelf().tell(new NextColorMsg(), getSelf());
+            currentSender.tell(new TestMessage(), self());
         }
     }
 
+    public int getCpuColorIndex() {
+        return cpuColorIndex;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public boolean isPlayerTurn() {
+        return playerTurn;
+    }
+
+    public List<SimonColorImpl> getCpuSequence() {
+        return cpuSequence;
+    }
+
+    public int getPlayerColorIndex() {
+        return playerColorIndex;
+    }
+
+    public List<SimonColorImpl> getPlayerSequence() {
+        return playerSequence;
+    }
 }

@@ -61,4 +61,5 @@ public class Constants {
     public static final String WHICH_PLAYER="whichPlayer";
     public static final String FIRST_PLAYER="firstplayer";
     public static final String SECOND_PLAYER="secondplayer";
+    public static final int MULTIPLAYER_GEN_COUNT = 100;
 }

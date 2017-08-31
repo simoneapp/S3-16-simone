@@ -93,7 +93,7 @@ class InvitesFragment : Fragment() {
             }
         }
 
-        DataManager.Companion.instance.database.addValueEventListener(postListener)
+        DataManager.Companion.instance.database?.addValueEventListener(postListener)
 
     }
 

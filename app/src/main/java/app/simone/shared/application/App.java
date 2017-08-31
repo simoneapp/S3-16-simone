@@ -27,7 +27,6 @@ public class App extends Application {
             new ActorDefinitor("app.simone.multiplayer.controller.FacebookViewActor", Constants.FBVIEW_ACTOR_NAME),
             new ActorDefinitor("app.simone.multiplayer.controller.FacebookManagerActor", Constants.FACEBOOK_ACTOR_NAME));
 
-
     @Override
     public void onCreate() {
         super.onCreate();

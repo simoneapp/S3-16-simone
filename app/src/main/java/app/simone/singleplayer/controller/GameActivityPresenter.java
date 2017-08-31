@@ -59,6 +59,10 @@ public class GameActivityPresenter {
         this.gameViewActor.tell(new AttachPresenterMsg(this), sender);
     }
 
+    public GameActivity getActivity() {
+        return activity;
+    }
+
     /**
      * Handler used to communicate with the GameviewActor. It is the only interface that receives
      * info from outside the class.

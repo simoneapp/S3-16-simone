@@ -1,7 +1,5 @@
 package app.simone.singleplayer.controller;
 
-import com.google.firebase.database.DatabaseReference;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,10 +9,10 @@ import akka.actor.UntypedActor;
 import app.simone.multiplayer.controller.DataManager;
 import app.simone.shared.messages.IMessage;
 import app.simone.shared.utils.Constants;
-import app.simone.shared.utils.Utilities;
 import app.simone.singleplayer.messages.ComputeFullMultiplayerSequenceMsg;
 import app.simone.singleplayer.messages.ReceivedSequenceMsg;
 import app.simone.singleplayer.messages.StartGameVsCPUMsg;
+import app.simone.singleplayer.messages.TestMessage;
 import app.simone.singleplayer.messages.TimeToBlinkMsg;
 import app.simone.singleplayer.model.SimonColorImpl;
 
@@ -72,8 +70,7 @@ public class CPUActor extends UntypedActor {
             this.multiplayerFullSequence.clear();
         }
 
-        ActorRef actor = Utilities.getActor(Constants.GAMEVIEW_ACTOR_NAME, message.getSystem());
-        this.generateAndSendColor(actor);
+        this.generateAndSendColor(message.getReplyingActor());
     }
 
 
@@ -91,11 +88,9 @@ public class CPUActor extends UntypedActor {
             this.currentSequence.add(this.multiplayerFullSequence.get(currentSequence.size()));
         }
 
-        ActorRef sender = getSelf();
-        if(currentSender != null && currentSender != ActorRef.noSender()) {
-            sender = currentSender;
-        }
-        viewActor.tell(new TimeToBlinkMsg(this.currentSequence), sender);
+        currentSender.tell(new TestMessage(), self());
+        viewActor.tell(new TimeToBlinkMsg(this.currentSequence), self());
+
     }
 
     /**
@@ -105,14 +100,15 @@ public class CPUActor extends UntypedActor {
      */
     private void computeMultiplayerSequence(ComputeFullMultiplayerSequenceMsg message) {
 
-        for (int i = 0; i <= 100; i++) {
+        for (int i = 0; i <= Constants.MULTIPLAYER_GEN_COUNT; i++) {
             int random = new Random().nextInt(message.getNColors());
             this.multiplayerFullSequence.add(SimonColorImpl.values()[random]);
         }
 
         final String key = message.getMatchKey();
-        DatabaseReference ref = DataManager.Companion.getInstance().getDatabase();
-        ref.child(key).child("sequence").setValue(this.multiplayerFullSequence);
+        DataManager.Companion.getInstance().setMultiplayerSequence(key, this.multiplayerFullSequence);
+
+        currentSender.tell(new TestMessage(), self());
         message.getPresenter().getHandler().sendEmptyMessage(Constants.MULTIPLAYER_READY);
     }
 
@@ -126,6 +122,17 @@ public class CPUActor extends UntypedActor {
         message.getPresenter().getHandler().sendEmptyMessage(Constants.MULTIPLAYER_READY);
     }
 
+    public List<SimonColorImpl> getCurrentSequence() {
+        return currentSequence;
+    }
+
+    public int getnColors() {
+        return nColors;
+    }
+
+    public List<SimonColorImpl> getMultiplayerFullSequence() {
+        return multiplayerFullSequence;
+    }
 }
 
 

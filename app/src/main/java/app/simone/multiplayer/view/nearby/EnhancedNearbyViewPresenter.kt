@@ -8,6 +8,10 @@ import com.google.firebase.database.ValueEventListener
 /**
  * Created by gzano on 28/08/2017.
  */
+/**
+ * Decorator class that adds functionality to the basic presenter
+ *
+ */
 class EnhancedNearbyViewPresenter(var nearbyViewPresenter: NearbyViewPresenter) : MatchBehaviour, Presenter {
 
     val GAME_OVER_TEXT = "GAMEOVER"
@@ -25,7 +29,9 @@ class EnhancedNearbyViewPresenter(var nearbyViewPresenter: NearbyViewPresenter) 
 
 
     //Extended Behaviour
-
+    /**
+     * Extended behaviour, used to shame player that loses and shows a text
+     */
     fun onShamePlayer() {
 
         nearbyViewPresenter.databaseRootReference?.child(nearbyViewPresenter.matchID)?.child(Constants.NODE_CHILD_STATUS)?.addValueEventListener(object : ValueEventListener {

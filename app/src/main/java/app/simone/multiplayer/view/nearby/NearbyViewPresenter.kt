@@ -9,6 +9,11 @@ import com.google.firebase.database.*
 /**
  * Created by gzano on 24/08/2017.
  */
+/**
+ * presenter handling the rendering logic for the nearby game activity to which is assigned
+ * @param matchID is the id of the match Firebase ValueEventListeners are focused on
+ * @param nearbyView is the view implemented by the activity the presenter is assigned to
+ */
 class NearbyViewPresenter(var matchID: String, var nearbyView: DistributedView.NearbyView) : Presenter, MatchBehaviour {
 
     val STATUS_VALUE_PLAYING = "playing"
@@ -78,7 +83,9 @@ class NearbyViewPresenter(var matchID: String, var nearbyView: DistributedView.N
 
     }
 
-
+    /**
+     * update players sequence as the button is pressed
+     */
     fun updatePlayersSequence() {
         databaseRootReference.child(matchID)?.child(Constants.NODE_CHILD_PLAYERSSEQUENCE)?.addListenerForSingleValueEvent(object : ValueEventListener {
 

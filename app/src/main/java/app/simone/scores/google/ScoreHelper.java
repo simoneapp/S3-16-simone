@@ -44,8 +44,8 @@ public class ScoreHelper {
                         : getApplicationContext().getResources().getString(R.string.achievement_head_full_of_dreams_hard);
                 break;
             case Constants.ACHIEVEMENT_SEQ_5:
-                achievement = mode == Constants.CLASSIC_MODE ? getApplicationContext().getResources().getString(R.string.achievement_hard_as_zync)
-                        : getApplicationContext().getResources().getString(R.string.achievement_hard_as_zync_hard);
+                achievement = mode == Constants.CLASSIC_MODE ? getApplicationContext().getResources().getString(R.string.achievement_deca)
+                        : getApplicationContext().getResources().getString(R.string.achievement_deca_hard);
                 break;
             case Constants.ACHIEVEMENT_SEQ_6:
                 achievement = mode == Constants.CLASSIC_MODE ? getApplicationContext().getResources().getString(R.string.achievement_meaning_of_life)
@@ -57,7 +57,7 @@ public class ScoreHelper {
                 break;
             case Constants.ACHIEVEMENT_SEQ_8:
                 achievement = mode == Constants.CLASSIC_MODE ? getApplicationContext().getResources().getString(R.string.achievement_i_have_nothing_to_do_in_my_life)
-                        : getApplicationContext().getResources().getString(R.string.achievement_terry);
+                        : getApplicationContext().getResources().getString(R.string.achievement_i_have_nothing_to_do_in_my_life);
                 break;
         }
         if (achievement != null) {
@@ -92,7 +92,7 @@ public class ScoreHelper {
                 achievement = getApplicationContext().getResources().getString(R.string.achievement_giotto);
                 break;
             case Constants.SEVENTYFIVE :
-                achievement = getApplicationContext().getResources().getString(R.string.achievement_chris_martin);
+                achievement = getApplicationContext().getResources().getString(R.string.achievement_paniccia);
                 break;
             case Constants.HUNDRED :
                 achievement = getApplicationContext().getResources().getString(R.string.achievement_simon);

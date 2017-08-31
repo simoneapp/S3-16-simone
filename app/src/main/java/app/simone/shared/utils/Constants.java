@@ -27,7 +27,7 @@ public class Constants {
     public static final int ACHIEVEMENT_SEQ_2 = 7;
     public static final int ACHIEVEMENT_SEQ_3 = 14;
     public static final int ACHIEVEMENT_SEQ_4 = 20;
-    public static final int ACHIEVEMENT_SEQ_5 = 30;
+    public static final int ACHIEVEMENT_SEQ_5 = 10;
     public static final int ACHIEVEMENT_SEQ_6 = 42;
     public static final int ACHIEVEMENT_SEQ_7 = 50;
     public static final int ACHIEVEMENT_SEQ_8 = 100;

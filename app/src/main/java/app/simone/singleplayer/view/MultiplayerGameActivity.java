@@ -18,6 +18,7 @@ import app.simone.shared.utils.Constants;
 import app.simone.shared.utils.Utilities;
 import app.simone.singleplayer.messages.ComputeFullMultiplayerSequenceMsg;
 import app.simone.singleplayer.messages.ReceivedSequenceMsg;
+import app.simone.singleplayer.messages.StartGameVsCPUMsg;
 import app.simone.singleplayer.model.SimonColorImpl;
 
 /**
@@ -27,7 +28,7 @@ import app.simone.singleplayer.model.SimonColorImpl;
  * @author Michele Sapignoli
  */
 
-public class MultiplayerGameActivity extends GameActivity {
+public class MultiplayerGameActivity extends GameActivityImpl {
 
     /**
      * Implementation of the abstract method setup() of GameActivityImpl.
@@ -82,5 +83,10 @@ public class MultiplayerGameActivity extends GameActivity {
         });
         DataManager.Companion.getInstance().getDatabase().child(key).child(whichPlayer).child("score").setValue("" + presenter.getFinalScore());
 
+    }
+
+    @Override
+    public void prepareGame() {
+        presenter.prepareGame(new StartGameVsCPUMsg(false, Utilities.getActor(Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())));
     }
 }

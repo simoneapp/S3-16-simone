@@ -31,7 +31,7 @@ class EnhancedNearbyViewPresenter(var nearbyViewPresenter: NearbyViewPresenter) 
 
             override fun onDataChange(p0: DataSnapshot?) {
                 if (p0?.value.toString() == Constants.NODE_CHILD_STATUS_VALUE) {
-                    nearbyViewPresenter.nearbyView.updateButtonText(Constants.BUTTON_TEXT_PLAYER_TUNR)
+                    nearbyViewPresenter.nearbyView.updateButtonText(Constants.BUTTON_TEXT_PLAYER_TURN)
                 }
                else{
                     nearbyViewPresenter.nearbyView.updateButtonText(Constants.BUTTON_TEXT_SIMONE_TURN)
@@ -60,7 +60,6 @@ class EnhancedNearbyViewPresenter(var nearbyViewPresenter: NearbyViewPresenter) 
             }
 
             override fun onDataChange(p0: DataSnapshot?) {
-                Log.d("TESTSHAME"," what is in here "+p0?.child(Constants.NODE_CHILD_CASE)?.value?.toString())
                 val gameCase = p0?.child(Constants.NODE_CHILD_CASE)?.value?.toString()
                 if (gameCase != null && gameCase == STATUS_VALUE_WRONG) {
                     val colorLose = p0?.child(Constants.NODE_CHILD_COLOR)?.value.toString()

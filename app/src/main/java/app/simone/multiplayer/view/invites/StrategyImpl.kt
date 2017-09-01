@@ -1,5 +1,6 @@
 package app.simone.multiplayer.view.invites
 
+import android.util.Log
 import app.simone.multiplayer.model.OnlineMatch
 import com.google.firebase.database.DataSnapshot
 
@@ -16,7 +17,9 @@ class StrategyImpl: Strategy {
             for (data in match) {
                 keysArray.add(data.key)
             }
-                repeat(keysArray.size) { i ->
+            Log.d("TESTFRIEndsFilleR", " children count "+dataSnapshot.childrenCount)
+
+            repeat(keysArray.size) { i ->
                     val onlineMatch = dataSnapshot.child(keysArray[i]).getValue(OnlineMatch::class.java)!!
                     onlineMatch.key = keysArray[i]
                     requestsUsers.add(onlineMatch)

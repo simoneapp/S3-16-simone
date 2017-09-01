@@ -12,8 +12,11 @@ import java.util.concurrent.ExecutionException
 import android.widget.Toast
 import app.simone.singleplayer.model.SimonColor
 
-
-class NearbyGameActivity : AppCompatActivity(),DistributedView.NearbyView {
+/**
+ * actvity for nearby game user interaction, implements DistrbutedView.NearbyView
+ *
+ */
+class NearbyGameActivity : AppCompatActivity(), DistributedView.NearbyView {
 
 
     private var handler: Handler? = null
@@ -21,7 +24,7 @@ class NearbyGameActivity : AppCompatActivity(),DistributedView.NearbyView {
     private var buttonColor: Button? = null
     private var player = AudioPlayer()
     var presenter: NearbyViewPresenter? = null
-    private var enhancedPresenter:EnhancedNearbyViewPresenter?=null
+    private var enhancedPresenter: EnhancedNearbyViewPresenter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +33,9 @@ class NearbyGameActivity : AppCompatActivity(),DistributedView.NearbyView {
         handler = Handler()
         matchID = intent.getStringExtra("match")
         presenter = NearbyViewPresenter(matchID, this)
-        enhancedPresenter= EnhancedNearbyViewPresenter(presenter!!)
+        enhancedPresenter = EnhancedNearbyViewPresenter(presenter!!)
+        enhancedPresenter?.onCreate()
 
-        presenter?.onCreate()
-        enhancedPresenter?.onShamePlayer()
 
     }
 
@@ -42,6 +44,7 @@ class NearbyGameActivity : AppCompatActivity(),DistributedView.NearbyView {
         return handler
 
     }
+
 
     override fun updateButtonBlink(blinkTonality: Float) {
         buttonColor?.alpha = blinkTonality

@@ -9,6 +9,9 @@ import app.simone.R
 import app.simone.multiplayer.controller.NearbyGameController
 import com.facebook.Profile
 
+/**
+ * waiting room for players
+ */
 class WaitingRoomActivity : AppCompatActivity(), DistributedView.WaitingRoomView {
 
 

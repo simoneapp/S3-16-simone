@@ -17,7 +17,6 @@ class StrategyImpl: Strategy {
             for (data in match) {
                 keysArray.add(data.key)
             }
-            Log.d("TESTFRIEndsFilleR", " children count "+dataSnapshot.childrenCount)
 
             repeat(keysArray.size) { i ->
                     val onlineMatch = dataSnapshot.child(keysArray[i]).getValue(OnlineMatch::class.java)!!

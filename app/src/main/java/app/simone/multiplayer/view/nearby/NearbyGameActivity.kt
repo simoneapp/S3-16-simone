@@ -37,6 +37,12 @@ class NearbyGameActivity : AppCompatActivity(), DistributedView.NearbyView {
         enhancedPresenter?.onCreate()
 
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        enhancedPresenter?.onShamePlayer()
     }
 
 

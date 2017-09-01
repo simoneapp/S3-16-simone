@@ -1,5 +1,6 @@
 package app.simone.multiplayer.view.nearby
 
+import android.util.Log
 import app.simone.shared.utils.Constants
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -59,6 +60,7 @@ class EnhancedNearbyViewPresenter(var nearbyViewPresenter: NearbyViewPresenter) 
             }
 
             override fun onDataChange(p0: DataSnapshot?) {
+                Log.d("TESTSHAME"," what is in here "+p0?.child(Constants.NODE_CHILD_CASE)?.value?.toString())
                 val gameCase = p0?.child(Constants.NODE_CHILD_CASE)?.value?.toString()
                 if (gameCase != null && gameCase == STATUS_VALUE_WRONG) {
                     val colorLose = p0?.child(Constants.NODE_CHILD_COLOR)?.value.toString()

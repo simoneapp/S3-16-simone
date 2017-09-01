@@ -146,5 +146,4 @@ public class MainActivity extends FullscreenBaseGameActivity {
         Intent intent = new Intent(this, NearbyGameActivity.class);
         startActivity(intent);
     }
-
 }

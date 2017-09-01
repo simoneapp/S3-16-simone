@@ -4,6 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +20,8 @@ import static junit.framework.Assert.assertTrue;
  * Created by nicola on 27/08/2017.
  */
 
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(JUnit4.class)
 public class FacebookUserTest {
 
     private String testUid = "1020304050";

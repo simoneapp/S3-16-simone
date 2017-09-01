@@ -1,6 +1,10 @@
 package app.simone;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import akka.actor.ActorRef;
 import akka.testkit.TestKit;
@@ -14,6 +18,8 @@ import static junit.framework.Assert.assertTrue;
  * Created by nicola on 25/08/2017.
  */
 
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(JUnit4.class)
 public class AppTest extends ActorTests {
 
     @Test

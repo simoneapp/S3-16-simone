@@ -1,5 +1,7 @@
 package app.simone.shared.utils;
 
+import scala.util.parsing.combinator.testing.Str;
+
 /**
  * Created by sapi9 on 21/06/2017.
  */
@@ -51,6 +53,9 @@ public class Constants {
     public static final int FIVEHUNDRED = 500;
     public static final int THOUSAND = 1000;
     public static final int MAX_FRIENDS_PER_MATCH = 3;
+    public static final String MATCH_KEY = "key";
+    public static final String ENDING_GAME_TITLE = "Are you letting Simone win?";
+    public static final String ENDING_GAME_MSG = "Your final score will be considered ";
     public static final String NODE_CHILD_PLAYERSSEQUENCE = "playersSequence";
     public static final String NODE_CHILD_CPUSEQUENCE = "cpuSequence";
     public static final String NODE_ROOT = "matches";

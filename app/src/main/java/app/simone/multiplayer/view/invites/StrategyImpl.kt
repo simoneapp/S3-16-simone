@@ -1,6 +1,5 @@
 package app.simone.multiplayer.view.invites
 
-import android.util.Log
 import app.simone.multiplayer.model.OnlineMatch
 import com.google.firebase.database.DataSnapshot
 
@@ -11,18 +10,14 @@ class StrategyImpl: Strategy {
 
     override fun getRequestsUsers(dataSnapshot: DataSnapshot): ArrayList<OnlineMatch> {
         val match = dataSnapshot.children
-        val keysArray = ArrayList<String>();
         val requestsUsers = arrayListOf<OnlineMatch>()
         if (match != null) {
             for (data in match) {
-                keysArray.add(data.key)
+                //val ref = dataSnapshot.child(data.key)
+                val onlineMatch = data.getValue(OnlineMatch::class.java)!!
+                onlineMatch.key = data.key
+                requestsUsers.add(onlineMatch)
             }
-
-            repeat(keysArray.size) { i ->
-                    val onlineMatch = dataSnapshot.child(keysArray[i]).getValue(OnlineMatch::class.java)!!
-                    onlineMatch.key = keysArray[i]
-                    requestsUsers.add(onlineMatch)
-                }
         }
         return requestsUsers
     }

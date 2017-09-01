@@ -92,7 +92,6 @@ public class CPUActor extends UntypedActor {
 
         currentSender.tell(new TestMessage(), self());
         viewActor.tell(new TimeToBlinkMsg(this.currentSequence), self());
-
     }
 
     /**

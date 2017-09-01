@@ -4,8 +4,10 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.View;
 
+import app.simone.shared.application.App;
 import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
+import app.simone.shared.utils.Utilities;
 import app.simone.singleplayer.messages.StartGameVsCPUMsg;
 
 /**
@@ -14,7 +16,7 @@ import app.simone.singleplayer.messages.StartGameVsCPUMsg;
  *
  * @author Michele Sapignoli
  */
-public class SingleplayerGameActivity extends GameActivity {
+public class SingleplayerGameActivity extends GameActivityImpl {
 
     /**
      * Implementation of the abstract method setup() of GameActivityImpl.
@@ -43,4 +45,10 @@ public class SingleplayerGameActivity extends GameActivity {
         simoneTextView.setText(Constants.PLAY_AGAIN);
         simoneTextView.setTextColor(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
     }
+
+    @Override
+    public void prepareGame() {
+        presenter.prepareGame(new StartGameVsCPUMsg(true, Utilities.getActor(Constants.GAMEVIEW_ACTOR_NAME, App.getInstance().getActorSystem())));
+    }
 }
+

@@ -4,35 +4,58 @@ Google Play game services IDs.
 Save this file as res/values/games-ids.xml in your project.
 -->
 <resources>
-    <string name="app_id">550232197609</string>
-    <string name="package_name">app.simone</string>
-    <string name="achievement_rgb">CgkI6ZOU44EQEAIQBw</string>
-    <string name="achievement_rgb_hard">CgkI6ZOU44EQEAIQCA</string>
-    <string name="achievement_rainbow">CgkI6ZOU44EQEAIQCQ</string>
-    <string name="achievement_rainbow_hard">CgkI6ZOU44EQEAIQCg</string>
-    <string name="achievement_double_rainbow">CgkI6ZOU44EQEAIQCw</string>
-    <string name="achievement_double_rainbow_hard">CgkI6ZOU44EQEAIQDA</string>
-    <string name="achievement_head_full_of_dreams">CgkI6ZOU44EQEAIQDQ</string>
-    <string name="achievement_head_full_of_dreams_hard">CgkI6ZOU44EQEAIQDg</string>
-    <string name="achievement_hard_as_zync">CgkI6ZOU44EQEAIQHg</string>
-    <string name="achievement_hard_as_zync_hard">CgkI6ZOU44EQEAIQHw</string>
-    <string name="achievement_meaning_of_life">CgkI6ZOU44EQEAIQEA</string>
-    <string name="achievement_meaning_of_life_hard">CgkI6ZOU44EQEAIQEQ</string>
-    <string name="achievement_cheater">CgkI6ZOU44EQEAIQEg</string>
-    <string name="achievement_master_of_cheating">CgkI6ZOU44EQEAIQEw</string>
-    <string name="achievement_i_have_nothing_to_do_in_my_life">CgkI6ZOU44EQEAIQFA</string>
-    <string name="achievement_terry">CgkI6ZOU44EQEAIQFQ</string>
-    <string name="achievement_fibonacci">CgkI6ZOU44EQEAIQDw</string>
-    <string name="achievement_cimabue">CgkI6ZOU44EQEAIQFg</string>
-    <string name="achievement_van_gogh">CgkI6ZOU44EQEAIQFw</string>
-    <string name="achievement_giotto">CgkI6ZOU44EQEAIQGA</string>
-    <string name="achievement_chris_martin">CgkI6ZOU44EQEAIQGQ</string>
-    <string name="achievement_simon">CgkI6ZOU44EQEAIQGg</string>
-    <string name="achievement_nyancat">CgkI6ZOU44EQEAIQGw</string>
-    <string name="achievement_unicorn">CgkI6ZOU44EQEAIQHA</string>
-    <string name="achievement_giuliano_e_i_notturni">CgkI6ZOU44EQEAIQHQ</string>
-    <string name="leaderboard_classic">CgkI6ZOU44EQEAIQAg</string>
-    <string name="leaderboard_hard">CgkI6ZOU44EQEAIQAw</string>
-    <string name="leaderboard_multiplayer">CgkI6ZOU44EQEAIQBA</string>
-    <string name="leaderboard_team_play">CgkI6ZOU44EQEAIQBQ</string>
+    <!-- app_id -->
+    <string name="app_id" translatable="false">550232197609</string>
+    <!-- package_name -->
+    <string name="package_name" translatable="false">app.simone</string>
+    <!-- achievement RGB -->
+    <string name="achievement_rgb" translatable="false">CgkI6ZOU44EQEAIQBw</string>
+    <!-- achievement RGB Hard -->
+    <string name="achievement_rgb_hard" translatable="false">CgkI6ZOU44EQEAIQCA</string>
+    <!-- achievement Rainbow -->
+    <string name="achievement_rainbow" translatable="false">CgkI6ZOU44EQEAIQCQ</string>
+    <!-- achievement Rainbow hard -->
+    <string name="achievement_rainbow_hard" translatable="false">CgkI6ZOU44EQEAIQCg</string>
+    <!-- achievement Deca -->
+    <string name="achievement_deca" translatable="false">CgkI6ZOU44EQEAIQHg</string>
+    <!-- achievement Deca hard -->
+    <string name="achievement_deca_hard" translatable="false">CgkI6ZOU44EQEAIQHw</string>
+    <!-- achievement Double rainbow -->
+    <string name="achievement_double_rainbow" translatable="false">CgkI6ZOU44EQEAIQCw</string>
+    <!-- achievement Double rainbow hard -->
+    <string name="achievement_double_rainbow_hard" translatable="false">CgkI6ZOU44EQEAIQDA</string>
+    <!-- achievement Head full of dreams -->
+    <string name="achievement_head_full_of_dreams" translatable="false">CgkI6ZOU44EQEAIQDQ</string>
+    <!-- achievement Head full of dreams hard -->
+    <string name="achievement_head_full_of_dreams_hard" translatable="false">CgkI6ZOU44EQEAIQDg</string>
+    <!-- achievement Meaning of life -->
+    <string name="achievement_meaning_of_life" translatable="false">CgkI6ZOU44EQEAIQEA</string>
+    <!-- achievement Meaning of life hard -->
+    <string name="achievement_meaning_of_life_hard" translatable="false">CgkI6ZOU44EQEAIQEQ</string>
+    <!-- achievement Cheater -->
+    <string name="achievement_cheater" translatable="false">CgkI6ZOU44EQEAIQEg</string>
+    <!-- achievement Master of cheating -->
+    <string name="achievement_master_of_cheating" translatable="false">CgkI6ZOU44EQEAIQEw</string>
+    <!-- achievement I have nothing to do in my life -->
+    <string name="achievement_i_have_nothing_to_do_in_my_life" translatable="false">CgkI6ZOU44EQEAIQFA</string>
+    <!-- achievement Cimabue -->
+    <string name="achievement_cimabue" translatable="false">CgkI6ZOU44EQEAIQFg</string>
+    <!-- achievement Van Gogh -->
+    <string name="achievement_van_gogh" translatable="false">CgkI6ZOU44EQEAIQFw</string>
+    <!-- achievement Giotto -->
+    <string name="achievement_giotto" translatable="false">CgkI6ZOU44EQEAIQGA</string>
+    <!-- achievement Paniccia -->
+    <string name="achievement_paniccia" translatable="false">CgkI6ZOU44EQEAIQGQ</string>
+    <!-- achievement Simon -->
+    <string name="achievement_simon" translatable="false">CgkI6ZOU44EQEAIQGg</string>
+    <!-- achievement Nyancat -->
+    <string name="achievement_nyancat" translatable="false">CgkI6ZOU44EQEAIQGw</string>
+    <!-- achievement Unicorn -->
+    <string name="achievement_unicorn" translatable="false">CgkI6ZOU44EQEAIQHA</string>
+    <!-- achievement Giuliano e i Notturni -->
+    <string name="achievement_giuliano_e_i_notturni" translatable="false">CgkI6ZOU44EQEAIQHQ</string>
+    <!-- leaderboard Classic -->
+    <string name="leaderboard_classic" translatable="false">CgkI6ZOU44EQEAIQAg</string>
+    <!-- leaderboard Hard -->
+    <string name="leaderboard_hard" translatable="false">CgkI6ZOU44EQEAIQAw</string>
 </resources>

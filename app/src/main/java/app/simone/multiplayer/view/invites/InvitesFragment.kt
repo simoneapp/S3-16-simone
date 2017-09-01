@@ -11,6 +11,9 @@ import android.widget.ListView
 import app.simone.multiplayer.controller.DataManager
 import app.simone.multiplayer.controller.FacebookManagerActor
 import app.simone.multiplayer.model.OnlineMatch
+import app.simone.shared.application.App
+import app.simone.shared.utils.Constants
+import app.simone.shared.utils.Utilities
 import com.facebook.Profile
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -36,9 +39,7 @@ class InvitesFragment : Fragment() {
         initRequestsList()
         listenForChanges()
 
-        val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR
-                + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
-                app.simone.shared.application.App.getInstance().actorSystem)
+        val actor = Utilities.getActor(Constants.FBVIEW_ACTOR_NAME, App.getInstance().actorSystem)
 
         val btnInvites = rootView?.findViewById(app.simone.R.id.btn_invite) as FloatingActionButton
         btnInvites.setOnClickListener({
@@ -106,7 +107,7 @@ class InvitesFragment : Fragment() {
             }
         }
 
-        DataManager.Companion.instance.database.addValueEventListener(postListener)
+        DataManager.Companion.instance.database?.addValueEventListener(postListener)
 
     }
 

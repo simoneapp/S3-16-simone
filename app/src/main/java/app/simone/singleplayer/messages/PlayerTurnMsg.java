@@ -3,7 +3,9 @@ package app.simone.singleplayer.messages;
 import app.simone.shared.messages.IMessage;
 
 /**
- * Created by sapi9 on 26/06/2017.
+ * PlayerTurnMsg,
+ * used to switch the turn from CPU to Player.
+ * @author Michele Sapignoli
  */
 
 public class PlayerTurnMsg implements IMessage {

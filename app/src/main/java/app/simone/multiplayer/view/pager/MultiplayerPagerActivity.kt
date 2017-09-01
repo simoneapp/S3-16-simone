@@ -16,10 +16,12 @@ import app.simone.multiplayer.view.invites.InvitesFragment
 import app.simone.multiplayer.view.invites.NearbyInvitesFragment
 import app.simone.multiplayer.view.newmatch.FriendsListFragment
 import app.simone.shared.application.App
+import app.simone.shared.utils.Constants
+import app.simone.shared.utils.Utilities
 import com.facebook.Profile
 
 
-class MultiplayerPagerActivity : AppCompatActivity() {
+open class MultiplayerPagerActivity : AppCompatActivity() {
 
     var type : MultiplayerType? = null
     var friendsList = FriendsListFragment()
@@ -32,7 +34,7 @@ class MultiplayerPagerActivity : AppCompatActivity() {
 
         type = MultiplayerType.valueOf(intent.getStringExtra("source"))
 
-        var fragment : Fragment?
+        val fragment : Fragment?
 
         if(type == MultiplayerType.NEARBY) {
             fragment = nearbyInvites
@@ -45,7 +47,7 @@ class MultiplayerPagerActivity : AppCompatActivity() {
         viewPager.adapter = MultiplayerPagerAdapter(supportFragmentManager,
                 arrayListOf(
                         FragmentContainer(friendsList, "New match"),
-                        FragmentContainer(fragment!!, "Invites")
+                        FragmentContainer(fragment, "Invites")
                 ))
 
         // Give the TabLayout the ViewPager
@@ -56,6 +58,7 @@ class MultiplayerPagerActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         setFacebookViewVisible(Profile.getCurrentProfile() == null)
+
     }
 
     fun setFacebookViewVisible(visible : Boolean) {
@@ -77,8 +80,7 @@ class MultiplayerPagerActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val actor = app.simone.shared.utils.Utilities.getActorByName(app.simone.shared.utils.Constants.PATH_ACTOR + app.simone.shared.utils.Constants.FBVIEW_ACTOR_NAME,
-                App.getInstance().actorSystem)
+        val actor = Utilities.getActor(Constants.FBVIEW_ACTOR_NAME, App.getInstance().actorSystem);
         actor.tell(FbOnActivityResultMsg(requestCode, resultCode, data), akka.actor.ActorRef.noSender())
     }
 

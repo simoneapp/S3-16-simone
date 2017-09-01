@@ -11,18 +11,19 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
-apply plugin: 'realm-android'
+
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.3'
     defaultConfig {
         applicationId "app.simone"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
-        versionName "0.3b"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionName "0.8b"
         multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -42,29 +43,16 @@ android {
         unitTests.returnDefaultValues = true
     }
 }
-realm {
-    syncEnabled = true;
-}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile group: 'com.typesafe.akka', name: 'akka-actor_2.10', version: '2.3.16'
     compile group: 'org.scala-lang', name: 'scala-library', version: '2.10.4'
-    compile group: 'com.pubnub', name: 'pubnub-gson', version: '4.6.5'
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.57'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-
-    compile 'com.google.dagger:dagger:2.4'
-    annotationProcessor "com.google.dagger:dagger-compiler:2.4"
-
-
-    compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
@@ -72,33 +60,37 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'org.scala-lang:scala-library:2.10.4'
     compile 'com.facebook.android:facebook-android-sdk:4.25.0'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    compile 'com.github.bumptech.glide:glide:4.0.0'
     compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'org.slf4j:slf4j-api:1.7.5'
-    compile 'org.slf4j:slf4j-log4j12:1.7.5'
-    compile 'com.github.salomonbrys.kotson:kotson:2.5.0'
-    compile 'com.beust:klaxon:0.30'
+    compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.google.android.gms:play-services:11.0.2'
     compile 'com.google.android.gms:play-services-games:11.0.2'
     compile 'com.google.android.gms:play-services-identity:11.0.2'
     compile 'com.google.firebase:firebase-database:11.0.2'
     compile 'com.google.firebase:firebase-messaging:11.0.2'
     compile 'com.firebaseui:firebase-ui-database:2.0.0'
+    compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile group: 'com.typesafe.akka', name: 'akka-testkit_2.10', version: '2.3.16'
+    androidTestCompile group: 'com.typesafe.akka', name: 'akka-testkit_2.10', version: '2.3.16'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
     androidTestCompile 'com.android.support:support-annotations:25.3.1'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
-    testCompile 'org.powermock:powermock:1.6.5'
-    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
-    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
-
+    testCompile 'org.powermock:powermock:1.6.6'
+    testCompile 'org.powermock:powermock-module-junit4:1.7.1'
+    testCompile "org.mockito:mockito-core:2.1.0"
+    testCompile 'org.powermock:powermock-api-mockito2:1.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
 }
 
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
+    jcenter()
 }
 
 apply plugin: 'com.google.gms.google-services'

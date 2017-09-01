@@ -2,7 +2,7 @@ package app.simone.multiplayer.model;
 
 
 import java.util.List;
-import app.simone.singleplayer.model.SColor;
+import app.simone.singleplayer.model.SimonColorImpl;
 
 /**
  * This class models an online match (Instant Multiplayer mode), which is made by two players, a match id (key) and a sequence of colors.
@@ -16,8 +16,7 @@ public class OnlineMatch{
     private FacebookUser firstplayer;
     private FacebookUser secondplayer;
     private String key;
-    private List<SColor> sequence;
-
+    private List<SimonColorImpl> sequence;
 
     public OnlineMatch(){
 
@@ -29,7 +28,6 @@ public class OnlineMatch{
      * @param firstplayer first player of the match
      * @param secondplayer second plyaer of the match
      */
-
     public OnlineMatch(FacebookUser firstplayer, FacebookUser secondplayer) {
         this.firstplayer = firstplayer;
         this.secondplayer = secondplayer;
@@ -51,8 +49,7 @@ public class OnlineMatch{
         this.key = key;
     }
 
-    public List<SColor> getSequence() {
+    public List<SimonColorImpl> getSequence() {
         return sequence;
     }
-
 }

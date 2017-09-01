@@ -3,21 +3,22 @@ package app.simone.singleplayer.messages;
 import java.util.List;
 
 import app.simone.shared.messages.IMessage;
-import app.simone.singleplayer.model.SColor;
-import app.simone.singleplayer.view.IGameActivity;
+import app.simone.singleplayer.controller.GameActivityPresenter;
+import app.simone.singleplayer.model.SimonColorImpl;
 
 /**
- * Created by sapi9 on 27/06/2017.
+ * ReceivedSequenceMsg,
+ * containing the multiplayer sequence to play.
+ * @author Michele Sapignoli
  */
-
 public class ReceivedSequenceMsg implements IMessage {
-    private List<SColor> sequence;
-    private IGameActivity activity;
+    private List<SimonColorImpl> sequence;
+    private GameActivityPresenter presenter;
 
 
-    public ReceivedSequenceMsg(List<SColor> listToPlay,IGameActivity activity){
+    public ReceivedSequenceMsg(List<SimonColorImpl> listToPlay, GameActivityPresenter presenter){
         this.sequence = listToPlay;
-        this.activity =activity;
+        this.presenter = presenter;
     }
 
     @Override
@@ -25,11 +26,11 @@ public class ReceivedSequenceMsg implements IMessage {
         return MessageType.RECEIVED_SEQUENCE_MSG;
     }
 
-    public List<SColor> getSequence() {
+    public List<SimonColorImpl> getSequence() {
         return sequence;
     }
 
-    public IGameActivity getActivity() {
-        return activity;
+    public GameActivityPresenter getPresenter() {
+        return presenter;
     }
 }

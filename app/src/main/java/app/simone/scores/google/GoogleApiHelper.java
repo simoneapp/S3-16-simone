@@ -1,6 +1,5 @@
 package app.simone.scores.google;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
@@ -10,11 +9,11 @@ import com.google.android.gms.games.Games;
 import app.simone.shared.main.FullscreenBaseGameActivity;
 
 /**
- * Created by sapi9 on 07/07/2017.
+ * GoogleApiHelper class.
+ * @author Michele Sapignoli
  */
 
 public class GoogleApiHelper {
-    private static final String TAG = GoogleApiHelper.class.getSimpleName();
     private Context context;
     private GoogleApiClient mGoogleApiClient;
 
@@ -27,21 +26,19 @@ public class GoogleApiHelper {
     }
 
 
-
-    public void disconnect() {
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
-
+    /**
+     * Method to check if GoogleApiHelper is connected.
+     * @return mGoogleApiClient.isConnected()
+     */
     public boolean isConnected() {
-        if (mGoogleApiClient != null) {
-            return mGoogleApiClient.isConnected();
-        } else {
-            return false;
-        }
+        return mGoogleApiClient != null && mGoogleApiClient.isConnected();
     }
 
+    /**
+     * Initialization of the GoogleApiClient with Callbacks, Listeners and View for popups.
+     * @param activity
+     * @param view
+     */
     public void buildGoogleApiClient(FullscreenBaseGameActivity activity, View view) {
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(activity)
@@ -50,8 +47,5 @@ public class GoogleApiHelper {
                 .setViewForPopups(view)
                 .addApi(Games.API).build();
         mGoogleApiClient.connect();
-
     }
-
-
 }

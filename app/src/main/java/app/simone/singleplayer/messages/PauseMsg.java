@@ -3,9 +3,10 @@ package app.simone.singleplayer.messages;
 import app.simone.shared.messages.IMessage;
 
 /**
- * Created by sapi9 on 02/07/2017.
+ * PauseMsg,
+ * used to pause the behaviour of the actors.
+ * @author Michele Sapignoli
  */
-
 public class PauseMsg implements IMessage {
     private boolean pausing;
 

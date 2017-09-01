@@ -1,7 +1,8 @@
 package app.simone.shared.utils;
 
 /**
- * Created by sapi9 on 01/07/2017.
+ * AudioPlayer class.
+ * @author Michele Sapignoli
  */
 
 import android.content.Context;
@@ -20,7 +21,6 @@ public class AudioPlayer {
 
     public void play(Context c, int rid) {
         stop();
-
         mMediaPlayer = MediaPlayer.create(c, rid);
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -28,9 +28,11 @@ public class AudioPlayer {
                 stop();
             }
         });
-
         mMediaPlayer.start();
+    }
 
+    public boolean isPlaying() {
+        return mMediaPlayer != null && mMediaPlayer.isPlaying();
     }
 
 }

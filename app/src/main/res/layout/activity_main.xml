@@ -1,50 +1,160 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
-    tools:context="app.simone.MainActivity">
+    android:launchMode="singleTask"
+    tools:context="app.simone.shared.main.MainActivity">
 
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-    <TextView
-        android:id="@+id/fullscreen_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:keepScreenOn="true"
-        android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
-        android:textStyle="bold" />
 
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            style="?metaButtonBarStyle"
+            android:id="@+id/main_fullscreen_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="2">
 
-            <Button
-                android:id="@+id/dummy_button"
-                style="?metaButtonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:id="@+id/main_top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:orientation="horizontal"
+                android:weightSum="2">
 
+                <Button
+                    android:id="@+id/button_vs_cpu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/myGreen"
+                    android:textColor="@color/myMainTextColor">
+
+                </Button>
+
+
+                <Button
+                    android:id="@+id/main_button_multiplayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/myRed"
+                    android:onClick="multiplayerSetUp"
+                    android:textColor="@color/myMainTextColor" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/main_bottom_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/main_button_highscore"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/myYellow"
+                    android:textColor="@color/myMainTextColor" />
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/myBlue"
+                    android:textColor="@color/myMainTextColor" />
+            </LinearLayout>
         </LinearLayout>
+
     </FrameLayout>
 
-</FrameLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/main_fab"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginEnd="20dp"
+        app:backgroundTint="@color/myLightGray"
+        app:layout_anchor="@id/main_top_layout"
+        app:layout_anchorGravity="bottom|center" >
+
+        </android.support.design.widget.FloatingActionButton>
+    <app.simone.shared.styleable.SimoneTextView
+        android:layout_height="wrap_content"
+        android:id="@+id/main_simone_textview"
+        android:layout_width="wrap_content"
+        android:text="@string/center_button_default_text"
+        android:elevation="6dp"
+        android:textSize="64sp"
+        android:textColor="@color/myDarkGray"
+        app:layout_anchor="@id/main_top_layout"
+        app:layout_anchorGravity="bottom|center"/>
+
+    <app.simone.shared.styleable.MainTextView
+
+        android:layout_height="wrap_content"
+        android:id="@+id/main_textview_vscpu"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:text="@string/vs_cpu"
+        android:layout_marginStart="20sp"
+        android:layout_marginTop="30sp"
+        android:textColor="#FFF"
+        android:alpha="0.6"
+        app:layout_anchor="@id/main_top_layout"
+        app:layout_anchorGravity="left"
+        />
+    <app.simone.shared.styleable.MainTextView
+
+        android:layout_height="wrap_content"
+        android:id="@+id/main_textview_multiplayer"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:text="@string/multiplayer"
+        android:textAlignment="textEnd"
+        android:layout_marginEnd="20sp"
+        android:layout_marginTop="30sp"
+        android:textColor="#FFF"
+        android:alpha="0.6"
+        app:layout_anchor="@id/main_top_layout"
+        app:layout_anchorGravity="right"
+        />
+    <app.simone.shared.styleable.MainTextView
+
+        android:layout_height="wrap_content"
+        android:id="@+id/main_textview_highscore"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:text="@string/highscore"
+        android:layout_marginStart="20sp"
+        android:layout_marginBottom="30sp"
+        android:textColor="#FFF"
+        android:alpha="0.6"
+        app:layout_anchor="@id/main_bottom_layout"
+        app:layout_anchorGravity="bottom"
+        />
+    <app.simone.shared.styleable.MainTextView
+
+        android:layout_height="wrap_content"
+        android:id="@+id/main_textview_settings"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:text="@string/settings"
+        android:layout_marginEnd="20sp"
+        android:layout_marginBottom="30sp"
+        android:textColor="#FFF"
+        android:alpha="0.6"
+        app:layout_anchor="@id/main_bottom_layout"
+        app:layout_anchorGravity="bottom|right"
+        />
+
+
+</android.support.design.widget.CoordinatorLayout>

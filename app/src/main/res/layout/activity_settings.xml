@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="app.simone.settings.view.SettingsActivity">
+
+    <LinearLayout
+        android:id="@+id/settings_fullscreen_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+
+        <LinearLayout
+            android:id="@+id/settings_top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:id="@+id/settings_top_left_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/myRed"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/settings_top_right_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/myRed"
+                android:orientation="vertical">
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/settings_bottomlayout"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/myBlue"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:id="@+id/settings_bottom_left_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/myBlue"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/settings_bottom_right_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/myBlue"
+                android:orientation="vertical">
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/settings_music"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginEnd="20dp"
+        app:backgroundTint="@color/myLightGray"
+        app:layout_anchor="@id/settings_top_left_layout"
+        app:layout_anchorGravity="bottom|center" />
+
+    <app.simone.shared.styleable.MainTextView
+
+        android:id="@+id/settings_music2_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20sp"
+        android:layout_marginTop="30sp"
+        android:alpha="0.6"
+        android:text="@string/settings"
+        android:textColor="#FFF"
+        android:textSize="32sp"
+        app:layout_anchor="@id/settings_top_layout"
+        app:layout_anchorGravity="left" />
+
+     <app.simone.shared.styleable.MainTextView
+
+        android:id="@+id/music_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20sp"
+        android:layout_marginTop="30sp"
+        android:alpha="0.8"
+        android:text="@string/music_on"
+        android:textColor="#FFF"
+        android:textSize="32sp"
+        app:layout_anchor="@id/settings_bottom_left_layout"
+        app:layout_anchorGravity="center" />
+
+     <app.simone.shared.styleable.MainTextView
+
+        android:id="@+id/notification_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20sp"
+        android:layout_marginTop="30sp"
+        android:alpha="0.8"
+        android:textAlignment="center"
+        android:text="@string/notification_on"
+        android:textColor="#FFF"
+        android:textSize="32sp"
+        app:layout_anchor="@id/settings_bottom_right_layout"
+        app:layout_anchorGravity="center" />
+
+    <app.simone.shared.styleable.SimoneTextView
+        android:id="@+id/settings_music_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:text="@string/music"
+        android:textColor="@color/myDarkGray"
+        android:textSize="32sp"
+        app:layout_anchor="@id/settings_top_left_layout"
+        app:layout_anchorGravity="bottom|center" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/settings_notification"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginEnd="20dp"
+        app:backgroundTint="@color/myLightGray"
+        app:layout_anchor="@id/settings_top_right_layout"
+        app:layout_anchorGravity="bottom|center" />
+
+    <app.simone.shared.styleable.SimoneTextView
+        android:id="@+id/settings_notification_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:text="@string/notification"
+        android:textColor="@color/myDarkGray"
+        android:textSize="32sp"
+        app:layout_anchor="@id/settings_top_right_layout"
+        app:layout_anchorGravity="bottom|center" />
+
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="app.simone.multiplayer.view.nearby.WaitingRoomActivity">
+
+    <TextView
+        android:id="@+id/text_waiting_room_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/waiting_room"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Material.Display2" />
+
+    <TextView
+        android:id="@+id/text_wait_here"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/please_wait_here_while_the_other_players_accept_their_invites"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/text_match_id_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/id_of_this_match"
+        android:textAlignment="center" />
+    <TextView
+        android:id="@+id/text_match_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text=""
+        android:textAlignment="center" />
+
+    <ListView
+        android:id="@+id/list_waiting_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

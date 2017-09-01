@@ -6,14 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import akka.actor.ActorRef;
-import akka.actor.Props;
 import akka.pattern.Patterns;
 import akka.testkit.JavaTestKit;
-import akka.testkit.TestActorRef;
 import app.simone.ActorTests;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.controller.GameActivityPresenter;
-import app.simone.singleplayer.controller.GameViewActor;
 import app.simone.singleplayer.messages.AttachPresenterMsg;
 import app.simone.singleplayer.messages.MessageType;
 import app.simone.singleplayer.messages.PauseMsg;
@@ -38,22 +35,19 @@ import static org.mockito.Mockito.mock;
 
 public class SinglePlayerTest extends ActorTests {
 
+    SinglePlayerActorsContainer ac = new SinglePlayerActorsContainer(system);
+
     @Test
     public void testPresenterCreation() throws Exception {
 
         new JavaTestKit(system) {{
-            Props p = Props.create(GameViewActor.class);
-            TestActorRef<GameViewActor> testActorRef = TestActorRef.create(system, p);
-            GameViewActor actor = testActorRef.underlyingActor();
-
-            GameActivityPresenter presenter = buildPresenter(testActorRef);
-            Future<Object> future = Patterns.ask(testActorRef, new AttachPresenterMsg(presenter), 3000);
+            GameActivityPresenter presenter = buildPresenter(ac.getGameViewActorRef());
+            Future<Object> future = Patterns.ask(ac.getGameViewActorRef(), new AttachPresenterMsg(presenter), 3000);
             Await.ready(future, Duration.Inf());
 
             assertTrue(future.isCompleted());
-            assertTrue(presenter == actor.getPresenter());
+            assertTrue(presenter == ac.getGameViewActor().getPresenter());
         }};
-
     }
 
 
@@ -62,7 +56,6 @@ public class SinglePlayerTest extends ActorTests {
 
         new JavaTestKit(system) {{
 
-            ActorsContainer ac = new ActorsContainer(system);
             StartGameVsCPUMsg msg = new StartGameVsCPUMsg(true, ac.getGameViewActorRef());
             Future<Object> future = Patterns.ask(ac.getCpuActorRef(), msg, 3000);
             assertTrue(future.isCompleted());
@@ -79,8 +72,6 @@ public class SinglePlayerTest extends ActorTests {
     public void testTimeToBlink() throws Exception {
 
         new JavaTestKit(system) {{
-
-            ActorsContainer ac = new ActorsContainer(system);
 
             List<SimonColorImpl> colors = getExampleSequence();
             TimeToBlinkMsg msg = new TimeToBlinkMsg(colors);
@@ -103,8 +94,6 @@ public class SinglePlayerTest extends ActorTests {
 
         new JavaTestKit(system) {{
 
-            ActorsContainer ac = new ActorsContainer(system);
-
             PlayerTurnMsg msg = new PlayerTurnMsg();
             Future<Object> future = Patterns.ask(ac.getGameViewActorRef(), msg, 3000);
             assertTrue(future.isCompleted());
@@ -121,8 +110,6 @@ public class SinglePlayerTest extends ActorTests {
     public void testPause() throws Exception {
 
         new JavaTestKit(system) {{
-
-            ActorsContainer ac = new ActorsContainer(system);
 
             PauseMsg pause1 = new PauseMsg(true);
             Future<Object> future1 = Patterns.ask(ac.getGameViewActorRef(), pause1, 3000);
@@ -147,36 +134,46 @@ public class SinglePlayerTest extends ActorTests {
     @Test
     public void testNextColor() throws Exception {
 
-        ActorsContainer ac = new ActorsContainer(system);
+        new JavaTestKit(system) {{
 
-        List<SimonColorImpl> colors = getExampleSequence();
-        TimeToBlinkMsg msg = new TimeToBlinkMsg(colors);
-        Future<Object> future = Patterns.ask(ac.getGameViewActorRef(), msg, 3000);
-        assertTrue(future.isCompleted());
-        Await.result(future, Duration.Zero());
-        assertTrue(future.isCompleted());
-        Await.result(future, Duration.Zero());
-        assertFalse(ac.getGameViewActor().isPlayerTurn());
+            List<SimonColorImpl> colors = getExampleSequence();
+            TimeToBlinkMsg msg = new TimeToBlinkMsg(colors);
+            Future<Object> future = Patterns.ask(ac.getGameViewActorRef(), msg, 3000);
+            assertTrue(future.isCompleted());
+            Await.result(future, Duration.Zero());
+            assertTrue(future.isCompleted());
+            Await.result(future, Duration.Zero());
+            assertFalse(ac.getGameViewActor().isPlayerTurn());
+        }};
     }
 
+    /*
     @Test
     public void testGuessColor() throws Exception {
 
-        /*
-        ActorsContainer ac = new ActorsContainer(system);
+        new JavaTestKit(system) {{
 
-        List<SimonColorImpl> colors = getExampleSequence();
-        TimeToBlinkMsg msg1 = new TimeToBlinkMsg(colors);
-        Future<Object> future1 = Patterns.ask(ac.getGameViewActorRef(), msg1, 3000);
-        assertTrue(future1.isCompleted());
-        Await.result(future1, Duration.Zero());
+            ActorsContainer ac = new ActorsContainer(system);
 
-        GuessColorMsg msg2 = new GuessColorMsg(colors.get(0));
-        Future<Object> future2 = Patterns.ask(ac.getGameViewActorRef(), msg2, 30000);
-        assertTrue(future2.isCompleted());
-        Await.result(future2, Duration.Zero());
-*/
-    }
+            List<SimonColorImpl> colors = getExampleSequence();
+            TimeToBlinkMsg msg1 = new TimeToBlinkMsg(colors);
+            Future<Object> future1 = Patterns.ask(ac.getGameViewActorRef(), msg1, 30000);
+            assertTrue(future1.isCompleted());
+            Await.result(future1, Duration.Zero());
+
+            NextColorMsg msg2 = new NextColorMsg();
+            Future<Object> future2 = Patterns.ask(ac.getGameViewActorRef(), msg2, 30000);
+            assertTrue(future2.isCompleted());
+            Await.result(future2, Duration.Zero());
+
+            GuessColorMsg msg3 = new GuessColorMsg(colors.get(0));
+            Future<Object> future3 = Patterns.ask(ac.getGameViewActorRef(), msg3, 30000);
+            assertTrue(future3.isCompleted());
+            Await.result(future3, Duration.Zero());
+
+            }};
+
+    }*/
 
 
     private List<SimonColorImpl> getExampleSequence() {

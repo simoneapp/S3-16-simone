@@ -88,10 +88,15 @@ class FacebookManagerActor : UntypedActor() {
             val gson = Gson()
             val jsonFriends = gson
                     .fromJson(response.rawResponse, JsonElement::class.java)
-                    .asJsonObject.get("data").asJsonArray
+                    .asJsonObject
 
-            val list = FacebookUser.listFromJson(jsonFriends)
-            currentSender?.tell(FbResponseFriendsMsg(list), self)
+            if(jsonFriends.has("data")) {
+                val data = jsonFriends.get("data").asJsonArray
+                val list = FacebookUser.listFromJson(data)
+                currentSender?.tell(FbResponseFriendsMsg(list), self)
+            } else {
+                currentSender?.tell(FbResponseFriendsMsg("Wrong friends list format"), self);
+            }
         } else {
             currentSender?.tell(FbResponseFriendsMsg(response.error.errorUserMessage), self)
         }

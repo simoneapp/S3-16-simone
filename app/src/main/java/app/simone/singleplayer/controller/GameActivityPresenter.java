@@ -131,7 +131,7 @@ public class GameActivityPresenter {
             activity.updateSimoneTextview(String.valueOf(currentScore),
                     AnimationHandler.getGameButtonAnimation());
             finalScore = currentScore;
-            ScoreHelper.checkAchievement(currentScore, chosenMode);
+            ScoreHelper.INSTANCE.checkAchievement(activity.getContext(), currentScore, chosenMode);
         }
 
         playerBlinking = false;
@@ -157,8 +157,8 @@ public class GameActivityPresenter {
      */
     private void handleYouLost(Message msg) {
         finalScore = msg.arg1;
-        ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
-        ScoreHelper.checkNGamesAchievement();
+        ScoreHelper.INSTANCE.sendResultToLeaderboard(activity.getContext(), chosenMode, finalScore);
+        ScoreHelper.INSTANCE.checkNGamesAchievement(activity.getContext());
         tapToBegin = true;
         activity.saveScore();
         activity.renderYouLost(finalScore);
@@ -226,7 +226,7 @@ public class GameActivityPresenter {
      * Method called when the user taps on the "back" button and the game ends
      */
     public void endGame() {
-        ScoreHelper.sendResultToLeaderboard(chosenMode, finalScore);
+        ScoreHelper.INSTANCE.sendResultToLeaderboard(activity.getContext(), chosenMode, finalScore);
         AudioManager.Companion.getInstance().playSimoneMusic();
     }
 

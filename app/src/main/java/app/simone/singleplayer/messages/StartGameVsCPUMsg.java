@@ -37,6 +37,7 @@ public class StartGameVsCPUMsg implements IMessage {
 		this.replyingActor = replyingActor;
 	}
 
+
 	@Override
 	public MessageType getType() {
 		return MessageType.START_GAME_VS_CPU;

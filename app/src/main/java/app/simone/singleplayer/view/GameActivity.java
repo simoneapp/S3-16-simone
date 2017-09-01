@@ -1,5 +1,6 @@
 package app.simone.singleplayer.view;
 
+
 import android.content.Context;
 import android.os.Message;
 import android.view.animation.Animation;

@@ -23,18 +23,19 @@ object ScoreHelper {
     fun checkAchievement(context: Context, score: Int, mode: Int) {
 
         val achievementList = AchievementSpecifier.getInstance().badgeAchievements
-        val achievement = achievementList.stream().filter { it.achievementId == score }.findFirst()
+        achievementList.forEach {
+            if(it.achievementId == score) {
+                var stringId : Int? = null
+                if(mode == Constants.CLASSIC_MODE) { stringId = it.classicServerId }
+                else { stringId = it.hardServerId }
 
-        if(!achievement.isPresent) return
-
-        var stringId : Int? = null
-        if(mode == Constants.CLASSIC_MODE) { stringId = achievement.get().classicServerId }
-        else { stringId = achievement.get().hardServerId }
-
-        if (achievement != null && App.getGoogleApiHelper().googleApiClient.isConnected) {
-                Games.Achievements.unlockImmediate(App.getGoogleApiHelper().googleApiClient,
-                        context.resources.getString(stringId))
-                        .setResultCallback(AchievementCallback())
+                if (App.getGoogleApiHelper().googleApiClient.isConnected) {
+                    Games.Achievements.unlockImmediate(App.getGoogleApiHelper().googleApiClient,
+                            context.resources.getString(stringId))
+                            .setResultCallback(AchievementCallback())
+                }
+                return
+            }
         }
     }
 
@@ -51,14 +52,13 @@ object ScoreHelper {
         editor.apply()
 
         val achievementList = AchievementSpecifier.getInstance().getnGamesAchievements()
-        val achievement = achievementList.stream().filter { it.achievementId == nGames }.findFirst()
 
-        if(!achievement.isPresent) return
-
-        if (achievement != null && App.getGoogleApiHelper().googleApiClient.isConnected) {
+        achievementList.forEach {
+            if (it.achievementId == nGames && App.getGoogleApiHelper().googleApiClient.isConnected) {
                 Games.Achievements.unlockImmediate(App.getGoogleApiHelper().googleApiClient,
-                        context.resources.getString(achievement.get().classicServerId))
-                        .setResultCallback(AchievementCallback())
+                            context.resources.getString(it.classicServerId))
+                            .setResultCallback(AchievementCallback())
+            }
         }
     }
 

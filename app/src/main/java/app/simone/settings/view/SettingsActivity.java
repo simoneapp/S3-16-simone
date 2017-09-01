@@ -10,15 +10,19 @@ import app.simone.settings.controller.SettingsManager;
 import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.shared.utils.AudioManager;
 
+/**
+ *  This is the activity of the settings.
+ *  It is made by two buttons, the first one is about sounds (on/off) while the other one is about push notification (on/off)
+ *
+ *  @author Giacomo
+ */
 
 public class SettingsActivity extends FullscreenBaseGameActivity {
-
     private SettingsManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         manager = new SettingsManager(this);
         showCurrentSettings();
 
@@ -94,6 +98,14 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
         }else {
             textView.setText(R.string.off);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        if(manager.isMusicEnabled()){
+            AudioManager.Companion.getInstance().stopSimoneMusic();
+        }
+        super.onPause();
     }
 
 }

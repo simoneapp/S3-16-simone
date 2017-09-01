@@ -3,7 +3,11 @@ package app.simone.multiplayer;
 import android.os.Bundle;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 
 import akka.actor.ActorRef;
 import akka.testkit.JavaTestKit;
@@ -19,6 +23,8 @@ import static junit.framework.Assert.assertTrue;
  * Created by nicola on 28/08/2017.
  */
 
+@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(JUnit4.class)
 public class FacebookManagerTest extends ActorTests {
 
     @Test

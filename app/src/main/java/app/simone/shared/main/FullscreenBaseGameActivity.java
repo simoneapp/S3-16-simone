@@ -290,5 +290,4 @@ public abstract class FullscreenBaseGameActivity extends AppCompatActivity imple
                 });
         alertDialog.show();
     }
-
 }

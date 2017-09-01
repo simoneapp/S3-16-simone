@@ -15,3 +15,10 @@ Simone follows a standard GitHub workflow, so:
 - fork your own copy of the repository
 - improve it, add new functionalities and test them
 - open a Pull Request for the integration phase
+
+## Credits
+
+Giacomo Zanotti
+Michele Sapignoli
+Nicola Giancecchi
+Giacomo Bartoli

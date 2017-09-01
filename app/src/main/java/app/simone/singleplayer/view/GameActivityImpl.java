@@ -1,5 +1,6 @@
 package app.simone.singleplayer.view;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -26,7 +27,6 @@ import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.AudioPlayer;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.controller.GameActivityPresenter;
-import app.simone.singleplayer.messages.StartGameVsCPUMsg;
 import app.simone.singleplayer.model.MessageBuilder;
 import app.simone.singleplayer.model.SimonColorImpl;
 
@@ -116,7 +116,7 @@ public abstract class GameActivityImpl extends FullscreenBaseGameActivity implem
 
                 if (presenter.isTapToBegin()) {
                     prepareViewsForGame();
-                    presenter.prepareGame(new StartGameVsCPUMsg());
+                    prepareGame();
                 }
             }
         });
@@ -142,6 +142,8 @@ public abstract class GameActivityImpl extends FullscreenBaseGameActivity implem
      * Abstract method implemented in the subclasses that handles the score
      */
     public abstract void saveScore();
+
+    public abstract void prepareGame();
 
     /**
      * Implementation of the abstract method of FullscreenBaseGameActivity, used to set the
@@ -242,5 +244,10 @@ public abstract class GameActivityImpl extends FullscreenBaseGameActivity implem
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

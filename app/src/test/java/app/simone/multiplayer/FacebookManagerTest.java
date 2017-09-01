@@ -21,8 +21,6 @@ import static junit.framework.Assert.assertTrue;
 
 public class FacebookManagerTest extends ActorTests {
 
-    MultiPlayerActorsContainer ac = new MultiPlayerActorsContainer(system);
-
     @Test
     public void testCorrectFacebookFriends() {
         new JavaTestKit(system) {{

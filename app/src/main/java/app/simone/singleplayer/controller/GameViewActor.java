@@ -17,6 +17,7 @@ import app.simone.singleplayer.messages.GuessColorMsg;
 import app.simone.singleplayer.messages.NextColorMsg;
 import app.simone.singleplayer.messages.PauseMsg;
 import app.simone.singleplayer.messages.PlayerTurnMsg;
+import app.simone.singleplayer.messages.StartGameVsCPUMsg;
 import app.simone.singleplayer.messages.TestMessage;
 import app.simone.singleplayer.messages.TimeToBlinkMsg;
 import app.simone.singleplayer.model.MessageBuilder;
@@ -53,6 +54,9 @@ public class GameViewActor extends UntypedActor {
             case ATTACH_VIEW_MSG:
                 attachPresenter((AttachPresenterMsg) message);
                 break;
+            case START_GAME_VS_CPU:
+                tellCPUActorToBegin((StartGameVsCPUMsg) message);
+                break;
             case TIME_TO_BLINK_MSG:
                 timeToBlink((TimeToBlinkMsg)message);
                 break;
@@ -82,6 +86,11 @@ public class GameViewActor extends UntypedActor {
      */
     private void attachPresenter(AttachPresenterMsg message) {
         this.presenter = message.getPresenter();
+    }
+
+    private void tellCPUActorToBegin(StartGameVsCPUMsg message){
+        Utilities.getActor(Constants.CPU_ACTOR_NAME, App.getInstance().getActorSystem())
+                .tell(message, getSelf());
     }
 
     public GameActivityPresenter getPresenter() {

@@ -34,7 +34,6 @@ public class GameActivityPresenter {
     private boolean tapToBegin = true;
     private boolean viewPaused;
     private ActorRef gameViewActor;
-    private ActorRef cpuActor;
     private ActorRef sender;
 
 
@@ -55,7 +54,6 @@ public class GameActivityPresenter {
         this.sender = sender;
         this.chosenMode = mode;
         this.gameViewActor = Utilities.getActor(Constants.GAMEVIEW_ACTOR_NAME, system);
-        this.cpuActor = Utilities.getActor(Constants.CPU_ACTOR_NAME, system);
         this.gameViewActor.tell(new AttachPresenterMsg(this), sender);
     }
 
@@ -118,7 +116,7 @@ public class GameActivityPresenter {
         tapToBegin = false;
         finalScore = 0;
         playerBlinking = false;
-        cpuActor.tell(message, sender);
+        gameViewActor.tell(message, sender);
     }
 
     /**

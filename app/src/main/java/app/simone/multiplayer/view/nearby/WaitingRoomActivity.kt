@@ -38,7 +38,7 @@ class WaitingRoomActivity : AppCompatActivity(), DistributedView.WaitingRoomView
 
         return this
     }
-    fun startGameActivity(matchID: String){
+    override fun startGameActivity(matchID: String){
         val intent = Intent(this, NearbyGameActivity::class.java)
         intent.putExtra("match", matchID)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

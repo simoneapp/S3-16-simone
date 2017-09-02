@@ -62,5 +62,10 @@ interface DistributedView {
          * @return the waiting room activity context
          */
         fun getActivityContext(): WaitingRoomActivity
+
+        /**
+         * used to start the activity
+         */
+        fun startGameActivity(matchID: String)
     }
 }

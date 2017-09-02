@@ -1,5 +1,6 @@
 package app.simone.multiplayer.view.nearby
 
+import android.util.Log
 import app.simone.shared.utils.Constants
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -30,7 +31,7 @@ class EnhancedNearbyViewPresenter(var nearbyViewPresenter: NearbyViewPresenter) 
 
             override fun onDataChange(p0: DataSnapshot?) {
                 if (p0?.value.toString() == Constants.NODE_CHILD_STATUS_VALUE) {
-                    nearbyViewPresenter.nearbyView.updateButtonText(Constants.BUTTON_TEXT_PLAYER_TUNR)
+                    nearbyViewPresenter.nearbyView.updateButtonText(Constants.BUTTON_TEXT_PLAYER_TURN)
                 }
                else{
                     nearbyViewPresenter.nearbyView.updateButtonText(Constants.BUTTON_TEXT_SIMONE_TURN)

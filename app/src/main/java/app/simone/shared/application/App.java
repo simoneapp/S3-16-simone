@@ -2,19 +2,16 @@ package app.simone.shared.application;
 
 import android.app.Application;
 
-import com.google.firebase.FirebaseApp;
-
+import java.util.Arrays;
+import java.util.List;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-import app.simone.multiplayer.controller.FacebookManagerActor;
-import app.simone.multiplayer.controller.FacebookViewActor;
 import app.simone.scores.google.GoogleApiHelper;
 import app.simone.shared.utils.Constants;
-import app.simone.singleplayer.controller.CPUActor;
-import app.simone.singleplayer.controller.GameViewActor;
 
 
-/**
+/** App class, extends Application.
+ *
  * @author Michele Sapignoli
  */
 
@@ -23,6 +20,11 @@ public class App extends Application {
     private GoogleApiHelper googleApiHelper;
     private static App mInstance;
 
+    public static List<ActorDefinitor> actorDefinitions =  Arrays.asList(
+            new ActorDefinitor("app.simone.singleplayer.controller.CPUActor", Constants.CPU_ACTOR_NAME),
+            new ActorDefinitor("app.simone.singleplayer.controller.GameViewActor", Constants.GAMEVIEW_ACTOR_NAME),
+            new ActorDefinitor("app.simone.multiplayer.controller.FacebookViewActor", Constants.FBVIEW_ACTOR_NAME),
+            new ActorDefinitor("app.simone.multiplayer.controller.FacebookManagerActor", Constants.FACEBOOK_ACTOR_NAME));
 
     @Override
     public void onCreate() {
@@ -30,12 +32,21 @@ public class App extends Application {
 
         mInstance = this;
         googleApiHelper = new GoogleApiHelper(mInstance);
-        FirebaseApp.initializeApp(this);
-        system = ActorSystem.create("system");
-        system.actorOf(Props.create(CPUActor.class), Constants.CPU_ACTOR_NAME);
-        system.actorOf(Props.create(GameViewActor.class), Constants.GAMEVIEW_ACTOR_NAME);
-        system.actorOf(Props.create(FacebookViewActor.class), Constants.FBVIEW_ACTOR_NAME);
-        system.actorOf(Props.create(FacebookManagerActor.class), Constants.FACEBOOK_ACTOR_NAME);
+        this.system = buildActorSystem();
+    }
+
+    public static ActorSystem buildActorSystem() {
+        ActorSystem system = ActorSystem.create("system");
+
+        for(ActorDefinitor definitor : actorDefinitions) {
+            try {
+                system.actorOf(Props.create(Class.forName(definitor.getActorClass())), definitor.getActorName());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return system;
     }
 
     public ActorSystem getActorSystem(){
@@ -46,11 +57,22 @@ public class App extends Application {
         return mInstance;
     }
 
+    /**
+     * Gets GoogleApiHelper instance.
+     * @return googleApiHelper
+     */
     public GoogleApiHelper getGoogleApiHelperInstance() {
         return this.googleApiHelper;
     }
+
+    /**
+     * Gets GoogleApiHelper instance.
+     * @return googleApiHelper
+     */
     public static GoogleApiHelper getGoogleApiHelper() {
         return getInstance().getGoogleApiHelperInstance();
     }
+
+
 
 }

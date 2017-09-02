@@ -10,6 +10,8 @@ import app.simone.R;
 import app.simone.shared.utils.Constants;
 
 /**
+ * VSCpuActivity, subclass of FullscreenBaseGameActivity.
+ * Opens the activity corresponding to the selected chosen mode.
  * @author Michele Sapignoli
  */
 
@@ -20,14 +22,14 @@ public class VSCpuActivity extends FullscreenBaseGameActivity {
         FloatingActionButton easyFab = (FloatingActionButton) this.findViewById(R.id.vs_cpu_fab);
         easyFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                openActivity(GameActivity.class, Constants.CHOSEN_MODE, Constants.CLASSIC_MODE, R.anim.right_in, R.anim.left_out);
+                openActivity(SingleplayerGameActivity.class, Constants.CHOSEN_MODE, Constants.CLASSIC_MODE, R.anim.right_in, R.anim.left_out);
             }
         });
 
         FloatingActionButton hardFab = (FloatingActionButton) this.findViewById(R.id.vs_cpu_fab_hard);
         hardFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                openActivity(GameActivity.class, Constants.CHOSEN_MODE, Constants.HARD_MODE, R.anim.right_in, R.anim.left_out);
+                openActivity(SingleplayerGameActivity.class, Constants.CHOSEN_MODE, Constants.HARD_MODE, R.anim.right_in, R.anim.left_out);
             }
         });
     }

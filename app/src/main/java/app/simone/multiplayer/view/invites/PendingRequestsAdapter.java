@@ -15,6 +15,7 @@ import app.simone.multiplayer.model.FacebookUser;
 import app.simone.multiplayer.model.OnlineMatch;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.GameActivity;
+import app.simone.singleplayer.view.MultiplayerGameActivity;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -67,13 +68,10 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
         Object object= getItem(position);
         OnlineMatch dataModel=(OnlineMatch)object;
 
-
         switch (v.getId())
         {
-
             case R.id.item_info:
-
-                Intent intent = new Intent(mContext,GameActivity.class);
+                Intent intent = new Intent(mContext,MultiplayerGameActivity.class);
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(Constants.MULTIPLAYER_MODE, "multiplayerMode");
                 intent.putExtra(Constants.MATCH_KEY,dataModel.getKey());
@@ -95,7 +93,7 @@ public class PendingRequestsAdapter extends ArrayAdapter<OnlineMatch> implements
     public View getView(int position, View convertView, ViewGroup parent) {
 
         this.dataModel = getItem(position);
-        ViewHolder viewHolder;
+        ViewHolder viewHolder; // view lookup cache stored in tag
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());

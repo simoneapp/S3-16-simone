@@ -116,7 +116,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_scrolling_db">ScrollingActivityDB</string>
     <string name="center_button_default_text">simone</string>
-    <string name="vs_cpu">vs\ncpu</string>
+    <string name="vs_cpu">arcade</string>
     <string name="settings">settings</string>
     <string name="highscore">score\nboard</string>
     <string name="tap_to_begin">tap to\nbegin</string>
@@ -127,16 +127,36 @@
     <string name="leaderboard">leader\nboard</string>
     <string name="achievements">achieve\nments</string>
     <string name="scoreboard_long">scoreboard</string>
-    <string name="instant">instant</string>
+    <string name="instant">classic</string>
     <string name="nearby">nearby</string>
-    <string name="multiplayer">Multi\nplayer</string>
     <string name="multiplayer_full">Multiplayer</string>
+    <string name="multiplayer">Multi\nplayer</string>
     <string name="button">Button</string>
 
     <!-- Strings related to settings activity -->
     <string name="music">Music</string>
-    <string name="notification">Notification</string>
+    <string name="notification">Notify</string>
     <string name="music_on">On</string>
     <string name="notification_on">On</string>
+    <string name="waiting_for_your_color">waiting for your color...</string>
+    <string name="type_your_player_id_here">Type your player id here</string>
+    <string name="sign_in">Sign In</string>
+    <string name="your_info">Your Info</string>
+    <string name="multiplayer_nwith_facebook">Multiplayer. With Facebook.</string>
+    <string name="to_try_multiplayer_you_need_to_sell_your_soul_and_your_data_to_mark_zuckerberg_njust_kidding_you_ll_just_sell_your_soul">To try Multiplayer, you need to sell your soul and your data to Mark Zuckerberg. Just kidding, you\'ll just sell your soul.</string>
+    <string name="waiting_room">Waiting room</string>
+    <string name="please_wait_here_while_the_other_players_accept_their_invites">Please wait here while the other players accept their invites.</string>
+    <string name="id_of_this_match">ID of this match:</string>
+    <string name="loading">Loading...</string>
+    <string name="user">User</string>
+    <string name="name">Name</string>
+    <string name="score">Score:</string>
+    <string name="_10">10</string>
+    <string name="score_">Score:</string>
+    <string name="_5">5</string>
+    <string name="play">Play</string>
+    <string name="off">off</string>
+    <string name="on">on</string>
+    <string name="settings_uc">Settings</string>
 
 </resources>

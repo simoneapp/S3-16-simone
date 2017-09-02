@@ -2,17 +2,20 @@ package app.simone.singleplayer.messages;
 
 import java.util.List;
 
-import app.simone.singleplayer.model.SColor;
+import app.simone.singleplayer.model.SimonColor;
 import app.simone.shared.messages.IMessage;
+import app.simone.singleplayer.model.SimonColorImpl;
 
 /**
- * Created by sapi9 on 21/06/2017.
+ * TimeToBlinkMsg,
+ * used to trigger the blinking time of the CPUActor.
+ * @author Michele Sapignoli
  */
 
 public class TimeToBlinkMsg implements IMessage {
-    private List<SColor> sequence;
+    private List<SimonColorImpl> sequence;
 
-    public TimeToBlinkMsg(List<SColor> sequence){
+    public TimeToBlinkMsg(List<SimonColorImpl> sequence){
         this.sequence = sequence;
     }
 
@@ -21,7 +24,7 @@ public class TimeToBlinkMsg implements IMessage {
         return MessageType.TIME_TO_BLINK_MSG;
     }
 
-    public List<SColor> getSequence(){
+    public List<SimonColorImpl> getSequence(){
         return this.sequence;
     }
 }

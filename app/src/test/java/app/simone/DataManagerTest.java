@@ -4,10 +4,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import org.junit.Before;
 import org.junit.Test;
-import app.simone.multiplayer.model.FacebookUser;
-import app.simone.multiplayer.model.OnlineMatch;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
@@ -17,6 +16,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+
+import app.simone.multiplayer.model.FacebookUser;
+import app.simone.multiplayer.model.OnlineMatch;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -29,6 +31,7 @@ import static org.mockito.Mockito.when;
  * This class contains some tests concerning Firebase functionalities
  *
  */
+
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(JUnit4.class)
 @PrepareForTest({ FirebaseDatabase.class})

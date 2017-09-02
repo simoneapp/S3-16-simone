@@ -58,7 +58,7 @@ class NearbyInvitesFragment : Fragment() {
                 val key = itemRef.key
 
                 val tv = v?.findViewById(android.R.id.text1) as TextView
-                val tv2 = v?.findViewById(android.R.id.text2) as TextView
+                val tv2 = v.findViewById(android.R.id.text2) as TextView
                 if(model != null){
                     tv.text = "Match of " + Utilities.stringFromTimestamp(model)
                     tv2.text = "Key: " + key

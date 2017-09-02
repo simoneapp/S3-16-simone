@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:launchMode="singleTask"
-    tools:context="app.simone.singleplayer.view.GameActivity">
+    tools:context="app.simone.singleplayer.view.GameActivityImpl">
 
 
     <FrameLayout
@@ -135,7 +135,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginEnd="20dp"
-        app:backgroundTint="@color/myDarkGray"
+        app:backgroundTint="@color/myLightGray"
         app:layout_anchor="@id/game_fab"
         android:visibility="gone"
         app:layout_anchorGravity="top|left"
@@ -146,9 +146,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:elevation="6dp"
-        android:text="88"
+        android:text=""
         android:textAlignment="center"
-        android:textColor="@color/myLightGray"
+        android:textColor="@color/myDarkGray"
         android:textSize="40sp"
         android:visibility="gone"
         app:layout_anchor="@id/game_score_fab"

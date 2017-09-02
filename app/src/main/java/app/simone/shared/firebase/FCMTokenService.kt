@@ -16,7 +16,7 @@ class FCMTokenService : FirebaseInstanceIdService() {
             if(FacebookManagerActor.Companion.isLoggedIn()){
                 val fbID = com.facebook.Profile.getCurrentProfile().id
                 val refreshedToken = com.google.firebase.iid.FirebaseInstanceId.getInstance().token.toString()
-                android.util.Log.d("FBToken", "Refreshed token: " + refreshedToken!!)
+                android.util.Log.d("FBToken", "Refreshed token: " + refreshedToken)
 
                 NearbyGameController().updateToken(refreshedToken, fbID)
             }

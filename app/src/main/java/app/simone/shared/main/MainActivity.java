@@ -84,7 +84,8 @@ public class MainActivity extends FullscreenBaseGameActivity {
         multiplayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openActivity(MultiplayerTypeActivity.class, R.anim.slide_down, R.anim.slide_down_existing);
+                //openActivity(MultiplayerTypeActivity.class, R.anim.slide_down, R.anim.slide_down_existing);
+                openActivity(ComingSoonActivity.class, R.anim.slide_down, R.anim.slide_down_existing);
             }
         });
 

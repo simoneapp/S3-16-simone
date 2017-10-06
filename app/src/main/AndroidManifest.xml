@@ -47,6 +47,10 @@
             android:name=".scores.view.ScoreboardActivity"
             android:label="Scoreboard"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".shared.main.ComingSoonActivity"
+            android:label="Coming Soon"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

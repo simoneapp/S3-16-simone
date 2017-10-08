@@ -27,8 +27,6 @@ import com.facebook.share.widget.GameRequestDialog
  */
 class FacebookViewActor : akka.actor.UntypedActor() {
 
-    //var activity : FriendsListFragment? = null
-
     var loginButton : LoginButton? = null
     var requestDialog : GameRequestDialog? = null
     var callbackManager : CallbackManager? = null

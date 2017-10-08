@@ -4,6 +4,7 @@ import android.app.Application;
 
 import java.util.Arrays;
 import java.util.List;
+
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import app.simone.scores.google.GoogleApiHelper;
@@ -29,7 +30,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         mInstance = this;
         googleApiHelper = new GoogleApiHelper(mInstance);
         this.system = buildActorSystem();

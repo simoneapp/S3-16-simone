@@ -87,7 +87,7 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
         setBooleanText(enabled, R.id.music_text);
     }
 
-   /* private void setNotificationsText(boolean enabled){
+    /*private void setNotificationsText(boolean enabled){
         setBooleanText(enabled, R.id.notification_text);
     }*/
 

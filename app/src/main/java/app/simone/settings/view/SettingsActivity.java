@@ -33,12 +33,12 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
             }
         });
 
-        FloatingActionButton notificationButton = (FloatingActionButton) this.findViewById(R.id.settings_notification);
+        /*FloatingActionButton notificationButton = (FloatingActionButton) this.findViewById(R.id.settings_notification);
         notificationButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 notificationsSwitch();
             }
-        });
+        });*/
     }
 
     @Override
@@ -60,22 +60,22 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
         showCurrentSettings();
     }
 
-    private void notificationsSwitch() {
+    /*private void notificationsSwitch() {
         boolean enabled = manager.areNotificationsEnabled();
         enabled = !enabled;
         manager.setNotificationsEnabled(enabled);
         showCurrentSettings();
-    }
+    }*/
 
     private void showCurrentSettings() {
         boolean musicEnabled = manager.isMusicEnabled();
         setMusicText(musicEnabled);
 
-        boolean notificationsEnabled = manager.areNotificationsEnabled();
-        setNotificationsText(notificationsEnabled);
+        /*boolean notificationsEnabled = manager.areNotificationsEnabled();
+        setNotificationsText(notificationsEnabled);*/
     }
 
-    private void playAudio(boolean isMusicOn) {
+    public void playAudio(boolean isMusicOn) {
         if(isMusicOn){
             AudioManager.Companion.getInstance().playSimoneMusic();
         }else {
@@ -87,9 +87,9 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
         setBooleanText(enabled, R.id.music_text);
     }
 
-    private void setNotificationsText(boolean enabled){
+   /* private void setNotificationsText(boolean enabled){
         setBooleanText(enabled, R.id.notification_text);
-    }
+    }*/
 
     private void setBooleanText(boolean value, int viewID) {
         TextView textView = (TextView)findViewById(viewID);

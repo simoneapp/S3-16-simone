@@ -18,6 +18,7 @@ import app.simone.multiplayer.view.MultiplayerTypeActivity;
 import app.simone.multiplayer.view.nearby.NearbyGameActivity;
 import app.simone.multiplayer.view.newmatch.FriendsListFragment;
 import app.simone.scores.view.ScoreboardActivity;
+import app.simone.settings.controller.SettingsManager;
 import app.simone.settings.view.SettingsActivity;
 import app.simone.shared.firebase.FCMTokenService;
 import app.simone.shared.utils.AudioManager;
@@ -36,6 +37,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
     private Button connectionButton;
     private Button btnMultiplayer;
     private Button multiplayerButton;
+    private SettingsManager settingsReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +96,13 @@ public class MainActivity extends FullscreenBaseGameActivity {
         mainFab.startAnimation(animation);
         simoneTextView.startAnimation(animation);
 
-        AudioManager.Companion.getInstance().playSimoneMusic();
+        settingsReference = new SettingsManager(getApplicationContext());
+        if(settingsReference.isMusicEnabled()){
+            AudioManager.Companion.getInstance().playSimoneMusic();
+        }else{
+            AudioManager.Companion.getInstance().stopSimoneMusic();
+        }
+        //AudioManager.Companion.getInstance().playSimoneMusic();
 
         Button b = (Button) findViewById(R.id.main_button_highscore);
         b.setOnClickListener(new View.OnClickListener() {
@@ -145,5 +153,16 @@ public class MainActivity extends FullscreenBaseGameActivity {
     public void multiplayerSetUp(View view) {
         Intent intent = new Intent(this, NearbyGameActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        settingsReference = new SettingsManager(getApplicationContext());
+        if(settingsReference.isMusicEnabled()){
+            AudioManager.Companion.getInstance().playSimoneMusic();
+        }else{
+            AudioManager.Companion.getInstance().stopSimoneMusic();
+        }
     }
 }

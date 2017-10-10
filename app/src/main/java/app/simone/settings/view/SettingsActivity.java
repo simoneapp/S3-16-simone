@@ -1,5 +1,6 @@
 package app.simone.settings.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
@@ -39,6 +40,13 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
                 notificationsSwitch();
             }
         });
+
+        FloatingActionButton creditsButton = (FloatingActionButton) this.findViewById(R.id.settings_credits);
+        creditsButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openCredits();
+            }
+        });
     }
 
     @Override
@@ -65,6 +73,11 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
         enabled = !enabled;
         manager.setNotificationsEnabled(enabled);
         showCurrentSettings();
+    }
+
+    private void openCredits() {
+        Intent intent = new Intent(this,CreditsActivity.class);
+        this.startActivity(intent);
     }
 
     private void showCurrentSettings() {

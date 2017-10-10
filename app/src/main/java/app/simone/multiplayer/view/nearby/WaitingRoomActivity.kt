@@ -6,8 +6,6 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.ListView
 import android.widget.TextView
 import app.simone.R
-import app.simone.multiplayer.controller.NearbyGameController
-import com.facebook.Profile
 
 /**
  * waiting room for players
@@ -35,9 +33,9 @@ class WaitingRoomActivity : AppCompatActivity(), DistributedView.WaitingRoomView
     }
 
     override fun getActivityContext(): WaitingRoomActivity {
-
         return this
     }
+
     override fun startGameActivity(matchID: String){
         val intent = Intent(this, NearbyGameActivity::class.java)
         intent.putExtra("match", matchID)

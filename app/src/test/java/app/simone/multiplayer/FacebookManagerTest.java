@@ -42,23 +42,6 @@ public class FacebookManagerTest extends ActorTests {
         }};
     }
 
-/*
-    @Test
-    public void testWrongFacebookFriends() {
-        new JavaTestKit(system) {{
-            JavaTestKit probe = new JavaTestKit(system);
-
-            Bundle bundle = Mockito.mock(Bundle.class);
-            MockGraphRequestWrapper request = new MockGraphRequestWrapper(new WrongMockingStrategy());
-            getFbManagerActor().tell(new FbRequestFriendsMsgMock(bundle, request), probe.getRef());
-
-            FbResponseFriendsMsg message = probe.expectMsgClass(
-                    ActorTests.defaultDuration, FbResponseFriendsMsg.class);
-            assertTrue(message.getData() == null);
-            assertTrue(message.getErrorMessage() != null || !message.getErrorMessage().equals(""));
-        }};
-    }
-   */
     private ActorRef getFbManagerActor() {
         return Utilities.getActor(Constants.FACEBOOK_ACTOR_NAME, system);
     }

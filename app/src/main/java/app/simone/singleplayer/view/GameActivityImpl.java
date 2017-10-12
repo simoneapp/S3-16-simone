@@ -22,6 +22,8 @@ import java.util.List;
 import app.simone.R;
 import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.shared.styleable.SimoneTextView;
+import app.simone.shared.utils.Analytics;
+import app.simone.shared.utils.AnalyticsAppAction;
 import app.simone.shared.utils.AnimationHandler;
 import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.AudioPlayer;
@@ -117,6 +119,7 @@ public abstract class GameActivityImpl extends FullscreenBaseGameActivity implem
                 if (presenter.isTapToBegin()) {
                     prepareViewsForGame();
                     prepareGame();
+                    Analytics.Companion.logAppAction(AnalyticsAppAction.GAME_START_TOUCHED, getApplicationContext());
                 }
             }
         });

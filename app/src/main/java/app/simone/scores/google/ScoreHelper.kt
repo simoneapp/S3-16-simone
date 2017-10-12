@@ -3,6 +3,7 @@ package app.simone.scores.google
 import android.content.Context
 import app.simone.scores.model.AchievementSpecifier
 import app.simone.shared.application.App
+import app.simone.shared.utils.Analytics
 import app.simone.shared.utils.Constants
 import com.facebook.FacebookSdk.getApplicationContext
 import com.google.android.gms.games.Games
@@ -30,9 +31,10 @@ object ScoreHelper {
                 else { stringId = it.hardServerId }
 
                 if (App.getGoogleApiHelper().googleApiClient.isConnected) {
+                    val finalID = context.resources.getString(stringId)
+                    Analytics.logAchievement(finalID, getApplicationContext())
                     Games.Achievements.unlockImmediate(App.getGoogleApiHelper().googleApiClient,
-                            context.resources.getString(stringId))
-                            .setResultCallback(AchievementCallback())
+                            finalID).setResultCallback(AchievementCallback())
                 }
                 return
             }
@@ -55,9 +57,10 @@ object ScoreHelper {
 
         achievementList.forEach {
             if (it.achievementId == nGames && App.getGoogleApiHelper().googleApiClient.isConnected) {
+                val serverID = context.resources.getString(it.classicServerId)
+                Analytics.logAchievement(serverID, getApplicationContext())
                 Games.Achievements.unlockImmediate(App.getGoogleApiHelper().googleApiClient,
-                            context.resources.getString(it.classicServerId))
-                            .setResultCallback(AchievementCallback())
+                        serverID).setResultCallback(AchievementCallback())
             }
         }
     }

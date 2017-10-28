@@ -37,7 +37,7 @@ class DataManager private constructor() {
      */
     fun createMatch(match: OnlineMatch):String {
         if(database == null) {
-            return "";
+            return ""
         }
 
         val matchList = database?.push()
@@ -57,7 +57,7 @@ class DataManager private constructor() {
 
         repeat(matches.size){ i->
             if ((matches[i].firstplayer.id==id) || (matches[i].secondplayer.id==id)){
-                //keep it
+
                 filteredArray.add(matches[i])
             }
 

@@ -7,6 +7,7 @@ import android.view.View;
 
 import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.R;
+import app.simone.shared.utils.Analytics;
 import app.simone.shared.utils.Constants;
 
 /**
@@ -22,6 +23,7 @@ public class VSCpuActivity extends FullscreenBaseGameActivity {
         FloatingActionButton easyFab = (FloatingActionButton) this.findViewById(R.id.vs_cpu_fab);
         easyFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Analytics.Companion.logNewSinglePlayerGame(Constants.CLASSIC_MODE, getApplicationContext());
                 openActivity(SingleplayerGameActivity.class, Constants.CHOSEN_MODE, Constants.CLASSIC_MODE, R.anim.right_in, R.anim.left_out);
             }
         });
@@ -29,6 +31,7 @@ public class VSCpuActivity extends FullscreenBaseGameActivity {
         FloatingActionButton hardFab = (FloatingActionButton) this.findViewById(R.id.vs_cpu_fab_hard);
         hardFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Analytics.Companion.logNewSinglePlayerGame(Constants.CLASSIC_MODE, getApplicationContext());
                 openActivity(SingleplayerGameActivity.class, Constants.CHOSEN_MODE, Constants.HARD_MODE, R.anim.right_in, R.anim.left_out);
             }
         });

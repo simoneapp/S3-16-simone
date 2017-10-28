@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:launchMode="singleTask"
+    tools:context="app.simone.settings.view.CreditsActivity">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/credits_fullscreen_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:id="@+id/credits_top_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/credits_image_green"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        />
+
+                    <Button
+                        android:id="@+id/credits_button_green"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/myGreen"
+                        android:textColor="@color/myMainTextColor" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/credits_image_red"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        />
+
+                    <Button
+                        android:id="@+id/credits_button_red"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/myRed"
+                        android:textColor="@color/myMainTextColor"/>
+
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/credits_bottom_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/credits_image_yellow"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop">
+                    </ImageView>
+
+                    <Button
+                        android:id="@+id/credits_button_yellow"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/myYellow"
+                        android:textColor="@color/myMainTextColor"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/credits_image_blue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        />
+
+
+                    <Button
+                        android:id="@+id/credits_button_blue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/myBlue"
+                        android:textColor="@color/myMainTextColor" />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/credits_fab"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginEnd="20dp"
+        android:elevation="6dp"
+        app:backgroundTint="@color/myLightGray"
+        app:layout_anchor="@id/credits_top_layout"
+        app:layout_anchorGravity="bottom|center" >
+
+    </android.support.design.widget.FloatingActionButton>
+    <app.simone.shared.styleable.SimoneTextView
+        android:layout_height="wrap_content"
+        android:id="@+id/credits_simone_textview"
+        android:layout_width="wrap_content"
+        android:text="@string/credits"
+        android:textSize="28sp"
+        android:elevation="6dp"
+        android:textColor="@color/myDarkGray"
+        app:layout_anchor="@id/credits_top_layout"
+        app:layout_anchorGravity="bottom|center"/>
+
+
+    <app.simone.shared.styleable.MainTextView
+
+        android:layout_height="wrap_content"
+        android:id="@+id/credits_textview_green"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:text="@string/michele_sapignoli"
+        android:layout_marginStart="20sp"
+        android:layout_marginTop="30sp"
+        android:textColor="#FFF"
+        android:alpha="0.6"
+        app:layout_anchor="@id/credits_top_layout"
+        app:layout_anchorGravity="top|left"
+        />
+    <app.simone.shared.styleable.MainTextView
+
+        android:layout_height="wrap_content"
+        android:id="@+id/credits_textview_red"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:text="@string/nicola_giancecchi"
+        android:textAlignment="textEnd"
+        android:layout_marginEnd="20sp"
+        android:layout_marginTop="30sp"
+        android:textColor="#FFF"
+        android:alpha="0.6"
+        app:layout_anchor="@id/credits_top_layout"
+        app:layout_anchorGravity="top|right"
+        />
+    <app.simone.shared.styleable.MainTextView
+
+        android:layout_height="wrap_content"
+        android:id="@+id/credits_textview_yellow"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:text="@string/giacomo_zanotti"
+        android:layout_marginStart="20sp"
+        android:layout_marginBottom="30sp"
+        android:textColor="#FFF"
+        android:alpha="0.6"
+        app:layout_anchor="@id/credits_bottom_layout"
+        app:layout_anchorGravity="bottom|left"
+        />
+    <app.simone.shared.styleable.MainTextView
+
+        android:layout_height="wrap_content"
+        android:id="@+id/credits_textview_blue"
+        android:layout_width="wrap_content"
+        android:textSize="32sp"
+        android:textAlignment="textEnd"
+        android:text="@string/giacomo_bartoli"
+        android:layout_marginEnd="20sp"
+        android:layout_marginBottom="30sp"
+        android:textColor="#FFF"
+        android:alpha="0.6"
+        app:layout_anchor="@id/credits_bottom_layout"
+        app:layout_anchorGravity="bottom|right"
+        />
+
+
+</android.support.design.widget.CoordinatorLayout>

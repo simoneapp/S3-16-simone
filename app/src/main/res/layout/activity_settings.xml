@@ -81,12 +81,13 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/settings_music"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginEnd="20dp"
+        android:elevation="6dp"
         app:backgroundTint="@color/myLightGray"
         app:layout_anchor="@id/settings_top_left_layout"
-        app:layout_anchorGravity="bottom|center" />
+        app:layout_anchorGravity="bottom|right|center" />
 
     <app.simone.shared.styleable.MainTextView
 
@@ -102,34 +103,34 @@
         app:layout_anchor="@id/settings_top_layout"
         app:layout_anchorGravity="left" />
 
-     <app.simone.shared.styleable.MainTextView
+    <app.simone.shared.styleable.MainTextView
 
         android:id="@+id/music_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20sp"
-        android:layout_marginTop="30sp"
+        android:layout_marginTop="5sp"
         android:alpha="0.8"
         android:text="@string/music_on"
         android:textColor="#FFF"
         android:textSize="32sp"
         app:layout_anchor="@id/settings_bottom_left_layout"
-        app:layout_anchorGravity="center" />
+        app:layout_anchorGravity="right|center" />
 
-     <app.simone.shared.styleable.MainTextView
+     <!--<app.simone.shared.styleable.MainTextView
 
         android:id="@+id/notification_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20sp"
-        android:layout_marginTop="30sp"
+        android:layout_marginTop="5sp"
         android:alpha="0.8"
         android:textAlignment="center"
         android:text="@string/notification_on"
         android:textColor="#FFF"
         android:textSize="32sp"
         app:layout_anchor="@id/settings_bottom_right_layout"
-        app:layout_anchorGravity="center" />
+        app:layout_anchorGravity="center" /> -->
 
     <app.simone.shared.styleable.SimoneTextView
         android:id="@+id/settings_music_textview"
@@ -137,21 +138,22 @@
         android:layout_height="wrap_content"
         android:elevation="6dp"
         android:text="@string/music"
+        android:textAlignment="center"
         android:textColor="@color/myDarkGray"
         android:textSize="32sp"
         app:layout_anchor="@id/settings_top_left_layout"
-        app:layout_anchorGravity="bottom|center" />
+        app:layout_anchorGravity="bottom|right|center" />
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/settings_notification"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginEnd="20dp"
         app:backgroundTint="@color/myLightGray"
         app:layout_anchor="@id/settings_top_right_layout"
-        app:layout_anchorGravity="bottom|center" />
+        app:layout_anchorGravity="bottom|center" /> -->
 
-    <app.simone.shared.styleable.SimoneTextView
+    <!--<app.simone.shared.styleable.SimoneTextView
         android:id="@+id/settings_notification_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -160,7 +162,32 @@
         android:textColor="@color/myDarkGray"
         android:textSize="32sp"
         app:layout_anchor="@id/settings_top_right_layout"
-        app:layout_anchorGravity="bottom|center" />
+        app:layout_anchorGravity="bottom|center" />-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/settings_credits"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:elevation="6dp"
+        app:backgroundTint="@color/myLightGray"
+        app:layout_anchor="@id/settings_top_right_layout"
+        app:layout_anchorGravity="top|right" />
+
+    <app.simone.shared.styleable.SimoneTextView
+        android:id="@+id/settings_credits_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/credits"
+        android:textColor="@color/myDarkGray"
+        android:textSize="22sp"
+        android:elevation="6dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_anchor="@id/settings_credits"
+        app:layout_anchorGravity="center" />
+
 
 
 </android.support.design.widget.CoordinatorLayout>

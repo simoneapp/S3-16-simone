@@ -61,7 +61,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
                 openActivity(VSCpuActivity.class, R.anim.left_in, R.anim.right_out);
             }
         });
-
+/*
         multiplayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +69,16 @@ public class MainActivity extends FullscreenBaseGameActivity {
                 openActivity(MultiplayerTypeActivity.class, R.anim.slide_down, R.anim.slide_down_existing);
             }
         });
-
+*/
+        multiplayerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //openActivity(MultiplayerTypeActivity.class, R.anim.slide_down, R.anim.slide_down_existing);
+                Analytics.Companion.logAppAction(AnalyticsAppAction.MULTI_PLAYER_TOUCHED, getApplicationContext());
+                openActivity(ComingSoonActivity.class, R.anim.slide_down, R.anim.slide_down_existing);
+            }
+        });
+      
         connectionButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -78,6 +87,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
                 openActivity(SettingsActivity.class, R.anim.right_in, R.anim.left_out);
             }
         });
+
 
         FloatingActionButton mainFab = (FloatingActionButton) findViewById(R.id.main_fab);
         TextView simoneTextView = (TextView) findViewById(R.id.main_simone_textview);

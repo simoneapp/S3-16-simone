@@ -16,7 +16,7 @@ class StrategyImpl: Strategy {
         val requestsUsers = arrayListOf<OnlineMatch>()
         if (match != null) {
             for (data in match) {
-                //val ref = dataSnapshot.child(data.key)
+
                 val onlineMatch = data.getValue(OnlineMatch::class.java)!!
                 onlineMatch.key = data.key
                 requestsUsers.add(onlineMatch)

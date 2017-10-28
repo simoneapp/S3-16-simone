@@ -16,10 +16,12 @@ import app.simone.R;
 import app.simone.multiplayer.controller.NearbyGameController;
 import app.simone.multiplayer.view.MultiplayerTypeActivity;
 import app.simone.multiplayer.view.nearby.NearbyGameActivity;
-import app.simone.multiplayer.view.newmatch.FriendsListFragment;
 import app.simone.scores.view.ScoreboardActivity;
+import app.simone.settings.controller.SettingsManager;
 import app.simone.settings.view.SettingsActivity;
 import app.simone.shared.firebase.FCMTokenService;
+import app.simone.shared.utils.Analytics;
+import app.simone.shared.utils.AnalyticsAppAction;
 import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
 import app.simone.singleplayer.view.VSCpuActivity;
@@ -36,6 +38,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
     private Button connectionButton;
     private Button btnMultiplayer;
     private Button multiplayerButton;
+    private SettingsManager settingsReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,22 +49,24 @@ public class MainActivity extends FullscreenBaseGameActivity {
 
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
         connectionButton = (Button)findViewById(R.id.button4);
-        btnMultiplayer = (Button)findViewById(R.id.main_button_multiplayer);
+        multiplayerButton = (Button) findViewById(R.id.main_button_multiplayer);
+
 
         //Listener on vs CPUActor button
         VSCpuButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
+                Analytics.Companion.logAppAction(AnalyticsAppAction.SINGLE_PLAYER_TOUCHED, getApplicationContext());
                 openActivity(VSCpuActivity.class, R.anim.left_in, R.anim.right_out);
             }
         });
 
-        btnMultiplayer.setOnClickListener(new View.OnClickListener() {
-
+        multiplayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                openActivity(FriendsListFragment.class, R.anim.left_in, R.anim.right_out);
+            public void onClick(View v) {
+                Analytics.Companion.logAppAction(AnalyticsAppAction.MULTI_PLAYER_TOUCHED, getApplicationContext());
+                openActivity(MultiplayerTypeActivity.class, R.anim.slide_down, R.anim.slide_down_existing);
             }
         });
 
@@ -69,22 +74,8 @@ public class MainActivity extends FullscreenBaseGameActivity {
 
             @Override
             public void onClick(View view) {
+                Analytics.Companion.logAppAction(AnalyticsAppAction.SETTINGS_TOUCHED, getApplicationContext());
                 openActivity(SettingsActivity.class, R.anim.right_in, R.anim.left_out);
-            }
-        });
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-
-
-        multiplayerButton = (Button) findViewById(R.id.main_button_multiplayer);
-
-        multiplayerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openActivity(MultiplayerTypeActivity.class, R.anim.slide_down, R.anim.slide_down_existing);
             }
         });
 
@@ -94,12 +85,19 @@ public class MainActivity extends FullscreenBaseGameActivity {
         mainFab.startAnimation(animation);
         simoneTextView.startAnimation(animation);
 
-        AudioManager.Companion.getInstance().playSimoneMusic();
+        settingsReference = new SettingsManager(getApplicationContext());
+        if(settingsReference.isMusicEnabled()){
+            AudioManager.Companion.getInstance().playSimoneMusic();
+        }else{
+            AudioManager.Companion.getInstance().stopSimoneMusic();
+        }
+        //AudioManager.Companion.getInstance().playSimoneMusic();
 
         Button b = (Button) findViewById(R.id.main_button_highscore);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Analytics.Companion.logAppAction(AnalyticsAppAction.SCOREBOARD_TOUCHED, getApplicationContext());
                openActivity(ScoreboardActivity.class, R.anim.slide_up, R.anim.slide_up_existing);
             }
         });
@@ -145,5 +143,16 @@ public class MainActivity extends FullscreenBaseGameActivity {
     public void multiplayerSetUp(View view) {
         Intent intent = new Intent(this, NearbyGameActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        settingsReference = new SettingsManager(getApplicationContext());
+        if(settingsReference.isMusicEnabled()){
+            AudioManager.Companion.getInstance().playSimoneMusic();
+        }else{
+            AudioManager.Companion.getInstance().stopSimoneMusic();
+        }
     }
 }

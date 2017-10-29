@@ -165,4 +165,9 @@ public class MainActivity extends FullscreenBaseGameActivity {
             AudioManager.Companion.getInstance().stopSimoneMusic();
         }
     }
+    @Override
+    protected void onPause() {
+        AudioManager.Companion.getInstance().stopSimoneMusic();
+        super.onPause();
+    }
 }

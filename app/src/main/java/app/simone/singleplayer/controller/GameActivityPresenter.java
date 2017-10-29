@@ -8,6 +8,7 @@ import akka.actor.ActorSystem;
 import app.simone.scores.google.ScoreHelper;
 import app.simone.shared.application.App;
 import app.simone.shared.messages.IMessage;
+import app.simone.shared.utils.Analytics;
 import app.simone.shared.utils.AnimationHandler;
 import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
@@ -159,6 +160,7 @@ public class GameActivityPresenter {
         finalScore = msg.arg1;
         ScoreHelper.INSTANCE.sendResultToLeaderboard(activity.getContext(), chosenMode, finalScore);
         ScoreHelper.INSTANCE.checkNGamesAchievement(activity.getContext());
+        Analytics.Companion.logScore(finalScore, activity.getContext());
         tapToBegin = true;
         activity.saveScore();
         activity.renderYouLost(finalScore);

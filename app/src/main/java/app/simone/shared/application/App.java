@@ -4,9 +4,11 @@ import android.app.Application;
 
 import java.util.Arrays;
 import java.util.List;
+
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import app.simone.scores.google.GoogleApiHelper;
+import app.simone.shared.utils.Analytics;
 import app.simone.shared.utils.Constants;
 
 
@@ -29,9 +31,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         mInstance = this;
         googleApiHelper = new GoogleApiHelper(mInstance);
+        Analytics.Companion.logAppOpen(this);
         this.system = buildActorSystem();
     }
 

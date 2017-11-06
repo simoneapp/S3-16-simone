@@ -1,0 +1,2 @@
+json_key_file “secret_key/developer-942da2abb241.json” # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name "app.simone" # e.g. com.krausefx.app

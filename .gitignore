@@ -58,3 +58,7 @@ freeline_project_description.json
 
 #Fabric
 app/fabric.properties
+
+# Fastlane
+secret_key
+secret_key/developer-942da2abb241.json

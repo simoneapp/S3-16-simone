@@ -60,5 +60,6 @@ freeline_project_description.json
 app/fabric.properties
 
 # Fastlane
-secret_key
-secret_key/developer-942da2abb241.json
+fastlane/secret_key
+fastlane/secret_key/developer-942da2abb241.json
+fastlan/

@@ -1,9 +1,10 @@
 package app.simone.shared.main;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,7 +15,6 @@ import com.crashlytics.android.Crashlytics;
 
 import app.simone.R;
 import app.simone.multiplayer.controller.NearbyGameController;
-import app.simone.multiplayer.view.MultiplayerTypeActivity;
 import app.simone.multiplayer.view.nearby.NearbyGameActivity;
 import app.simone.scores.view.ScoreboardActivity;
 import app.simone.settings.controller.SettingsManager;
@@ -24,6 +24,9 @@ import app.simone.shared.utils.Analytics;
 import app.simone.shared.utils.AnalyticsAppAction;
 import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
+import app.simone.singleplayer.view.ApplicationLifeCycleHandler;
+import app.simone.singleplayer.view.HomeWatcher;
+import app.simone.singleplayer.view.OnHomePressedListener;
 import app.simone.singleplayer.view.VSCpuActivity;
 import io.fabric.sdk.android.Fabric;
 
@@ -44,13 +47,15 @@ public class MainActivity extends FullscreenBaseGameActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Fabric.with(this, new Crashlytics());
+        ApplicationLifeCycleHandler handler = new ApplicationLifeCycleHandler(getApplicationContext());
+        getApplication().registerActivityLifecycleCallbacks(handler);
+        registerComponentCallbacks(handler);
 
+        Fabric.with(this, new Crashlytics());
 
         VSCpuButton = (Button)findViewById(R.id.button_vs_cpu);
         connectionButton = (Button)findViewById(R.id.button4);
         multiplayerButton = (Button) findViewById(R.id.main_button_multiplayer);
-
 
         //Listener on vs CPUActor button
         VSCpuButton.setOnClickListener(new View.OnClickListener() {
@@ -95,12 +100,23 @@ public class MainActivity extends FullscreenBaseGameActivity {
         mainFab.startAnimation(animation);
         simoneTextView.startAnimation(animation);
 
-        settingsReference = new SettingsManager(getApplicationContext());
-        if(settingsReference.isMusicEnabled()){
-            AudioManager.Companion.getInstance().playSimoneMusic();
-        }else{
-            AudioManager.Companion.getInstance().stopSimoneMusic();
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MusicPref", 0);
+
+        try{
+            String s=pref.getString("STRING",null);
+            if(s==null){
+                AudioManager.Companion.getInstance().playSimoneMusic();
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("STRING", "true");
+                editor.commit();
+            }else if(s.equals("true")){
+                AudioManager.Companion.getInstance().playSimoneMusic();
+            }
+        }catch (Exception e){
+            Log.d("PREF","NO preferences!");
         }
+
         //AudioManager.Companion.getInstance().playSimoneMusic();
 
         Button b = (Button) findViewById(R.id.main_button_highscore);
@@ -111,6 +127,7 @@ public class MainActivity extends FullscreenBaseGameActivity {
                openActivity(ScoreboardActivity.class, R.anim.slide_up, R.anim.slide_up_existing);
             }
         });
+        this.watchHome();
     }
 
     @Override
@@ -158,16 +175,27 @@ public class MainActivity extends FullscreenBaseGameActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        settingsReference = new SettingsManager(getApplicationContext());
-        if(settingsReference.isMusicEnabled()){
-            AudioManager.Companion.getInstance().playSimoneMusic();
-        }else{
-            AudioManager.Companion.getInstance().stopSimoneMusic();
-        }
     }
-    @Override
-    protected void onPause() {
-        AudioManager.Companion.getInstance().stopSimoneMusic();
-        super.onPause();
-    }
+
+
+   private void watchHome(){
+       HomeWatcher mHomeWatcher = new HomeWatcher(this);
+       mHomeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
+           @Override
+           public void onHomePressed() {
+               // do something here...
+               Log.d("Home","HomeButton pressed!");
+               AudioManager.Companion.getInstance().stopSimoneMusic();
+           }
+           @Override
+           public void onHomeLongPressed() {
+           }
+       });
+       mHomeWatcher.startWatch();
+   }
+
+
+
+
+
 }

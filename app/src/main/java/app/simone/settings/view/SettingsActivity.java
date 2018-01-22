@@ -1,6 +1,7 @@
 package app.simone.settings.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
@@ -47,6 +48,15 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
                 openCredits();
             }
         });
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MusicPref", 0);
+        String s=pref.getString("STRING",null);
+        if(s.equals("false")){
+            setMusicText(false);
+        }else if(s.equals("true")){
+            setMusicText(true);
+            //let the music keep playing
+        }
     }
 
     @Override
@@ -61,19 +71,25 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
     }
 
     private void musicSwitch(){
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MusicPref", 0);
+        String s=pref.getString("STRING",null);
         boolean enabled = manager.isMusicEnabled();
         enabled = !enabled;
         manager.setMusicEnabled(enabled);
         playAudio(enabled);
-        showCurrentSettings();
-    }
+        SharedPreferences.Editor editor = pref.edit();
+        if(!enabled){
+            editor.putString("STRING", "false");
+            editor.commit();
+            setMusicText(false);
+        }else{
+            editor.putString("STRING", "true");
+            editor.commit();
+            setMusicText(true);
+        }
 
-    /*private void notificationsSwitch() {
-        boolean enabled = manager.areNotificationsEnabled();
-        enabled = !enabled;
-        manager.setNotificationsEnabled(enabled);
-        showCurrentSettings();
-    }*/
+    }
 
     private void openCredits() {
         Intent intent = new Intent(this,CreditsActivity.class);
@@ -100,10 +116,6 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
         setBooleanText(enabled, R.id.music_text);
     }
 
-    /*private void setNotificationsText(boolean enabled){
-        setBooleanText(enabled, R.id.notification_text);
-    }*/
-
     private void setBooleanText(boolean value, int viewID) {
         TextView textView = (TextView)findViewById(viewID);
         if(value){
@@ -113,13 +125,6 @@ public class SettingsActivity extends FullscreenBaseGameActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        if(manager.isMusicEnabled()){
-            AudioManager.Companion.getInstance().stopSimoneMusic();
-        }
-        super.onPause();
-    }
 
 }
 

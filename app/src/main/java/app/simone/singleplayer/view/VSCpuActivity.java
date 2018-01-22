@@ -1,5 +1,6 @@
 package app.simone.singleplayer.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +9,7 @@ import android.view.View;
 import app.simone.shared.main.FullscreenBaseGameActivity;
 import app.simone.R;
 import app.simone.shared.utils.Analytics;
+import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
 
 /**
@@ -47,6 +49,5 @@ public class VSCpuActivity extends FullscreenBaseGameActivity {
     protected void backTransition() {
         overridePendingTransition(R.anim.right_in, R.anim.left_out);
     }
-
 
 }

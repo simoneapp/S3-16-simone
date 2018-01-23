@@ -1,4 +1,4 @@
-package app.simone.singleplayer.view;
+package app.simone.singleplayer.lifeCycleHandler;
 
 /**
  * Created by Giacomo on 22/01/2018.

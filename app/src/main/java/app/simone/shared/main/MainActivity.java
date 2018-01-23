@@ -24,9 +24,9 @@ import app.simone.shared.utils.Analytics;
 import app.simone.shared.utils.AnalyticsAppAction;
 import app.simone.shared.utils.AudioManager;
 import app.simone.shared.utils.Constants;
-import app.simone.singleplayer.view.ApplicationLifeCycleHandler;
-import app.simone.singleplayer.view.HomeWatcher;
-import app.simone.singleplayer.view.OnHomePressedListener;
+import app.simone.singleplayer.lifeCycleHandler.ApplicationLifeCycleHandler;
+import app.simone.singleplayer.lifeCycleHandler.HomeWatcher;
+import app.simone.singleplayer.lifeCycleHandler.OnHomePressedListener;
 import app.simone.singleplayer.view.VSCpuActivity;
 import io.fabric.sdk.android.Fabric;
 
